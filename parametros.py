@@ -19,6 +19,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import Optional
+import validacion
+from reglas import Reglas, cargar_reglas
 
 from enfermedades_espaciales import (
     CondicionEvaluada, DatosComplementarios, evaluar_condiciones,
@@ -45,12 +47,21 @@ class Perfil:
     ciclo: str = "no_aplica"               # "natural" | "suprimido" | "no_aplica"
     fase_ciclo: Optional[str] = None       # "menstrual" | "folicular" | "ovulacion" | "lutea"
 
+    def __post_init__(self):
+        validacion.perfil(self)
+
 
 @dataclass
 class Ambiente:
     fase: str = "vuelo"                    # "vuelo" | "regreso_gravedad" | "eva" | "superficie"
     co2_mmhg: Optional[float] = None       # presion parcial de CO2 de cabina
     ejercicio: bool = False
+
+    def __post_init__(self):
+        validacion.opcion("fase", self.fase, ("vuelo", "regreso_gravedad", "eva", "superficie"))
+        if self.co2_mmhg is not None:
+            validacion.numero("co2_mmhg", self.co2_mmhg)
+        validacion.booleano("ejercicio", self.ejercicio)
 
 
 @dataclass
@@ -64,6 +75,12 @@ class Signos:
     oxigeno_suplementario: bool = False
     hipercapnico: bool = False             # escala 2 de SpO2
 
+    def __post_init__(self):
+        validacion.signos(self)
+        validacion.opcion("conciencia", self.conciencia, ("alerta", "confuso", "voz", "dolor", "inconsciente"))
+        validacion.booleano("oxigeno_suplementario", self.oxigeno_suplementario)
+        validacion.booleano("hipercapnico", self.hipercapnico)
+
 
 @dataclass
 class LineaBase:
@@ -72,6 +89,9 @@ class LineaBase:
     fr: float
     temp: float
     spo2: float
+
+    def __post_init__(self):
+        validacion.signos(self)
 
 
 @dataclass
@@ -110,6 +130,7 @@ def _pts_spo2(s: float, oxigeno: bool, hipercapnico: bool) -> int:
 
 
 def news2(s: Signos) -> tuple[int, dict]:
+    s.__post_init__()
     if s.conciencia not in ("alerta", "confuso", "voz", "dolor", "inconsciente"):
         raise ValueError(f"conciencia invalida: {s.conciencia}")
     d = {
@@ -137,6 +158,7 @@ def _nivel_news2(total: int, desglose: dict) -> Riesgo:
 # y considera estatura, peso, edad y sexo)
 # ----------------------------------------------------------------------------
 def gasto_basal(p: Perfil) -> float:
+    validacion.perfil(p)
     cm = p.estatura_m * 100
     if p.sexo == "F":
         return 447.593 + 9.247 * p.masa_kg + 3.098 * cm - 4.330 * p.edad
@@ -146,36 +168,38 @@ def gasto_basal(p: Perfil) -> float:
 _BEE_REF = 88.362 + 13.397 * 70 + 4.799 * 170 - 5.677 * 40   # referencia: 1.70 m, 70 kg, 40 anos
 
 
-def carga_metabolica_rel(p: Perfil) -> float:
+def carga_metabolica_rel(p: Perfil, reglas: Optional[Reglas] = None) -> float:
     """Gasto basal relativo a la referencia, acotado a [0.8, 1.25] [CALIBRAR]."""
-    return min(1.25, max(0.8, gasto_basal(p) / _BEE_REF))
+    r = reglas or cargar_reglas()
+    return min(r.metabolismo_max, max(r.metabolismo_min, gasto_basal(p) / _BEE_REF))
 
 
 # ----------------------------------------------------------------------------
 # Capa 2: desviacion vs linea base personal
 # ----------------------------------------------------------------------------
 # (margen MEDIO, margen ALTO) respecto a la linea base ajustada [CALIBRAR]
-DESV = {"fc": (15, 30), "pas": (15, 30), "fr": (4, 8), "temp": (0.8, 1.5), "spo2": (3, 5)}
+DESV = dict(cargar_reglas().desviaciones)  # compatibilidad; evaluar usa su snapshot
 
 
-def _contexto(p: Perfil, a: Ambiente, base_de_fase: bool):
+def _contexto(p: Perfil, a: Ambiente, base_de_fase: bool, reglas=None):
     """Devuelve (offsets esperados, multiplicadores de margen, notas).
     mult > 1 = mas tolerancia; mult < 1 = mas sensibilidad."""
-    off = {k: 0.0 for k in DESV}
-    mult = {k: 1.0 for k in DESV}
+    r = reglas or cargar_reglas()
+    off = {k: 0.0 for k, _ in r.desviaciones}
+    mult = {k: 1.0 for k in off}
     notas: list[str] = []
 
     if a.fase == "regreso_gravedad":
-        off["fc"] += 6        # NASA/Hughson 2012: FC +5-6 lpm tras vuelo
-        notas.append("Regreso a gravedad: se espera FC ~+6 lpm y menor respuesta del barorreflejo.")
+        off["fc"] += r.offset_fc_regreso
+        notas.append(f"Regreso a gravedad: se espera FC ~+{r.offset_fc_regreso:g} lpm y menor respuesta del barorreflejo.")
         if p.sexo == "F":
-            mult["pas"] *= 0.8   # mayor incidencia de presincope en mujeres [CALIBRAR]
+            mult["pas"] *= r.mult_pas_mujer
             notas.append("Mayor sensibilidad a caida de PAS (ortostatismo mas frecuente en mujeres).")
 
     if a.ejercicio or a.fase == "eva":
-        k = carga_metabolica_rel(p)
+        k = carga_metabolica_rel(p, r)
         for par in ("fc", "fr"):
-            mult[par] *= 1.5 * k  # el esfuerzo sube FC/FR; el tamano escala la carga [CALIBRAR]
+            mult[par] *= r.mult_esfuerzo * k
         notas.append(f"Esfuerzo/EVA: margenes de FC y FR ampliados (carga metabolica relativa {k:.2f}).")
 
     if p.sexo == "F" and p.ciclo == "suprimido":
@@ -183,16 +207,17 @@ def _contexto(p: Perfil, a: Ambiente, base_de_fase: bool):
                      "Vigilar dolor/hinchazon de pierna o disnea subita (riesgo de TVP/TEP no caracterizado en vuelo).")
     elif p.sexo == "F" and p.ciclo == "natural":
         if p.fase_ciclo == "lutea" and not base_de_fase:
-            off["temp"] += 0.4    # temperatura basal +0.3-0.5 C tras ovulacion
-            mult["fc"] *= 1.2     # mayor actividad simpatica en fase lutea [CALIBRAR]
-            notas.append("Fase lutea: temperatura esperada +0.4 C y margen de FC ampliado.")
+            off["temp"] += r.offset_temp_lutea
+            mult["fc"] *= r.mult_fc_lutea
+            notas.append(f"Fase lutea: temperatura esperada +{r.offset_temp_lutea:g} C y margen de FC ampliado.")
         if p.fase_ciclo in ("menstrual", "folicular") and a.fase == "regreso_gravedad":
             notas.append("Fase menstrual/folicular temprana: vigilar mareo al ponerse de pie "
                          "(evidencia mixta; la linea base personal manda).")
     return off, mult, notas
 
 
-def _nivel_desviacion(s: Signos, base: LineaBase, off: dict, mult: dict):
+def _nivel_desviacion(s: Signos, base: LineaBase, off: dict, mult: dict, reglas=None):
+    desv = dict((reglas or cargar_reglas()).desviaciones)
     actual = {"fc": s.fc, "pas": s.pas, "fr": s.fr, "temp": s.temp, "spo2": s.spo2}
     esperado = {k: getattr(base, k) + off[k] for k in actual}
     nivel, alertas = Riesgo.BAJO, []
@@ -202,7 +227,7 @@ def _nivel_desviacion(s: Signos, base: LineaBase, off: dict, mult: dict):
             delta = abs(min(delta, 0.0))          # solo importan las caidas
         else:
             delta = abs(delta)
-        medio, alto = (m * mult[par] for m in DESV[par])
+        medio, alto = (m * mult[par] for m in desv[par])
         if delta >= alto:
             nivel = max(nivel, Riesgo.ALTO)
             alertas.append(f"{par}: desviacion {delta:.1f} >= {alto:.1f} (ALTO)")
@@ -237,12 +262,22 @@ def _nivel_co2(co2: Optional[float]):
 def evaluar(perfil: Perfil, signos: Signos, ambiente: Ambiente,
              base: Optional[LineaBase] = None,
              base_por_fase: Optional[dict] = None,
-             *, complementarios: Optional[DatosComplementarios] = None) -> Resultado:
+             *, complementarios: Optional[DatosComplementarios] = None,
+             reglas: Optional[Reglas] = None) -> Resultado:
     """base: linea base personal preflight.
     base_por_fase: opcional {"lutea": LineaBase, ...}; si existe para la fase actual,
     reemplaza a `base` y evita los ajustes genericos de ciclo.
     complementarios: evidencia opcional para cribado, separado del nivel agudo.
     Sin datos, las condiciones complementarias quedan no evaluables."""
+    perfil.__post_init__()
+    ambiente.__post_init__()
+    if base is not None:
+        base.__post_init__()
+    if base_por_fase is not None:
+        for fase, valor in base_por_fase.items():
+            validacion.opcion("base_por_fase", fase, validacion.FASES_CICLO)
+            valor.__post_init__()
+    reglas = reglas or cargar_reglas()
     total, desglose = news2(signos)
     n_news2 = _nivel_news2(total, desglose)
 
@@ -251,14 +286,14 @@ def evaluar(perfil: Perfil, signos: Signos, ambiente: Ambiente,
     if usa_base_fase:
         base = base_por_fase[perfil.fase_ciclo]
 
-    off, mult, notas = _contexto(perfil, ambiente, usa_base_fase)
+    off, mult, notas = _contexto(perfil, ambiente, usa_base_fase, reglas)
     alertas: list[str] = []
 
     if base is None:
         n_desv = Riesgo.BAJO
         notas.append("Sin linea base personal: se evalua solo con NEWS2 y ambiente.")
     else:
-        n_desv, a_desv = _nivel_desviacion(signos, base, off, mult)
+        n_desv, a_desv = _nivel_desviacion(signos, base, off, mult, reglas)
         alertas += a_desv
 
     n_co2, a_co2, n_co2_notas = _nivel_co2(ambiente.co2_mmhg)
