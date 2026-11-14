@@ -311,3 +311,61 @@ submissions, transactional rollback, encrypted storage, alert transitions and
 permission denial. Live-provider integration and operational deployment validation
 are separate, require the destination/credentials to be explicitly authorized,
 and have not been performed here.
+
+## Synthetic crew demonstration
+
+`simulador.py` demonstrates the existing validators, clinical services, encrypted
+persistence, personal baselines, temporal alerts and alert lifecycle with **only
+fictional records**. It does not start a server, send HTTP requests, authenticate
+against an identity provider or read production configuration/credentials. It is
+not an end-to-end OIDC/HTTP test or evidence of clinical validity.
+
+After installing the existing dependencies in a virtual environment:
+
+```sh
+python simulador.py
+python simulador.py --semilla 42 --tripulantes 6 --lecturas 8
+python simulador.py --formato json
+# Optional shell export: contains fictional records only.
+python simulador.py --semilla 42 --formato json > tripulacion-sintetica.json
+python -B -m unittest test_simulador -v
+```
+
+The default six profiles are named `SIM-01` through `SIM-06`, not after actual
+astronauts. The scenarios are:
+
+| Scenario | Demonstrated behavior |
+| --- | --- |
+| `estable` | Normal readings and a personal preflight baseline. |
+| `co2_persistente` | Three successive readings at 4.2 mmHg; temporal gating applies under the default rules. |
+| `urgencia_news2` | An acute deterioration produces an immediate high-risk alert. |
+| `regreso_gravedad` | Context-sensitive blood-pressure deviation, followed by scripted recovery. |
+| `eva` | Exercise-related HR/RR increases within adjusted margins. |
+| `cribado_complementario` | Fictional dose, bone/strength measurements and symptoms produce screening findings, not diagnoses. The dose limit is illustrative, not a clinical recommendation. |
+
+The last crew member also gets an explicit absence check after the configured
+time window. After scripted recovery, the fictional medical officer acknowledges
+astronaut-channel alerts and acknowledges/resolves medical-channel alerts; ground
+alerts stay new. The JSON includes each transition, actor and time. These are
+scripted demonstration actions, **not automatic clinical resolution rules**.
+
+Each person gets the configured minimum of identical preflight samples to
+establish a demonstrable baseline, followed by `--lecturas` mission measurements.
+Natural-cycle profiles include entirely fictional dates and explicitly scripted
+phase declarations; these are not inferred clinical observations. Physiology is
+a scripted example, not a validated biological simulator or dataset for clinical
+model training.
+
+Defaults: seed 42, six people and eight mission readings. Allowed values:
+`--semilla` 0–4294967295, `--tripulantes` 1–12, `--lecturas` 5–48 and `--formato`
+`resumen`/`json`. Additional people repeat the six scenario types. The script uses
+the repository's current `reglas.yaml`, not environment configuration. Different
+calibration can change the displayed outcomes; the report records rule version,
+hash and policy values. Identical seed, options, rules and engine produce an
+identical report, including timestamps; the fixed mission date is fictional.
+
+Every execution creates its own temporary SQLite database and ephemeral encryption
+key, then disposes the engine and removes the database on exit. Existing databases
+cannot be selected or overwritten; no production API/authentication setting is
+changed. Internal random record IDs/ciphertext are omitted from the reproducible
+report. Only stdout (or an explicitly requested shell redirect) survives.
