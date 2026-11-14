@@ -109,6 +109,47 @@ Production uses PostgreSQL with the psycopg driver and certificate-verified TLS.
 SQLite is restricted to explicitly constructed test configurations; there is no
 environment switch that opens a production API in anonymous/test mode.
 
+#### Recreate the backend environment on another machine
+
+Clone the repository and run these commands **from its root**. Install the tested
+Python 3.14.4 interpreter first; check the version before creating the environment.
+Each developer creates their own `.venv`: do not copy or commit an existing one,
+because it contains machine-specific interpreter paths and platform binaries.
+`requirements.lock` and `requirements.txt` are tracked; `.venv/` is ignored.
+
+Linux/macOS:
+
+```sh
+python3 --version
+python3 -m venv .venv
+.venv/bin/python -m pip install -r requirements.lock
+.venv/bin/python -m pip check
+.venv/bin/python simulador.py
+# Optional activation for shorter commands:
+source .venv/bin/activate
+```
+
+Windows (PowerShell, with the Python launcher installed):
+
+```powershell
+py -3.14 --version
+py -3.14 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.lock
+.\.venv\Scripts\python.exe -m pip check
+.\.venv\Scripts\python.exe simulador.py
+```
+
+These commands use the environment's interpreter explicitly, so activation is
+not required and PowerShell execution policy does not need to be changed. The
+package set was verified on Linux/Python 3.14.4; other platforms require local
+verification. In an IDE, select `.venv/bin/python` on Linux/macOS or
+`.venv\Scripts\python.exe` on Windows. Do not regenerate the lock independently
+for each developer; dependency upgrades should be intentional and tested.
+
+The synthetic simulator needs no credentials. Installing packages alone does
+**not** configure the production API: supply its database, encryption and OIDC
+settings separately as described below. Never share those secrets via Git.
+
 Supply these through your deployment secret manager, **never commit their values**:
 
 | Variable | Meaning |
