@@ -1,5 +1,5 @@
 """
-riesgo_salud.py - Clasificacion de riesgo (BAJO / MEDIO / ALTO) para monitoreo
+parametros.py - Clasificacion de riesgo (BAJO / MEDIO / ALTO) para monitoreo
 de salud de astronautas.
 
 Capas:
@@ -8,6 +8,7 @@ Capas:
      corporal y ciclo menstrual.
   3. Alertas de ambiente (CO2 de cabina).
 Nivel final = el MAS ALTO de las tres capas.
+El cribado complementario se informa por separado y no diagnostica enfermedades.
 
 IMPORTANTE: NEWS2 es del Royal College of Physicians/NHS (no de NASA) y no esta
 validado en vuelo. Todo lo marcado [CALIBRAR] es una hipotesis de diseno, no un
@@ -18,6 +19,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import IntEnum
 from typing import Optional
+
+from enfermedades_espaciales import (
+    CondicionEvaluada, DatosComplementarios, evaluar_condiciones,
+)
 
 INF = float("inf")
 
@@ -77,6 +82,7 @@ class Resultado:
     niveles_capas: dict
     alertas: list = field(default_factory=list)
     notas: list = field(default_factory=list)
+    condiciones: list[CondicionEvaluada] = field(default_factory=list)
 
 
 # ----------------------------------------------------------------------------
@@ -229,11 +235,14 @@ def _nivel_co2(co2: Optional[float]):
 # Funcion principal
 # ----------------------------------------------------------------------------
 def evaluar(perfil: Perfil, signos: Signos, ambiente: Ambiente,
-            base: Optional[LineaBase] = None,
-            base_por_fase: Optional[dict] = None) -> Resultado:
+             base: Optional[LineaBase] = None,
+             base_por_fase: Optional[dict] = None,
+             *, complementarios: Optional[DatosComplementarios] = None) -> Resultado:
     """base: linea base personal preflight.
     base_por_fase: opcional {"lutea": LineaBase, ...}; si existe para la fase actual,
-    reemplaza a `base` y evita los ajustes genericos de ciclo."""
+    reemplaza a `base` y evita los ajustes genericos de ciclo.
+    complementarios: evidencia opcional para cribado, separado del nivel agudo.
+    Sin datos, las condiciones complementarias quedan no evaluables."""
     total, desglose = news2(signos)
     n_news2 = _nivel_news2(total, desglose)
 
@@ -260,7 +269,9 @@ def evaluar(perfil: Perfil, signos: Signos, ambiente: Ambiente,
         alertas.insert(0, f"NEWS2 total {total}: {desglose}")
 
     capas = {"news2": n_news2, "desviacion": n_desv, "ambiente": n_co2}
-    return Resultado(max(capas.values()), total, desglose, capas, alertas, notas)
+    condiciones = evaluar_condiciones(
+        complementarios if complementarios is not None else DatosComplementarios())
+    return Resultado(max(capas.values()), total, desglose, capas, alertas, notas, condiciones)
 
 
 # ----------------------------------------------------------------------------
