@@ -1,0 +1,7 @@
+config.json
+config.example.json
+tests
+scripts
+node_modules
+ASTRA_*.html
+Fintrax Código Error.html

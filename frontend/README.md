@@ -52,6 +52,56 @@ rango* y *No disponible*.
 de cada etapa. Los datos viven en memoria durante la visita; el botón de descarga
 guarda las dos etapas en `FINTRAX_registro_premision.json`.
 
+## App instalable y sin conexión (PWA)
+
+Fintrax es una PWA: `manifest.webmanifest` la hace instalable y `sw.js` guarda
+todos sus archivos la primera vez que se abre desde el servidor (o https). A
+partir de ahí abre y funciona sin red: formulario, evaluación local, «Qué hacer»
+y comparativa. Sin enlace, el centro médico muestra **SIN ENLACE** y ofrece
+**Reintentar**.
+
+- **Instalar:** en Chrome, Edge o Chromium, botón de instalar de la barra de
+  direcciones; en Android, «Añadir a pantalla de inicio». Firefox de escritorio
+  usa la caché sin conexión pero no instala la app.
+- **Actualizar:** la app responde desde la caché y descarga los cambios en
+  segundo plano; se ven en la siguiente apertura. Para forzar una recarga completa
+  se cambia `VERSION` en `sw.js`.
+- **Al añadir o quitar archivos** de `src/` o `assets/` hay que actualizar
+  `PRECACHE` en `sw.js`; `tests/pwa.test.js` falla si falta alguno.
+
+## Desplegar en Vercel
+
+El frontend es estático: Vercel lo sirve sin compilar. `vercel.json` fija
+`framework: null` (preset «Other») y las cabeceras; `.vercelignore` deja fuera
+`config.json` (lleva la clave del equipo), las pruebas, los scripts y los HTML de
+referencia: se publican unos 680 KB.
+
+1. En Vercel, **Add New → Project** e importa el repositorio de GitHub.
+2. **Root Directory**: `frontend`. **Framework Preset**: Other. Sin Build
+   Command ni Output Directory. **Production Branch**: `main`.
+3. Deploy. Alternativa por terminal: `cd frontend && npx vercel` (vista previa)
+   y `npx vercel --prod`.
+
+Cabeceras de `vercel.json`:
+
+- **CSP**: solo scripts propios (`script-src 'self'`); conexiones al propio sitio,
+  a cualquier backend `https:` y a `localhost`; sin incrustación en otros sitios.
+  Los estilos en línea están permitidos porque el SVG del logo y el avatar los usan.
+- `sw.js` y `config.json` con `max-age=0`: una versión nueva llega sin quedar
+  retenida en el CDN.
+
+**Backend.** No se despliega en Vercel tal como está: usa SQLite en un archivo y
+una tarea periódica, y las funciones de Vercel no tienen disco persistente ni
+procesos permanentes. Opciones: un servicio con proceso y disco (Render, Railway,
+Fly.io) o PostgreSQL gestionado (`MONITOREO_DB=postgresql+psycopg://…`; el backend
+ya incluye `psycopg`). Debe servirse por **https** y añadir el dominio de Vercel a
+`MONITOREO_CORS_ORIGINS` (p. ej. `https://fintrax.vercel.app`).
+
+Sin `config.json`, la versión publicada conecta desde el diálogo (pulsando el
+indicador). Una página publicada que conecte con un backend en `localhost` queda
+sujeta a la protección de red local del navegador, que puede pedir permiso o
+bloquearla: para demostraciones públicas, usa un backend https.
+
 ## Centro médico (backend)
 
 La conexión es opcional: sin ella la evaluación es local. Arranca el backend

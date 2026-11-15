@@ -44,6 +44,11 @@ def _activar_fk(conexion, _registro) -> None:
 
 def crear_engine(url: str) -> Engine:
     """Crea un engine; en SQLite comparte memoria y activa claves foráneas."""
+    # Los proveedores (Neon, Render, Railway) dan postgres:// o postgresql:// sin
+    # driver; SQLAlchemy usaría psycopg2, que no se instala: se fuerza psycopg 3.
+    for prefijo in ("postgresql://", "postgres://"):
+        if url.startswith(prefijo):
+            url = "postgresql+psycopg://" + url[len(prefijo):]
     opciones: dict[str, Any] = {}
     if url.startswith("sqlite"):
         opciones["connect_args"] = {"check_same_thread": False}

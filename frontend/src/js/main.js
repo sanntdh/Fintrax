@@ -164,3 +164,9 @@ initIntro({
     enfocar($('#fintrax-form-title'));
   }
 });
+
+// PWA: guarda la app para abrirla sin conexión. Solo en contexto seguro
+// (https o localhost); un fallo de registro no afecta al uso en línea.
+if ('serviceWorker' in navigator && window.isSecureContext) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}

@@ -412,3 +412,21 @@ def test_astronauta_no_resuelve_y_medico_si(cliente, semilla):
     ana = semilla["astro_ana"]
     assert cliente.get(f"/astro/{ana}/resolver", headers={"X-API-Key": "k-ana"}).status_code == 403
     assert cliente.get(f"/astro/{ana}/resolver", headers={"X-API-Key": "k-medico"}).status_code == 200
+
+
+@pytest.mark.parametrize("url", [
+    "postgresql://fintrax:clave@db.ejemplo.com/fintrax?sslmode=require",
+    "postgres://fintrax:clave@db.ejemplo.com/fintrax",
+])
+def test_url_postgres_de_proveedor_usa_psycopg(url):
+    # Neon, Render o Railway dan la URL sin driver; el backend solo instala psycopg 3.
+    from app.db import crear_engine
+    motor = crear_engine(url)
+    assert motor.dialect.driver == "psycopg"
+    assert motor.url.query.get("sslmode") == ("require" if "sslmode" in url else None)
+
+
+def test_url_con_driver_o_sqlite_no_cambia():
+    from app.db import crear_engine
+    assert crear_engine("postgresql+psycopg://u:c@h/db").dialect.driver == "psycopg"
+    assert crear_engine("sqlite:///:memory:").dialect.name == "sqlite"

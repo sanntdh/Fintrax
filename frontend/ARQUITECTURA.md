@@ -81,6 +81,7 @@ degrada ni mejora el resultado.
 | `main.js` | Compone todo, crea los avatares, controla la secuencia, ejecuta el análisis actual y la exportación. |
 | `intro.js`, `fintrax-background.js` | Reproducen el SVG y el fondo originales de FINTRAX; liberan animaciones, temporizadores y listeners al terminar. |
 | `api.js` | Cliente HTTP del backend (clave en `sessionStorage`) y traducción perfil/lecturas/evaluación. |
+| `sw.js` (raíz) | Service worker PWA: precarga de toda la app, caché con actualización en segundo plano y `config.json` primero de la red. |
 | `centro.js` | Conexión opcional con el centro médico: diálogo, envío de lecturas y franja de resultados. |
 | `form.js` | Genera las secciones desde `metrics.js`, las muestra como pasos (un bloque por pantalla, `irAPaso`), restaura el borrador de cada etapa, valida y envía. |
 | `validation.js` | Valida perfil, cada medición, metadatos, confirmaciones de escalas y respuesta de molestias; calcula el progreso. |
