@@ -21,21 +21,25 @@ const HOTSPOTS = [
   { zone: 'extremidades', cx: 270, cy: 655, wave: 22, dot: 13, label: 'Zona Brazos' }
 ];
 
-function crearImagen(clase, sexo) {
-  const src = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-  const picture = el('picture', { class: `fintrax-avatar__img ${clase}` });
-  picture.append(
-    el('source', { srcset: `${src}.webp`, type: 'image/webp' }),
-    el('img', {
-      src: `${src}.png`,
-      alt: '',
-      width: 941,
-      height: 1672,
-      decoding: 'async'
-    })
-  );
+/**
+ * Imagen del holograma para un sexo. Solo WebP: lo soportan todos los
+ * navegadores actuales y pesa ~40 KB frente a ~1,2 MB del PNG original.
+ * @param {string} sexo 'Femenino' | 'Masculino'
+ * @param {string} clases clases del contenedor
+ */
+export function imagenAvatar(sexo, clases) {
+  const picture = el('picture', { class: clases });
+  picture.append(el('img', {
+    src: sexo === 'Femenino' ? 'assets/avatar-female.webp' : 'assets/avatar-male.webp',
+    alt: '',
+    width: 941,
+    height: 1672,
+    decoding: 'async'
+  }));
   return picture;
 }
+
+const crearImagen = (clase, sexo) => imagenAvatar(sexo, `fintrax-avatar__img ${clase}`);
 
 function crearHotspots(onZoneSelect) {
   const groups = HOTSPOTS.map((hot) => {

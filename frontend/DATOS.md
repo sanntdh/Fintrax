@@ -35,7 +35,6 @@ peso/estatura utiliza los datos personales.
 | Presión diastólica | `pa_diastolica` | número (mmHg) | sí |
 | Electrocardiograma | `ecg_estado` | selección | sí |
 | Saturación de oxígeno | `spo2` | número (%) | sí |
-| Observaciones del ECG | `ecg_informe` | texto | no |
 
 ### 02 · Óseo y muscular
 
@@ -54,8 +53,8 @@ peso/estatura utiliza los datos personales.
 | Glóbulos blancos | `leucocitos` | número (/µL) | sí |
 | Cortisol | `cortisol` | número (µg/dL) | sí |
 | Momento de toma | `hora_cortisol` | selección | no |
-| Marcadores inmunológicos | `marcadores_inmunes` | texto | sí |
-| Hormonas de estrés | `hormonas_estres` | texto | sí |
+| Marcadores inmunológicos | `marcadores_inmunes` | opción: Dentro de rango / Fuera de rango / No disponible | sí |
+| Hormonas de estrés | `hormonas_estres` | opción: Dentro de rango / Fuera de rango / No disponible | sí |
 
 Los dos campos de texto cuentan como «completados» cuando tienen contenido; el
 motor no les asigna puntos.
@@ -188,17 +187,17 @@ El motor devuelve además `flags` (`perfil-incompleto`, `sin-mediciones`,
 `sin-sintomas`, `pendientes`, `imc-alto`, `imc-bajo`, `edad-riesgo`,
 `psico-grave`) para diagnóstico interno y futuras vistas.
 
-## 6. Telemetría
+## 6. Comparativa habitual / actual
 
-Cuatro series: frecuencia cardíaca, saturación, presión sistólica y temperatura.
+Seis indicadores: frecuencia cardíaca, presión sistólica, SpO₂, frecuencia
+respiratoria, temperatura y glóbulos blancos. Gráficas estáticas: Fintrax no
+monitoriza de forma continua, así que no hay series en el tiempo.
 
-- Se dibujan solo si la medición existe (`hasData`); si no, la tarjeta queda
-  vacía con el texto «Sin datos disponibles».
-- La temperatura **nunca** tiene datos: el formulario no la registra. Se conserva
-  la tarjeta para mantener la composición de cuatro paneles.
-- Las bandas de normalidad usan los mismos umbrales de advertencia.
-- La columna se rotula «TELEMETRÍA SIMULADA · ÚLTIMOS 60 S» para no confundir la
-  variación visual con una medición en vivo.
+- **Anomalía**: valor actual fuera de la franja normal, o cambio respecto a lo
+  habitual igual o mayor que el umbral de aviso de desviación del backend
+  (FC y PAS 15, FR 4, temperatura 0,8 °C, SpO₂ 3).
+- Franjas: los umbrales de `severity.js`; FR y temperatura, las de NEWS2.
+- Sin medición actual no hay estado ni anomalía: no se inventan valores.
 
 ## 7. Exportación JSON
 

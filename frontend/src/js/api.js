@@ -402,6 +402,19 @@ export function fuenteDeRegistro(values = {}, perfil = {}) {
   };
 }
 
+/**
+ * Bandera `evaluacion_inmune_anormal` a partir de los resultados de
+ * laboratorio: `true` si alguno está fuera de rango, `false` si ambos están
+ * dentro y `null` si falta alguno (no se afirma lo que no se sabe).
+ * @param {Record<string, string>} values
+ */
+export function inmuneDeRegistro(values = {}) {
+  const resultados = [values.marcadores_inmunes, values.hormonas_estres];
+  if (resultados.includes('Fuera de rango')) return true;
+  if (resultados.every((valor) => valor === 'Dentro de rango')) return false;
+  return null;
+}
+
 const ETIQUETAS_NIVEL = ['BAJO', 'MEDIO', 'ALTO'];
 
 /** Estados de condición que piden actuar; el resto no se muestra. */

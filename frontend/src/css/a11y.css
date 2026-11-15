@@ -41,9 +41,7 @@
 /* Contraste: los textos auxiliares suben de luminosidad respecto al prototipo. */
 #fintrax-app .fintrax-helper,
 #fintrax-app .fintrax-hint,
-#fintrax-app .fintrax-range-ends,
-#fintrax-app .fintrax-chart__source,
-#fintrax-app .fintrax-charts-note {
+#fintrax-app .fintrax-range-ends {
   color: var(--mut);
 }
 
@@ -75,7 +73,8 @@
 
   #fintrax-app .fintrax-organ,
   #fintrax-app .fintrax-system,
-  #fintrax-app .fintrax-chart,
+  #fintrax-app .fintrax-comp,
+  #fintrax-app .fintrax-accion,
   #fintrax-app .fintrax-sym-card {
     border: 1px solid CanvasText;
   }

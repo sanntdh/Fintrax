@@ -11,11 +11,11 @@ function registroCompleto() {
     profile: { sexo: 'Femenino', nombre: 'Ana Ríos', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'O+' },
     values: {
       fc_reposo: '68', pa_sistolica: '120', pa_diastolica: '80',
-      ecg_estado: 'Sin hallazgos reportados', spo2: '98', fr: '14', temp: '36.6', ecg_informe: 'Ritmo sinusal',
+      ecg_estado: 'Sin hallazgos reportados', spo2: '98', fr: '14', temp: '36.6',
       densidad_osea: '1.120', region_dxa: 'Columna lumbar', masa_muscular: '31.5',
       fuerza_muscular: '42', metodo_fuerza: 'Prensión manual (dinamómetro)',
       leucocitos: '6500', cortisol: '12', hora_cortisol: 'Mañana',
-      marcadores_inmunes: 'Informe de referencia', hormonas_estres: 'Sin otros hallazgos',
+      marcadores_inmunes: 'Dentro de rango', hormonas_estres: 'Dentro de rango',
       estres: '2', estado_animo: '8', ansiedad: '2', sueno_horas: '7.5', sueno_calidad: '8',
       memoria: '8', atencion: '8', concentracion: '8', equilibrio: 'Sin dificultades percibidas',
       coordinacion: 'Sin dificultades percibidas', reaccion_ms: '245'
@@ -35,7 +35,7 @@ function rellenar(record) {
   actions.setOtherText(record.otherText);
 }
 
-test('cada campo, incluidos los auxiliares, es obligatorio', () => {
+test('cada campo que no es de laboratorio, incluidos los auxiliares, es obligatorio', () => {
   assert.deepEqual(erroresRegistro(registroCompleto()), {});
   for (const field of PROFILE_FIELDS) {
     const record = registroCompleto();
@@ -43,7 +43,7 @@ test('cada campo, incluidos los auxiliares, es obligatorio', () => {
     assert.ok(erroresRegistro(record)[field.id], `${field.id} no se exige`);
     assert.ok(progresoRegistro(record).porcentaje < 100);
   }
-  for (const id of FIELD_IDS) {
+  for (const id of FIELD_IDS.filter((campo) => !LABORATORIO.includes(campo))) {
     const record = registroCompleto();
     record.values[id] = '';
     assert.ok(erroresRegistro(record)[id], `${id} no se exige`);
@@ -75,14 +75,13 @@ test('una escala exige confirmación explícita, incluso si se elige cero o cinc
   assert.equal(progresoRegistro(record).porcentaje, 100);
 });
 
-test('el segundo registro exige estado de molestias y observaciones', () => {
+test('el segundo registro exige estado de molestias; las observaciones son opcionales', () => {
   const record = registroCompleto();
   record.wellBeing = false;
   record.otherText = ' ';
-  assert.deepEqual(Object.keys(erroresRegistro(record, 'current')), ['symptoms', 'otherText']);
+  assert.deepEqual(Object.keys(erroresRegistro(record, 'current')), ['symptoms']);
   assert.deepEqual(erroresRegistro(record, 'baseline'), {});
   record.symptoms.add('cabeza|Confusión');
-  record.otherText = 'Observación actual';
   assert.deepEqual(erroresRegistro(record, 'current'), {});
   record.wellBeing = true;
   assert.ok(erroresRegistro(record, 'current').symptoms);
@@ -152,9 +151,25 @@ test('recorrido completo: orden, aislamiento, edición, análisis actual y expor
   assert.equal(state.step, 'current');
   assert.equal(state.values.fc_reposo, '145');
   assert.equal(state.result, null);
-  actions.setValue('ecg_informe', '');
+  actions.setValue('spo2', '');
   assert.equal(actions.comenzarAnalisis(result), false);
   actions.terminarIntro();
   actions.terminarAnalisis();
   assert.equal(state.step, 'current');
+});
+
+const LABORATORIO = ['densidad_osea', 'region_dxa', 'leucocitos', 'cortisol', 'hora_cortisol', 'marcadores_inmunes', 'hormonas_estres'];
+
+test('los datos de laboratorio son opcionales y no frenan el progreso', () => {
+  const record = registroCompleto();
+  for (const id of LABORATORIO) delete record.values[id];
+  assert.deepEqual(erroresRegistro(record), {});
+  assert.equal(progresoRegistro(record).porcentaje, 100);
+});
+
+test('un dato de laboratorio escrito mal sigue siendo un error', () => {
+  const record = registroCompleto();
+  record.values.leucocitos = 'abc';
+  assert.ok(erroresRegistro(record).leucocitos);
+  assert.ok(progresoRegistro(record).porcentaje < 100);
 });

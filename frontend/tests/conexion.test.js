@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { perfilParaBackend, fuenteDeRegistro, resumirEvaluacion, lecturaMision } from '../src/js/api.js';
+import { perfilParaBackend, fuenteDeRegistro, resumirEvaluacion, lecturaMision, inmuneDeRegistro, mapearComplementarios } from '../src/js/api.js';
 import { FORM_FIELDS, COUNTED_IDS } from '../src/data/metrics.js';
 import { PROFILE_FIELDS } from '../src/js/validation.js';
 
@@ -78,4 +78,25 @@ test('el perfil admite solo lo que el backend acepta', () => {
   assert.deepEqual([porId.edad.min, porId.edad.max], [18, 80]);
   assert.deepEqual([porId.estatura.min, porId.estatura.max], [1.2, 2.2]);
   assert.deepEqual([porId.peso.min, porId.peso.max], [30, 200]);
+});
+
+test('ningún campo obligatorio pide texto libre', () => {
+  assert.deepEqual(FORM_FIELDS.filter((campo) => campo.kind === 'textarea').map((campo) => campo.id), []);
+});
+
+test('marcadores y hormonas se responden con tres opciones', () => {
+  const porId = Object.fromEntries(FORM_FIELDS.map((campo) => [campo.id, campo]));
+  for (const id of ['marcadores_inmunes', 'hormonas_estres']) {
+    assert.equal(porId[id].kind, 'select');
+    assert.deepEqual(porId[id].options, ['Dentro de rango', 'Fuera de rango', 'No disponible']);
+  }
+});
+
+test('un resultado inmunitario fuera de rango llega al backend como evaluación anormal', () => {
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Fuera de rango', hormonas_estres: 'Dentro de rango' }), true);
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Dentro de rango', hormonas_estres: 'Dentro de rango' }), false);
+  // Sin análisis disponible no se afirma nada: el backend lo trata como desconocido.
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'No disponible', hormonas_estres: 'Dentro de rango' }), null);
+  const complementarios = mapearComplementarios({ explicitos: { evaluacion_inmune_anormal: true } });
+  assert.equal(complementarios.evaluacion_inmune_anormal, true);
 });

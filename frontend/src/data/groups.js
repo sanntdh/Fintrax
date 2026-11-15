@@ -16,8 +16,9 @@ export const REPORT_GROUPS = [
       { label: 'Frecuencia cardíaca en reposo', id: 'fc_reposo', unit: 'bpm' },
       { label: 'Presión arterial', id: 'pa_sistolica', format: 'pressure', unit: 'mmHg' },
       { label: 'Electrocardiograma (ECG)', id: 'ecg_estado' },
-      { label: 'Observaciones del ECG', id: 'ecg_informe' },
-      { label: 'Saturación de oxígeno (SpO₂)', id: 'spo2', unit: '%' }
+      { label: 'Saturación de oxígeno (SpO₂)', id: 'spo2', unit: '%' },
+      { label: 'Frecuencia respiratoria', id: 'fr', unit: 'rpm' },
+      { label: 'Temperatura corporal', id: 'temp', unit: '°C' }
     ]
   },
   {

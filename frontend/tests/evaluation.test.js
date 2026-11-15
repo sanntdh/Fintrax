@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { evaluate, configurarSeries, isFilled, isPending } from '../src/js/evaluation.js';
+import { evaluate, isFilled, isPending } from '../src/js/evaluation.js';
 
 const perfil = (extra = {}) => ({ sexo: 'Masculino', edad: '35', peso: '78', estatura: '1.80', ...extra });
 
@@ -79,25 +79,8 @@ test('una zona sin mediciones ni síntomas queda sin datos', () => {
   assert.equal(r.zones.estomago.st, 'na');
 });
 
-test('las series nunca inventan datos cuando falta la medición', () => {
-  const r = evaluate({ profile: perfil() });
-  const series = configurarSeries(r);
-  assert.equal(series.length, 4);
-  assert.equal(series.find((s) => s.id === 'fc').hasData, false);
-  assert.equal(series.find((s) => s.id === 'temp').hasData, false, 'La temperatura no se registra');
-  for (const serie of series) {
-    assert.ok(serie.base >= serie.lo && serie.base <= serie.hi, `Base fuera de rango en ${serie.id}`);
-  }
-});
-
-test('las series usan la medición real y la marcan como tal', () => {
-  const r = evaluate({
-    profile: perfil(),
-    values: { fc_reposo: '70', pa_sistolica: '120', pa_diastolica: '80', spo2: '98' }
-  });
-  const series = configurarSeries(r);
-  assert.equal(series.find((s) => s.id === 'fc').hasData, true);
-  assert.equal(series.find((s) => s.id === 'fc').base, 70);
-  assert.equal(series.find((s) => s.id === 'spo2').base, 98);
-  assert.equal(series.find((s) => s.id === 'pa').base, 120);
+test('un análisis inmunitario fuera de rango marca el sistema inmunológico para revisar', () => {
+  const values = { marcadores_inmunes: 'Fuera de rango', hormonas_estres: 'Dentro de rango' };
+  assert.notEqual(evaluate({ profile: perfil(), values }).systems.inmune.st, 'ok');
+  assert.ok(evaluate({ profile: perfil(), values }).systems.inmune.notes.some((nota) => /fuera de rango/i.test(nota)));
 });

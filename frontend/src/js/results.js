@@ -17,8 +17,8 @@ import { ESTADOS } from '../data/severity.js';
 import { ORGANOS, ORGAN_ORDER } from '../data/organs.js';
 import { evaluateOrgans, peorOrgano, zonasConMolestias } from './organs.js';
 import { createOrganAvatar } from './organ-avatar.js';
-import { createCharts } from './charts.js';
-import { configurarSeries } from './evaluation.js';
+import { createComparativa } from './comparativa.js';
+import { createAcciones } from './acciones.js';
 import { actions } from './state.js';
 import { beep } from './audio.js';
 import { construirRegistro } from './export.js';
@@ -76,7 +76,6 @@ export function initResults({ onEdit, onExport }) {
   const rielDer = $('[data-organ-rail="right"]');
   const ficha = $('[data-organ-card]');
   const hostAvatar = $('[data-organ-avatar]');
-  const chartsHost = $('[data-charts]');
   const registro = $('[data-record]');
 
   const organAvatar = createOrganAvatar({
@@ -87,7 +86,8 @@ export function initResults({ onEdit, onExport }) {
     hostAvatar.append(organAvatar.root);
   }
 
-  const charts = createCharts(chartsHost);
+  const comparativa = createComparativa($('[data-comparativa]'));
+  const acciones = createAcciones($('[data-acciones]'));
   let seleccion = '';
 
   /* --- Selección -------------------------------------------------------- */
@@ -260,7 +260,6 @@ export function initResults({ onEdit, onExport }) {
     for (const panel of paneles) {
       panel.hidden = panel.dataset.tabPanel !== nombre;
     }
-    if (nombre === 'telemetry') charts.redraw();
   }
 
   for (const tab of tabs) {
@@ -340,7 +339,8 @@ export function initResults({ onEdit, onExport }) {
     organAvatar.setOrgans(organos, seleccionado);
     organAvatar.setGlow(overall);
 
-    charts.update(configurarSeries(result));
+    acciones.update({ symptoms: state.symptoms, systems: result.systems });
+    comparativa.update(state.records?.baseline?.values ?? {}, state.values);
   }
 
   // Delegación: un solo manejador para todas las pastillas del riel.
@@ -354,13 +354,10 @@ export function initResults({ onEdit, onExport }) {
   $('[data-export]')?.addEventListener('click', () => onExport?.());
   $('[data-back]')?.addEventListener('click', () => onEdit?.());
 
-  activarTab('telemetry');
+  activarTab('acciones');
 
   return {
     render,
-    selectOrgan: (key) => seleccionarOrgano(key),
-    destroy() {
-      charts.destroy();
-    }
+    selectOrgan: (key) => seleccionarOrgano(key)
   };
 }
