@@ -1,0 +1,22 @@
+version: "1.0.0"
+desviaciones:
+  fc: [15, 30]
+  pas: [15, 30]
+  fr: [4, 8]
+  temp: [0.8, 1.5]
+  spo2: [3, 5]
+offset_fc_regreso: 6
+offset_temp_lutea: 0.4
+mult_pas_mujer: 0.8
+mult_esfuerzo: 1.5
+mult_fc_lutea: 1.2
+metabolismo_min: 0.8
+metabolismo_max: 1.25
+# Politicas de ingenieria provisionales; requieren calibracion clinica.
+min_muestras: 5
+mad_corte: 3.5
+lecturas_consecutivas: 3
+ausencia_horas: 6
+separacion_max_horas: 1
+dias_menstruacion: 5
+dias_lutea: 14
