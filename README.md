@@ -111,6 +111,8 @@ Todas las pruebas Python viven en `tests/` y se descubren con `pytest.ini`;
 las de PostgreSQL se omiten sin una instancia desechable configurada explícitamente.
 Los temporales usan la ubicación del sistema, no una carpeta propia del equipo.
 Las salidas iniciales/finales de esta entrega están en [docs/PRUEBAS.md](docs/PRUEBAS.md).
+El historial explicado desde el inicio de la sesión está en
+[docs/REGISTRO_CAMBIOS_SESION.md](docs/REGISTRO_CAMBIOS_SESION.md).
 
 El seed usa el flujo real: Ana tiene 28 preflight y misión lútea sin alertas; Luis
 muestra deterioro NEWS2/CO₂ y tendencia; Sofía tiene ciclo suprimido y más de 12 h
