@@ -1,4 +1,4 @@
-# ASTRA · Registro Biomédico Premisión
+# FINTRAX · Registro Biomédico Premisión
 
 Página única que integra la presentación FINTRAX, el registro biomédico habitual
 y la captura de datos actuales con su evaluación. Muestra un avatar holográfico,
@@ -28,11 +28,14 @@ python3 -m http.server 5173
    `Fintrax Código Error.html` (10 segundos). Con movimiento reducido, el emblema
    se muestra estático durante 1,2 segundos.
 2. **Etapa 1 · Datos habituales**, basada en `ASTRA_registro_etapa1.html`:
-   completar los 33 campos y pulsar **COMENZAR ANÁLISIS**.
+   completar los 35 campos y pulsar **COMENZAR ANÁLISIS**. El formulario se recorre
+   por pasos (perfil y una sección médica por pantalla) con **Anterior** y
+   **Siguiente**; la barra de pasos permite saltar a cualquiera.
 3. **Etapa 2 · Datos actuales**, basada en `ASTRA_version2_con_resultados.html`:
    nombre, sexo, edad y grupo sanguíneo aparecen precargados y editables; peso,
    estatura, mediciones, molestias y observaciones se registran para el momento
-   actual. Completar sus 35 campos y pulsar **ANALIZAR DATOS ACTUALES**.
+   actual. Las molestias tienen su propio paso, justo después del perfil; tocar el
+   holograma lleva a él. Completar sus 37 campos y pulsar **ANALIZAR DATOS ACTUALES**.
 4. Tras la transición se muestra la revisión: órganos, gráficas, síntomas y el
    detalle de ambos registros en la pestaña **Registro**.
 
@@ -43,7 +46,27 @@ las observaciones pueden indicar **Sin observaciones**.
 
 **Editar datos habituales** y **Editar datos actuales** conservan las respuestas
 de cada etapa. Los datos viven en memoria durante la visita; el botón de descarga
-guarda las dos etapas en `ASTRA_registro_premision.json`.
+guarda las dos etapas en `FINTRAX_registro_premision.json`.
+
+## Centro médico (backend)
+
+La conexión es opcional: sin ella la evaluación es local. Arranca el backend
+(rama `Backend`) permitiendo el origen del frontend:
+
+```bash
+MONITOREO_ADMIN_KEY=<clave> MONITOREO_CORS_ORIGINS=http://localhost:5173 uvicorn app.main:app --port 8000
+```
+
+En la barra superior, **CENTRO MÉDICO · SIN CONEXIÓN** abre el diálogo: URL del
+backend y clave de API. La URL se recuerda en `localStorage` (también admite
+`?api=`); la clave vive solo en `sessionStorage`. Si la clave no tiene ficha de
+astronauta, se crea con el perfil al analizar.
+
+Al pulsar **ANALIZAR DATOS ACTUALES** se envía el registro habitual como lectura
+`preflight` (una vez por astronauta y sesión) y el actual como lectura `vuelo`,
+con las molestias traducidas a `complementarios`. La franja **CENTRO MÉDICO
+FINTRAX** de los resultados muestra el nivel, el NEWS2 y, plegadas, las
+recomendaciones de los hallazgos que requieren evaluación.
 
 ## Pruebas
 
@@ -51,7 +74,8 @@ guarda las dos etapas en `ASTRA_registro_premision.json`.
 npm test           # node --test tests/
 ```
 
-39 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
+63 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
+cliente del backend y traducción de lecturas,
 validación completa, orden de las etapas, conservación de registros, exportación
 y contrato del HTML.
 
@@ -77,12 +101,12 @@ Documentación detallada:
 ## Características
 
 - Dos registros con formulario compartido (`src/data/metrics.js`): 5 secciones,
-  23 indicadores médicos y 4 campos auxiliares, además del perfil.
+  25 indicadores médicos y 4 campos auxiliares, además del perfil.
 - Avatar holográfico con zonas interactivas, conmutación por sexo y estados por color.
 - Evaluación por zona y por sistema, con estado explícito «SIN DATOS» cuando no hay medición.
 - Telemetría de cuatro series: solo se dibuja si existe una medición real.
 - Tarjetas de orientación por síntoma (posible causa, qué hacer, señal de alarma).
-- Exportación del registro a `ASTRA_registro_premision.json`.
+- Exportación del registro a `FINTRAX_registro_premision.json`.
 - Accesibilidad: foco visible, etiquetas, `aria-live`, navegación por teclado y
   respeto global de `prefers-reduced-motion`.
 

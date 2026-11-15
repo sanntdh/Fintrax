@@ -1,10 +1,10 @@
 /* ==========================================================================
-   ASTRA · Transición Etapa 1 → Etapa 2
+   FINTRAX · Transición Etapa 1 → Etapa 2
    Secuencia: contorno → relleno luminoso → órganos en orden.
    Duraciones: relleno 900 ms, 180 ms entre órganos, total 3,2 s.
    ========================================================================== */
 
-#astra-app .astra-transition {
+#fintrax-app .fintrax-transition {
   position: fixed;
   inset: 0;
   z-index: 70;
@@ -20,7 +20,7 @@
   overflow: hidden;
 }
 
-#astra-app .astra-transition__grid {
+#fintrax-app .fintrax-transition__grid {
   position: absolute;
   inset: 0;
   background-image:
@@ -33,7 +33,7 @@
 
 /* --- Escenario del cuerpo ------------------------------------------------ */
 
-#astra-app .astra-transition__stage {
+#fintrax-app .fintrax-transition__stage {
   position: relative;
   display: grid;
   place-items: center;
@@ -41,14 +41,14 @@
   min-width: 0;
 }
 
-#astra-app .astra-transition__figure-wrap {
+#fintrax-app .fintrax-transition__figure-wrap {
   position: relative;
   height: 100%;
   aspect-ratio: 941 / 1672;
   max-width: 100%;
 }
 
-#astra-app .astra-transition__figure-wrap::before {
+#fintrax-app .fintrax-transition__figure-wrap::before {
   position: absolute;
   inset: 8% 12%;
   border-radius: 50%;
@@ -59,7 +59,7 @@
 }
 
 /* Silueta: la misma imagen de la Etapa 1, tratada como holograma. */
-#astra-app .astra-transition__figure {
+#fintrax-app .fintrax-transition__figure {
   position: absolute;
   inset: 0;
   mix-blend-mode: screen;
@@ -67,39 +67,39 @@
   mask-image: radial-gradient(ellipse 70% 66% at 50% 50%, #000 62%, transparent 100%);
 }
 
-#astra-app .astra-transition__img {
+#fintrax-app .fintrax-transition__img {
   position: absolute;
   inset: 0;
   transition: opacity var(--dur-med) ease;
 }
 
-#astra-app .astra-transition__img img {
+#fintrax-app .fintrax-transition__img img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 
-#astra-app .astra-transition__img--f {
+#fintrax-app .fintrax-transition__img--f {
   opacity: 0;
 }
 
-#astra-app .astra-transition__stage[data-sex='Femenino'] .astra-transition__img--f {
+#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--f {
   opacity: 1;
 }
 
-#astra-app .astra-transition__stage[data-sex='Femenino'] .astra-transition__img--m {
+#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--m {
   opacity: 0;
 }
 
 /* Contorno tenue que después se rellena. */
-#astra-app .astra-transition__ghost {
+#fintrax-app .fintrax-transition__ghost {
   opacity: 0.26;
   filter: brightness(0.9) contrast(1.7) saturate(0.6);
 }
 
 /* Relleno luminoso: se revela de abajo arriba. */
-#astra-app .astra-transition__fill {
+#fintrax-app .fintrax-transition__fill {
   clip-path: inset(100% 0 0 0);
   /* El contraste alto lleva el fondo casi negro del PNG a negro puro: con
      `screen` solo se ve el cuerpo, sin el rectángulo de la imagen. */
@@ -107,11 +107,11 @@
   transition: clip-path var(--dur-scan) var(--ease-out);
 }
 
-#astra-app .astra-transition__fill.is-filled {
+#fintrax-app .fintrax-transition__fill.is-filled {
   clip-path: inset(0 0 0 0);
 }
 
-#astra-app .astra-transition__canvas {
+#fintrax-app .fintrax-transition__canvas {
   position: absolute;
   inset: 0;
   display: block;
@@ -121,17 +121,17 @@
   filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.28));
 }
 
-#astra-app .astra-transition__sweep {
+#fintrax-app .fintrax-transition__sweep {
   fill: var(--cy);
   opacity: 0;
   filter: drop-shadow(0 0 10px var(--cy));
 }
 
-#astra-app .astra-transition__stage.is-scanning .astra-transition__sweep {
-  animation: astra-sweep var(--dur-scan) var(--ease-out) forwards;
+#fintrax-app .fintrax-transition__stage.is-scanning .fintrax-transition__sweep {
+  animation: fintrax-sweep var(--dur-scan) var(--ease-out) forwards;
 }
 
-@keyframes astra-sweep {
+@keyframes fintrax-sweep {
   0% {
     transform: translateY(0);
     opacity: 0;
@@ -149,19 +149,19 @@
 }
 
 /* Órganos: aparecen en orden, con halo propio. */
-#astra-app .astra-transition__organ {
+#fintrax-app .fintrax-transition__organ {
   opacity: 0;
   transition:
     opacity 260ms var(--ease-out),
     filter 260ms var(--ease-out);
 }
 
-#astra-app .astra-transition__organ.is-on {
+#fintrax-app .fintrax-transition__organ.is-on {
   opacity: 1;
   filter: drop-shadow(0 0 14px var(--organ));
 }
 
-#astra-app .astra-transition__organ-shape {
+#fintrax-app .fintrax-transition__organ-shape {
   fill: color-mix(in srgb, var(--organ) 34%, transparent);
   stroke: var(--organ);
   stroke-width: 1.4;
@@ -169,7 +169,7 @@
   stroke-linejoin: round;
 }
 
-#astra-app .astra-transition__organ-halo {
+#fintrax-app .fintrax-transition__organ-halo {
   fill: var(--organ);
   opacity: 0.16;
   filter: blur(6px);
@@ -177,7 +177,7 @@
 
 /* --- HUD ----------------------------------------------------------------- */
 
-#astra-app .astra-transition__hud {
+#fintrax-app .fintrax-transition__hud {
   position: relative;
   z-index: 2;
   min-width: 0;
@@ -186,17 +186,17 @@
   border-radius: var(--r-lg);
   background: linear-gradient(180deg, rgba(4, 18, 42, 0.86), rgba(2, 9, 24, 0.92));
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
-  animation: astra-transition-hud var(--dur-med) var(--ease-out);
+  animation: fintrax-transition-hud var(--dur-med) var(--ease-out);
 }
 
-@keyframes astra-transition-hud {
+@keyframes fintrax-transition-hud {
   from {
     opacity: 0;
     transform: translateY(18px);
   }
 }
 
-#astra-app .astra-transition__kicker {
+#fintrax-app .fintrax-transition__kicker {
   margin: 0 0 var(--sp-2);
   color: var(--ok);
   font-family: var(--font-hud);
@@ -204,7 +204,7 @@
   letter-spacing: 4px;
 }
 
-#astra-app .astra-transition h2 {
+#fintrax-app .fintrax-transition h2 {
   margin: 0 0 var(--sp-2);
   color: var(--tx);
   font-family: var(--font-hud);
@@ -212,14 +212,14 @@
   letter-spacing: 1px;
 }
 
-#astra-app .astra-transition__sub {
+#fintrax-app .fintrax-transition__sub {
   margin: 0 0 var(--sp-5);
   color: var(--mut);
   font-size: var(--fs-lg);
   line-height: 1.45;
 }
 
-#astra-app .astra-transition__bar {
+#fintrax-app .fintrax-transition__bar {
   position: relative;
   height: 8px;
   overflow: hidden;
@@ -228,7 +228,7 @@
   background: rgba(0, 240, 255, 0.08);
 }
 
-#astra-app .astra-transition__bar i {
+#fintrax-app .fintrax-transition__bar i {
   display: block;
   width: var(--p, 0%);
   height: 100%;
@@ -238,7 +238,7 @@
   transition: width 120ms linear;
 }
 
-#astra-app .astra-transition__pct {
+#fintrax-app .fintrax-transition__pct {
   margin: var(--sp-2) 0 var(--sp-4);
   color: var(--cy);
   font-family: var(--font-hud);
@@ -247,7 +247,7 @@
   text-align: right;
 }
 
-#astra-app .astra-transition__log {
+#fintrax-app .fintrax-transition__log {
   min-height: 88px;
   margin: 0 0 var(--sp-4);
   padding: 0;
@@ -256,15 +256,15 @@
   list-style: none;
 }
 
-#astra-app .astra-transition__log li {
+#fintrax-app .fintrax-transition__log li {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
   padding: 2px 0;
-  animation: astra-log-in 240ms var(--ease-out);
+  animation: fintrax-log-in 240ms var(--ease-out);
 }
 
-#astra-app .astra-transition__log li::before {
+#fintrax-app .fintrax-transition__log li::before {
   width: 6px;
   height: 6px;
   flex: 0 0 6px;
@@ -274,14 +274,14 @@
   content: '';
 }
 
-@keyframes astra-log-in {
+@keyframes fintrax-log-in {
   from {
     opacity: 0;
     transform: translateX(-6px);
   }
 }
 
-#astra-app .astra-transition [data-skip-transition] {
+#fintrax-app .fintrax-transition [data-skip-transition] {
   width: 100%;
   margin: 0;
 }
@@ -289,25 +289,25 @@
 /* --- Responsive ---------------------------------------------------------- */
 
 @media (max-width: 860px) {
-  #astra-app .astra-transition {
+  #fintrax-app .fintrax-transition {
     grid-template-columns: minmax(0, 1fr);
     align-content: end;
     padding-bottom: clamp(18px, 4vh, 40px);
   }
 
-  #astra-app .astra-transition__stage {
+  #fintrax-app .fintrax-transition__stage {
     position: absolute;
     inset: 0;
     height: 100%;
     opacity: 0.4;
   }
 
-  #astra-app .astra-transition__hud {
+  #fintrax-app .fintrax-transition__hud {
     margin: 0 auto;
     width: min(100%, 480px);
   }
 
-  #astra-app .astra-transition__log {
+  #fintrax-app .fintrax-transition__log {
     min-height: 0;
     max-height: 66px;
     overflow: hidden;
@@ -315,14 +315,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #astra-app .astra-transition__fill,
-  #astra-app .astra-transition__organ {
+  #fintrax-app .fintrax-transition__fill,
+  #fintrax-app .fintrax-transition__organ {
     transition: none;
   }
 
-  #astra-app .astra-transition__sweep,
-  #astra-app .astra-transition__hud,
-  #astra-app .astra-transition__log li {
+  #fintrax-app .fintrax-transition__sweep,
+  #fintrax-app .fintrax-transition__hud,
+  #fintrax-app .fintrax-transition__log li {
     animation: none;
   }
 }

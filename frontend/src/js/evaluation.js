@@ -32,7 +32,7 @@ export const SISTEMA_A_ZONA = { cardio: 'pecho', osteo: 'extremidades', neuro: '
 
 /** Indicadores que alimentan cada sistema (mismo orden que el prototipo). */
 export const SISTEMA_CAMPOS = {
-  cardio: ['fc_reposo', 'pa_sistolica', 'pa_diastolica', 'ecg_estado', 'spo2'],
+  cardio: ['fc_reposo', 'pa_sistolica', 'pa_diastolica', 'ecg_estado', 'spo2', 'fr', 'temp'],
   osteo: ['densidad_osea', 'masa_muscular', 'fuerza_muscular'],
   inmune: ['leucocitos', 'cortisol', 'marcadores_inmunes', 'hormonas_estres'],
   psico: [
@@ -160,6 +160,7 @@ export function evaluate(input = {}) {
   const ps = num(values.pa_sistolica);
   const pd = num(values.pa_diastolica);
   const ox = num(values.spo2);
+  const temp = num(values.temp);
   const u = UMBRALES;
   if (fc !== null) {
     const points =
@@ -303,7 +304,7 @@ export function evaluate(input = {}) {
     imc,
     imcCategoria: categoriaImc(imc).label,
     edad,
-    base: { fc, ps, pd, ox },
+    base: { fc, ps, pd, ox, temp },
     counts: {
       symptoms: sintomas.length,
       filledMetrics: filledMetrics.length,
@@ -326,7 +327,7 @@ export function configurarSeries(result) {
   const pecho = result.zones.pecho?.score ?? 0;
   const digestivo = (result.zones.estomago?.score ?? 0) + (result.zones.cabeza?.score ?? 0);
   const imcPuntos = result.imc !== null && result.imc >= 30 ? 12 : 0;
-  const { fc, ps, pd, ox } = result.base;
+  const { fc, ps, pd, ox, temp } = result.base;
   return [
     {
       id: 'fc',
@@ -375,15 +376,15 @@ export function configurarSeries(result) {
       id: 'temp',
       name: 'TEMPERATURA CORPORAL',
       unit: '°C',
-      base: 36.6 + digestivo * 0.2,
+      base: temp ?? 36.6 + digestivo * 0.2,
       ripple: 0.06,
       lo: 35,
       hi: 40,
       decimals: 1,
       ok: [36.1, 37.5],
       wn: [35.5, 38.5],
-      hasData: false,
-      source: 'La temperatura no se registra en este formulario'
+      hasData: temp !== null,
+      source: temp !== null ? 'Medición registrada' : 'Sin medición de temperatura'
     }
   ];
 }

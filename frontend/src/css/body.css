@@ -1,11 +1,11 @@
 /* ==========================================================================
-   ASTRA · Etapa 2 · Mapa funcional por órganos
+   FINTRAX · Etapa 2 · Mapa funcional por órganos
    Avatar protagonista + rieles laterales + ficha + pestañas de detalle.
    ========================================================================== */
 
 /* --- Cabecera ------------------------------------------------------------ */
 
-#astra-app .astra-step {
+#fintrax-app .fintrax-step {
   display: inline-block;
   margin-bottom: var(--sp-2);
   padding: 3px 10px;
@@ -18,13 +18,13 @@
   letter-spacing: 3px;
 }
 
-#astra-app .astra-step--alt {
+#fintrax-app .fintrax-step--alt {
   border-color: rgba(0, 245, 180, 0.45);
   background: rgba(0, 245, 180, 0.1);
   color: var(--ok);
 }
 
-#astra-app .astra-body__head {
+#fintrax-app .fintrax-body__head {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -33,7 +33,7 @@
   margin: var(--sp-5) 0 var(--sp-4);
 }
 
-#astra-app .astra-body__head h2 {
+#fintrax-app .fintrax-body__head h2 {
   margin: 0 0 var(--sp-1);
   color: var(--tx);
   font-family: var(--font-hud);
@@ -42,20 +42,20 @@
   text-shadow: 0 0 26px rgba(0, 240, 255, 0.3);
 }
 
-#astra-app .astra-body__head p {
+#fintrax-app .fintrax-body__head p {
   max-width: 56ch;
   margin: 0;
   color: var(--mut);
   font-size: var(--md, var(--fs-md));
 }
 
-#astra-app .astra-body__summary {
+#fintrax-app .fintrax-body__summary {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-2);
 }
 
-#astra-app .astra-body__metric {
+#fintrax-app .fintrax-body__metric {
   min-width: 96px;
   padding: 8px 14px;
   border: 1px solid rgba(29, 125, 184, 0.45);
@@ -63,7 +63,7 @@
   background: rgba(4, 18, 42, 0.72);
 }
 
-#astra-app .astra-body__metric span {
+#fintrax-app .fintrax-body__metric span {
   display: block;
   color: var(--mut-dim);
   font-family: var(--font-hud);
@@ -71,7 +71,7 @@
   letter-spacing: 1.5px;
 }
 
-#astra-app .astra-body__metric strong {
+#fintrax-app .fintrax-body__metric strong {
   display: block;
   color: var(--cy);
   font-family: var(--font-hud);
@@ -81,7 +81,7 @@
 
 /* --- Escenario ----------------------------------------------------------- */
 
-#astra-app .astra-body__stage {
+#fintrax-app .fintrax-body__stage {
   display: grid;
   grid-template-columns: minmax(190px, 1fr) minmax(0, 1.4fr) minmax(190px, 1fr);
   align-items: center;
@@ -89,7 +89,7 @@
   margin-bottom: var(--sp-5);
 }
 
-#astra-app .astra-body__core {
+#fintrax-app .fintrax-body__core {
   position: relative;
   display: grid;
   place-items: center;
@@ -103,7 +103,7 @@
   overflow: hidden;
 }
 
-#astra-app .astra-body__legend {
+#fintrax-app .fintrax-body__legend {
   position: absolute;
   bottom: 10px;
   left: 0;
@@ -117,35 +117,35 @@
   letter-spacing: 1px;
 }
 
-#astra-app .astra-body__legend span {
+#fintrax-app .fintrax-body__legend span {
   display: inline-flex;
   align-items: center;
   gap: 6px;
   color: var(--mut);
 }
 
-#astra-app .astra-body__legend i {
+#fintrax-app .fintrax-body__legend i {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--mut);
 }
 
-#astra-app .astra-body__legend [data-st='ok'] i {
+#fintrax-app .fintrax-body__legend [data-st='ok'] i {
   background: var(--ok);
 }
 
-#astra-app .astra-body__legend [data-st='warn'] i {
+#fintrax-app .fintrax-body__legend [data-st='warn'] i {
   background: var(--warn);
 }
 
-#astra-app .astra-body__legend [data-st='bad'] i {
+#fintrax-app .fintrax-body__legend [data-st='bad'] i {
   background: var(--alert);
 }
 
 /* --- Avatar de órganos --------------------------------------------------- */
 
-#astra-app .astra-organ-avatar {
+#fintrax-app .fintrax-organ-avatar {
   position: relative;
   /* Sin `isolation` ni `z-index`: ambos crean un contexto de apilado aislado.
      Al aislarlo, `mix-blend-mode: screen` no tiene fondo contra el que mezclar
@@ -163,14 +163,14 @@
 /* El raster trae un fondo casi negro: al subir el contraste se vuelve negro
    puro y `screen` lo deja pasar, así que no se ve el rectángulo de la imagen.
    La máscara solo suaviza los bordes laterales. */
-#astra-app .astra-organ-avatar .astra-avatar__img {
+#fintrax-app .fintrax-organ-avatar .fintrax-avatar__img {
   filter: brightness(1.06) contrast(1.75);
   mix-blend-mode: screen;
   -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0, #000 5%, #000 95%, transparent 100%);
 }
 
-#astra-app .astra-organ-avatar__layer {
+#fintrax-app .fintrax-organ-avatar__layer {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -180,11 +180,11 @@
 
 /* --- Líneas guía y etiquetas --------------------------------------------- */
 
-#astra-app .astra-organ-leaders {
+#fintrax-app .fintrax-organ-leaders {
   pointer-events: none;
 }
 
-#astra-app .astra-organ-leader__line {
+#fintrax-app .fintrax-organ-leader__line {
   fill: none;
   stroke: var(--organ);
   stroke-width: 1.2;
@@ -194,29 +194,29 @@
   transition: stroke-opacity var(--dur-fast) ease;
 }
 
-#astra-app .astra-organ-leader__dot {
+#fintrax-app .fintrax-organ-leader__dot {
   fill: var(--organ);
   fill-opacity: 0.55;
   transition: fill-opacity var(--dur-fast) ease;
 }
 
-#astra-app .astra-organ-leader[data-selected='true'] .astra-organ-leader__line {
+#fintrax-app .fintrax-organ-leader[data-selected='true'] .fintrax-organ-leader__line {
   stroke-opacity: 0.95;
   stroke-dasharray: none;
 }
 
-#astra-app .astra-organ-leader[data-selected='true'] .astra-organ-leader__dot {
+#fintrax-app .fintrax-organ-leader[data-selected='true'] .fintrax-organ-leader__dot {
   fill-opacity: 1;
 }
 
 /* Etiquetas HTML: se leen a 11 px, cosa imposible con `<text>` escalado. */
-#astra-app .astra-organ-tags {
+#fintrax-app .fintrax-organ-tags {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-#astra-app .astra-organ-tag {
+#fintrax-app .fintrax-organ-tag {
   position: absolute;
   z-index: 2;
   display: inline-flex;
@@ -244,58 +244,58 @@
     box-shadow var(--dur-fast) ease;
 }
 
-#astra-app .astra-organ-tag[data-anchor='start'] {
+#fintrax-app .fintrax-organ-tag[data-anchor='start'] {
   transform: translate(9px, -50%);
 }
 
 /* Marcador de estado redundante: la forma distingue el estado sin depender
    del color (● bien · ▲ revisar · ◆ atención · ○ sin datos). */
-#astra-app .astra-organ-tag::before {
+#fintrax-app .fintrax-organ-tag::before {
   color: var(--state, var(--mut));
   font-size: 8px;
   line-height: 1;
   content: '○';
 }
 
-#astra-app .astra-organ-tag[data-st='ok'] {
+#fintrax-app .fintrax-organ-tag[data-st='ok'] {
   --state: var(--ok);
 }
 
-#astra-app .astra-organ-tag[data-st='ok']::before {
+#fintrax-app .fintrax-organ-tag[data-st='ok']::before {
   content: '●';
 }
 
-#astra-app .astra-organ-tag[data-st='warn'] {
+#fintrax-app .fintrax-organ-tag[data-st='warn'] {
   --state: var(--warn);
 }
 
-#astra-app .astra-organ-tag[data-st='warn']::before {
+#fintrax-app .fintrax-organ-tag[data-st='warn']::before {
   content: '▲';
 }
 
-#astra-app .astra-organ-tag[data-st='bad'] {
+#fintrax-app .fintrax-organ-tag[data-st='bad'] {
   --state: var(--alert);
 }
 
-#astra-app .astra-organ-tag[data-st='bad']::before {
+#fintrax-app .fintrax-organ-tag[data-st='bad']::before {
   content: '◆';
 }
 
-#astra-app .astra-organ-tag[data-st='na'] {
+#fintrax-app .fintrax-organ-tag[data-st='na'] {
   --state: var(--mut);
   border-color: rgba(126, 166, 194, 0.3);
   color: var(--mut-dim);
 }
 
-#astra-app .astra-organ-tag:hover,
-#astra-app .astra-organ-tag:focus-visible {
+#fintrax-app .fintrax-organ-tag:hover,
+#fintrax-app .fintrax-organ-tag:focus-visible {
   border-color: var(--organ);
   color: #fff;
   outline: none;
   box-shadow: 0 0 18px color-mix(in srgb, var(--organ) 45%, transparent);
 }
 
-#astra-app .astra-organ-tag[data-selected='true'] {
+#fintrax-app .fintrax-organ-tag[data-selected='true'] {
   border-color: var(--organ);
   background: color-mix(in srgb, var(--organ) 22%, rgba(2, 9, 24, 0.9));
   color: #fff;
@@ -304,14 +304,14 @@
 
 /* --- Nodos --------------------------------------------------------------- */
 
-#astra-app .astra-organ-node {
+#fintrax-app .fintrax-organ-node {
   cursor: pointer;
   outline: none;
 }
 
 /* El trazo se mantiene en píxeles (`non-scaling-stroke`): el SVG se escala a
    ~0,31 px por unidad, así que un trazo de 1,8 unidades sería invisible. */
-#astra-app .astra-organ-node__shape {
+#fintrax-app .fintrax-organ-node__shape {
   fill: var(--organ);
   fill-opacity: 0.2;
   stroke: var(--organ);
@@ -325,7 +325,7 @@
 }
 
 /* Los intestinos son un tubo: aquí el grosor sí escala con el dibujo. */
-#astra-app .astra-organ-node[data-stroke='true'] .astra-organ-node__shape {
+#fintrax-app .fintrax-organ-node[data-stroke='true'] .fintrax-organ-node__shape {
   fill: none;
   stroke-width: 14;
   stroke-linecap: round;
@@ -333,7 +333,7 @@
   vector-effect: none;
 }
 
-#astra-app .astra-organ-node__detail {
+#fintrax-app .fintrax-organ-node__detail {
   fill: none;
   stroke: var(--organ);
   stroke-width: 1.1;
@@ -341,18 +341,18 @@
   vector-effect: non-scaling-stroke;
 }
 
-#astra-app .astra-organ-node__target {
+#fintrax-app .fintrax-organ-node__target {
   fill: transparent;
 }
 
-#astra-app .astra-organ-node__halo {
+#fintrax-app .fintrax-organ-node__halo {
   fill: var(--state, var(--cy));
   opacity: 0;
   filter: blur(9px);
   transition: opacity var(--dur-med) ease;
 }
 
-#astra-app .astra-organ-node__ring {
+#fintrax-app .fintrax-organ-node__ring {
   fill: none;
   stroke: var(--state, var(--cy));
   stroke-width: 2;
@@ -361,57 +361,57 @@
   transition: opacity var(--dur-fast) ease;
 }
 
-#astra-app .astra-organ-node[data-st='ok'] {
+#fintrax-app .fintrax-organ-node[data-st='ok'] {
   --state: var(--ok);
 }
 
-#astra-app .astra-organ-node[data-st='warn'] {
+#fintrax-app .fintrax-organ-node[data-st='warn'] {
   --state: var(--warn);
 }
 
-#astra-app .astra-organ-node[data-st='bad'] {
+#fintrax-app .fintrax-organ-node[data-st='bad'] {
   --state: var(--alert);
 }
 
-#astra-app .astra-organ-node[data-st='na'] {
+#fintrax-app .fintrax-organ-node[data-st='na'] {
   --state: var(--mut);
 }
 
-#astra-app .astra-organ-node[data-st='na'] .astra-organ-node__shape {
+#fintrax-app .fintrax-organ-node[data-st='na'] .fintrax-organ-node__shape {
   fill-opacity: 0.07;
   stroke-opacity: 0.45;
   stroke-dasharray: 4 4;
 }
 
-#astra-app .astra-organ-node[data-st='na'] .astra-organ-node__detail {
+#fintrax-app .fintrax-organ-node[data-st='na'] .fintrax-organ-node__detail {
   stroke-opacity: 0.22;
 }
 
-#astra-app .astra-organ-node:hover .astra-organ-node__shape,
-#astra-app .astra-organ-node:focus-visible .astra-organ-node__shape {
+#fintrax-app .fintrax-organ-node:hover .fintrax-organ-node__shape,
+#fintrax-app .fintrax-organ-node:focus-visible .fintrax-organ-node__shape {
   fill-opacity: 0.45;
   stroke-opacity: 1;
 }
 
-#astra-app .astra-organ-node[data-selected='true'] .astra-organ-node__shape {
+#fintrax-app .fintrax-organ-node[data-selected='true'] .fintrax-organ-node__shape {
   fill-opacity: 0.42;
   stroke-opacity: 1;
 }
 
-#astra-app .astra-organ-node[data-selected='true'] .astra-organ-node__halo {
+#fintrax-app .fintrax-organ-node[data-selected='true'] .fintrax-organ-node__halo {
   opacity: 0.32;
 }
 
-#astra-app .astra-organ-node[data-selected='true'] .astra-organ-node__ring {
+#fintrax-app .fintrax-organ-node[data-selected='true'] .fintrax-organ-node__ring {
   opacity: 0.9;
 }
 
-#astra-app .astra-organ-node[data-st='bad'] .astra-organ-node__halo {
+#fintrax-app .fintrax-organ-node[data-st='bad'] .fintrax-organ-node__halo {
   opacity: 0.3;
-  animation: astra-organ-alert 1.8s ease-in-out infinite;
+  animation: fintrax-organ-alert 1.8s ease-in-out infinite;
 }
 
-@keyframes astra-organ-alert {
+@keyframes fintrax-organ-alert {
   50% {
     opacity: 0.55;
   }
@@ -419,14 +419,14 @@
 
 /* --- Rieles -------------------------------------------------------------- */
 
-#astra-app .astra-body__rail {
+#fintrax-app .fintrax-body__rail {
   display: flex;
   flex-direction: column;
   gap: var(--sp-2);
   min-width: 0;
 }
 
-#astra-app .astra-organ-pill {
+#fintrax-app .fintrax-organ-pill {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
@@ -447,24 +447,24 @@
     transform var(--dur-fast) ease;
 }
 
-#astra-app .astra-organ-pill:hover {
+#fintrax-app .fintrax-organ-pill:hover {
   border-color: var(--organ);
   background: rgba(6, 30, 64, 0.9);
   transform: translateY(-1px);
 }
 
-#astra-app .astra-organ-pill:focus-visible {
+#fintrax-app .fintrax-organ-pill:focus-visible {
   outline: 2px solid var(--cy);
   outline-offset: 2px;
 }
 
-#astra-app .astra-organ-pill[aria-pressed='true'] {
+#fintrax-app .fintrax-organ-pill[aria-pressed='true'] {
   border-color: var(--organ);
   background: rgba(0, 240, 255, 0.1);
   box-shadow: 0 0 22px rgba(0, 240, 255, 0.16);
 }
 
-#astra-app .astra-organ-pill__dot {
+#fintrax-app .fintrax-organ-pill__dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
@@ -472,16 +472,16 @@
   box-shadow: 0 0 10px var(--organ);
 }
 
-#astra-app .astra-organ-pill[data-st='na'] .astra-organ-pill__dot {
+#fintrax-app .fintrax-organ-pill[data-st='na'] .fintrax-organ-pill__dot {
   background: var(--mut);
   box-shadow: none;
 }
 
-#astra-app .astra-organ-pill__body {
+#fintrax-app .fintrax-organ-pill__body {
   min-width: 0;
 }
 
-#astra-app .astra-organ-pill__body b {
+#fintrax-app .fintrax-organ-pill__body b {
   display: block;
   font-family: var(--font-hud);
   font-size: var(--fs-xs);
@@ -490,7 +490,7 @@
   text-transform: uppercase;
 }
 
-#astra-app .astra-organ-pill__summary {
+#fintrax-app .fintrax-organ-pill__summary {
   display: -webkit-box;
   overflow: hidden;
   color: var(--mut-dim);
@@ -500,14 +500,14 @@
   -webkit-line-clamp: 2;
 }
 
-#astra-app .astra-organ-pill .astra-pill {
+#fintrax-app .fintrax-organ-pill .fintrax-pill {
   font-size: var(--fs-2xs);
   white-space: nowrap;
 }
 
 /* --- Ficha del órgano --------------------------------------------------- */
 
-#astra-app .astra-organ-card {
+#fintrax-app .fintrax-organ-card {
   position: relative;
   display: block;
   padding: clamp(16px, 2.4vw, 26px) clamp(16px, 2.6vw, 30px);
@@ -519,17 +519,17 @@
     linear-gradient(180deg, rgba(4, 18, 42, 0.9), rgba(3, 11, 27, 0.94));
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
   outline: none;
-  animation: astra-card-in var(--dur-med) var(--ease-out);
+  animation: fintrax-card-in var(--dur-med) var(--ease-out);
 }
 
-@keyframes astra-card-in {
+@keyframes fintrax-card-in {
   from {
     opacity: 0;
     transform: translateY(10px);
   }
 }
 
-#astra-app .astra-organ-card__head {
+#fintrax-app .fintrax-organ-card__head {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -537,14 +537,14 @@
   margin-bottom: var(--sp-3);
 }
 
-#astra-app .astra-organ-card__index {
+#fintrax-app .fintrax-organ-card__index {
   color: var(--mut-dim);
   font-family: var(--font-hud);
   font-size: var(--fs-2xs);
   letter-spacing: 2px;
 }
 
-#astra-app .astra-organ-card__head h3 {
+#fintrax-app .fintrax-organ-card__head h3 {
   flex: 1 1 auto;
   margin: 0;
   color: var(--organ, var(--cy));
@@ -554,13 +554,13 @@
   text-shadow: 0 0 22px rgba(0, 240, 255, 0.25);
 }
 
-#astra-app .astra-organ-card__body {
+#fintrax-app .fintrax-organ-card__body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: var(--sp-3) var(--sp-5);
 }
 
-#astra-app .astra-organ-card__desc {
+#fintrax-app .fintrax-organ-card__desc {
   grid-column: 1 / -1;
   margin: 0;
   color: var(--tx);
@@ -568,7 +568,7 @@
   line-height: 1.45;
 }
 
-#astra-app .astra-organ-card__block h4 {
+#fintrax-app .fintrax-organ-card__block h4 {
   margin: 0 0 var(--sp-1);
   color: var(--mut-dim);
   font-family: var(--font-hud);
@@ -576,14 +576,14 @@
   letter-spacing: 2px;
 }
 
-#astra-app .astra-organ-card__block p {
+#fintrax-app .fintrax-organ-card__block p {
   margin: 0;
   color: var(--mut);
   font-size: var(--fs-md);
   line-height: 1.5;
 }
 
-#astra-app .astra-organ-card__list {
+#fintrax-app .fintrax-organ-card__list {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
@@ -592,7 +592,7 @@
   list-style: none;
 }
 
-#astra-app .astra-organ-card__list li {
+#fintrax-app .fintrax-organ-card__list li {
   padding: 3px 9px;
   border: 1px solid rgba(0, 240, 255, 0.28);
   border-radius: var(--r-pill);
@@ -601,13 +601,13 @@
   font-size: var(--fs-sm);
 }
 
-#astra-app .astra-organ-card__empty {
+#fintrax-app .fintrax-organ-card__empty {
   color: var(--mut-dim);
   font-size: var(--fs-md);
   font-style: italic;
 }
 
-#astra-app .astra-organ-card__meta {
+#fintrax-app .fintrax-organ-card__meta {
   grid-column: 1 / -1;
   margin: 0;
   padding-top: var(--sp-3);
@@ -616,7 +616,7 @@
   font-size: var(--fs-sm);
 }
 
-#astra-app .astra-pill--lg {
+#fintrax-app .fintrax-pill--lg {
   padding: 6px 14px;
   border: 1px solid currentColor;
   border-radius: var(--r-pill);
@@ -626,21 +626,21 @@
   letter-spacing: 2px;
 }
 
-#astra-app .astra-organ-card[data-st='bad'] {
+#fintrax-app .fintrax-organ-card[data-st='bad'] {
   box-shadow: 0 18px 50px rgba(255, 56, 96, 0.18);
 }
 
-#astra-app .astra-organ-card[data-st='warn'] {
+#fintrax-app .fintrax-organ-card[data-st='warn'] {
   box-shadow: 0 18px 50px rgba(255, 170, 51, 0.14);
 }
 
 /* --- Pestañas ------------------------------------------------------------ */
 
-#astra-app .astra-body__detail {
+#fintrax-app .fintrax-body__detail {
   margin-top: var(--sp-5);
 }
 
-#astra-app .astra-tabs {
+#fintrax-app .fintrax-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: var(--sp-1);
@@ -648,7 +648,7 @@
   margin-bottom: var(--sp-4);
 }
 
-#astra-app .astra-tab {
+#fintrax-app .fintrax-tab {
   padding: 10px 18px;
   border: 0;
   border-bottom: 2px solid transparent;
@@ -664,33 +664,33 @@
     border-color var(--dur-fast) ease;
 }
 
-#astra-app .astra-tab:hover {
+#fintrax-app .fintrax-tab:hover {
   color: var(--tx);
 }
 
-#astra-app .astra-tab[data-active='true'] {
+#fintrax-app .fintrax-tab[data-active='true'] {
   border-bottom-color: var(--cy);
   color: var(--cy);
   text-shadow: 0 0 12px rgba(0, 240, 255, 0.5);
 }
 
-#astra-app .astra-tab:focus-visible {
+#fintrax-app .fintrax-tab:focus-visible {
   outline: 2px solid var(--cy);
   outline-offset: 2px;
 }
 
-#astra-app .astra-tabpanel {
-  animation: astra-tab-in var(--dur-fast) var(--ease-out);
+#fintrax-app .fintrax-tabpanel {
+  animation: fintrax-tab-in var(--dur-fast) var(--ease-out);
 }
 
-@keyframes astra-tab-in {
+@keyframes fintrax-tab-in {
   from {
     opacity: 0;
     transform: translateY(6px);
   }
 }
 
-#astra-app .astra-charts-grid {
+#fintrax-app .fintrax-charts-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: var(--sp-3);
@@ -698,7 +698,7 @@
 
 /* --- Registro ------------------------------------------------------------ */
 
-#astra-app .astra-record-stage {
+#fintrax-app .fintrax-record-stage {
   margin-bottom: var(--sp-4);
   padding: var(--sp-4);
   border: 1px solid var(--field-border);
@@ -706,7 +706,7 @@
   background: rgba(3, 16, 36, 0.6);
 }
 
-#astra-app .astra-record-stage > summary {
+#fintrax-app .fintrax-record-stage > summary {
   padding: var(--sp-2) 0;
   color: var(--cy);
   font-family: var(--font-hud);
@@ -714,7 +714,7 @@
   cursor: pointer;
 }
 
-#astra-app .astra-record-group h3 {
+#fintrax-app .fintrax-record-group h3 {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -725,12 +725,12 @@
   font-size: var(--fs-sm);
 }
 
-#astra-app .astra-record dd {
+#fintrax-app .fintrax-record dd {
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
 
-#astra-app .astra-record {
+#fintrax-app .fintrax-record {
   display: grid;
   grid-template-columns: minmax(120px, 180px) minmax(0, 1fr);
   gap: var(--sp-2) var(--sp-4);
@@ -741,7 +741,7 @@
   background: rgba(4, 18, 42, 0.6);
 }
 
-#astra-app .astra-record dt {
+#fintrax-app .fintrax-record dt {
   color: var(--mut-dim);
   font-family: var(--font-hud);
   font-size: var(--fs-2xs);
@@ -749,19 +749,19 @@
   text-transform: uppercase;
 }
 
-#astra-app .astra-record dd {
+#fintrax-app .fintrax-record dd {
   margin: 0;
   color: var(--tx);
   font-size: var(--fs-md);
 }
 
-#astra-app .astra-record__note {
+#fintrax-app .fintrax-record__note {
   margin: var(--sp-3) 0 0;
   color: var(--mut);
   font-size: var(--fs-md);
 }
 
-#astra-app .astra-actions--body {
+#fintrax-app .fintrax-actions--body {
   justify-content: center;
   margin-top: var(--sp-5);
 }
@@ -769,16 +769,16 @@
 /* --- Responsive ---------------------------------------------------------- */
 
 @media (max-width: 1100px) {
-  #astra-app .astra-body__stage {
+  #fintrax-app .fintrax-body__stage {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  #astra-app .astra-body__core {
+  #fintrax-app .fintrax-body__core {
     min-height: clamp(400px, 58vh, 600px);
   }
 
   /* Los rieles pasan a una fila horizontal desplazable bajo el avatar. */
-  #astra-app .astra-body__rail {
+  #fintrax-app .fintrax-body__rail {
     flex-direction: row;
     gap: var(--sp-2);
     overflow-x: auto;
@@ -786,67 +786,67 @@
     scroll-snap-type: x proximity;
   }
 
-  #astra-app .astra-organ-pill {
+  #fintrax-app .fintrax-organ-pill {
     min-width: 210px;
     scroll-snap-align: start;
   }
 
-  #astra-app .astra-body__rail--right {
+  #fintrax-app .fintrax-body__rail--right {
     order: 3;
   }
 
-  #astra-app .astra-body__core {
+  #fintrax-app .fintrax-body__core {
     order: 1;
   }
 }
 
 @media (max-width: 760px) {
   /* Con poco ancho, las etiquetas del SVG no se leen: mandan las tarjetas. */
-  #astra-app .astra-organ-tags,
-  #astra-app .astra-organ-leaders {
+  #fintrax-app .fintrax-organ-tags,
+  #fintrax-app .fintrax-organ-leaders {
     display: none;
   }
 
-  #astra-app .astra-organ-avatar {
+  #fintrax-app .fintrax-organ-avatar {
     height: clamp(360px, 56vh, 520px);
   }
 
-  #astra-app .astra-body__head {
+  #fintrax-app .fintrax-body__head {
     margin-top: var(--sp-4);
   }
 
-  #astra-app .astra-body__summary {
+  #fintrax-app .fintrax-body__summary {
     width: 100%;
     overflow-x: auto;
     flex-wrap: nowrap;
     padding-bottom: 4px;
   }
 
-  #astra-app .astra-body__metric {
+  #fintrax-app .fintrax-body__metric {
     flex: 0 0 auto;
   }
 
-  #astra-app .astra-record {
+  #fintrax-app .fintrax-record {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  #astra-app .astra-record dt {
+  #fintrax-app .fintrax-record dt {
     margin-top: var(--sp-2);
   }
 
-  #astra-app .astra-actions--body {
+  #fintrax-app .fintrax-actions--body {
     flex-direction: column-reverse;
   }
 
-  #astra-app .astra-actions--body .astra-btn {
+  #fintrax-app .fintrax-actions--body .fintrax-btn {
     width: 100%;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  #astra-app .astra-organ-card,
-  #astra-app .astra-tabpanel,
-  #astra-app .astra-organ-node[data-st='bad'] .astra-organ-node__halo {
+  #fintrax-app .fintrax-organ-card,
+  #fintrax-app .fintrax-tabpanel,
+  #fintrax-app .fintrax-organ-node[data-st='bad'] .fintrax-organ-node__halo {
     animation: none;
   }
 }

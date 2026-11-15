@@ -9,7 +9,8 @@ import { evaluate } from './evaluation.js';
 import { initStarfield } from './starfield.js';
 import { createAvatar } from './avatar.js';
 import { initIntro } from './intro.js';
-import { initForm } from './form.js';
+import { initForm, irAPaso } from './form.js';
+import { initCentro, enviarAlCentro } from './centro.js';
 import { initProgress } from './progress.js';
 import { initSymptoms } from './symptoms-ui.js';
 import { initResults } from './results.js';
@@ -18,7 +19,7 @@ import { construirRegistro, descargarRegistro } from './export.js';
 import { showToast, hideToast } from './toast.js';
 import { beep } from './audio.js';
 
-const app = $('#astra-app');
+const app = $('#fintrax-app');
 
 const firma = (state) =>
   JSON.stringify([
@@ -44,9 +45,10 @@ function alArriba() {
 
 function enfocarZona(zone) {
   if (getState().step !== 'current') return;
-  const bloque = $('[data-symptoms="form"]')?.querySelector(`.astra-zone[data-zone="${zone}"]`);
+  const bloque = $('[data-symptoms="form"]')?.querySelector(`.fintrax-zone[data-zone="${zone}"]`);
   if (!bloque) return;
   beep('alert');
+  irAPaso('molestias');
   desplazarA(bloque, { block: 'center' });
   bloque.classList.add('hl');
   const control = bloque.querySelector('input');
@@ -71,7 +73,7 @@ const results = initResults({
     beep('click');
     actions.volverAEditar();
     alArriba();
-    enfocar($('#astra-form-title'));
+    enfocar($('#fintrax-form-title'));
   },
   onExport: () => {
     const state = getState();
@@ -90,12 +92,13 @@ const transition = createTransition({
   onDone: () => {
     actions.terminarAnalisis();
     alArriba();
-    enfocar($('#astra-body-title'));
+    enfocar($('#fintrax-body-title'));
     beep('success');
   }
 });
 
 initForm({ onSubmit: iniciarAnalisis });
+initCentro();
 
 /* ------------------------------------------------------------------------- */
 /* Análisis y transición                                                     */
@@ -107,7 +110,7 @@ function iniciarAnalisis() {
     if (actions.completarHabituales()) {
       beep('success');
       alArriba();
-      enfocar($('#astra-form-title'));
+      enfocar($('#fintrax-form-title'));
       showToast('Datos habituales guardados. Completa ahora tus datos actuales.');
     }
     return;
@@ -117,6 +120,7 @@ function iniciarAnalisis() {
   ultimaFirma = firma(state);
   if (!actions.comenzarAnalisis(result)) return;
   actions.setExportData(construirRegistro(state));
+  enviarAlCentro(getState());
   beep('click');
   alArriba();
   requestAnimationFrame(() => {
@@ -157,6 +161,6 @@ initIntro({
     actions.terminarIntro();
     initStarfield($('[data-stars]'));
     alArriba();
-    enfocar($('#astra-form-title'));
+    enfocar($('#fintrax-form-title'));
   }
 });

@@ -1,5 +1,5 @@
 /* Presentación de «Fintrax Código Error.html», acotada a su pantalla. */
-#astra-app .astra-intro {
+#fintrax-app .fintrax-intro {
   position: relative;
   z-index: 5;
   width: 100%;
@@ -8,7 +8,7 @@
   background: #02060d;
 }
 
-#astra-app #fintrax-fondo {
+#fintrax-app #fintrax-fondo {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -16,7 +16,7 @@
   display: block;
 }
 
-#astra-app #fintrax-logo {
+#fintrax-app #fintrax-logo {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -27,11 +27,11 @@
   font-family: var(--font-hud);
 }
 
-#astra-app #fintrax-logo > :not(defs) {
+#fintrax-app #fintrax-logo > :not(defs) {
   opacity: 0;
 }
 
-#astra-app .astra-intro__caption {
+#fintrax-app .fintrax-intro__caption {
   position: absolute;
   inset: auto 12px 20px;
   color: #a9c0d6;

@@ -23,7 +23,7 @@ const HOTSPOTS = [
 
 function crearImagen(clase, sexo) {
   const src = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-  const picture = el('picture', { class: `astra-avatar__img ${clase}` });
+  const picture = el('picture', { class: `fintrax-avatar__img ${clase}` });
   picture.append(
     el('source', { srcset: `${src}.webp`, type: 'image/webp' }),
     el('img', {
@@ -40,7 +40,7 @@ function crearImagen(clase, sexo) {
 function crearHotspots(onZoneSelect) {
   const groups = HOTSPOTS.map((hot) => {
     const group = svg('g', {
-      class: 'astra-hot',
+      class: 'fintrax-hot',
       'data-zone': hot.zone,
       tabindex: '0',
       role: 'button',
@@ -64,26 +64,26 @@ function crearHotspots(onZoneSelect) {
   });
 
   const labels = svg('g', { 'data-avatar-labels': '' });
-  return { root: svg('svg', { class: 'astra-avatar__hotspots', viewBox: '0 0 941 1672' }, groups), labels };
+  return { root: svg('svg', { class: 'fintrax-avatar__hotspots', viewBox: '0 0 941 1672' }, groups), labels };
 }
 
 /**
  * @param {{variant?: 'form'|'results', onZoneSelect?: (zone: string) => void}} options
  */
 export function createAvatar({ variant = 'form', onZoneSelect } = {}) {
-  const root = el('div', { class: 'astra-avatar', dataset: { sex: '', glow: 'na' } });
-  root.append(crearImagen('astra-avatar__img--female', 'Femenino'));
-  root.append(crearImagen('astra-avatar__img--male', 'Masculino'));
+  const root = el('div', { class: 'fintrax-avatar', dataset: { sex: '', glow: 'na' } });
+  root.append(crearImagen('fintrax-avatar__img--female', 'Femenino'));
+  root.append(crearImagen('fintrax-avatar__img--male', 'Masculino'));
 
   const { root: hotspots, labels } = crearHotspots(onZoneSelect);
   hotspots.append(labels);
   root.append(hotspots);
 
   if (variant === 'form') {
-    root.append(el('span', { class: 'astra-avatar__sweep', 'aria-hidden': 'true' }));
+    root.append(el('span', { class: 'fintrax-avatar__sweep', 'aria-hidden': 'true' }));
   }
 
-  const groups = [...hotspots.querySelectorAll('.astra-hot')];
+  const groups = [...hotspots.querySelectorAll('.fintrax-hot')];
 
   function setSex(sexo) {
     const valor = sexo === 'Femenino' || sexo === 'Masculino' ? sexo : '';
@@ -122,7 +122,7 @@ export function createAvatar({ variant = 'form', onZoneSelect } = {}) {
       if (!hot) continue;
       const izquierda = hot.cx < 400 || clave === 'ojos';
       const texto = svg('text', {
-        class: 'astra-hl',
+        class: 'fintrax-hl',
         x: izquierda ? hot.cx - 34 : hot.cx + 36,
         y: hot.cy + 10,
         'text-anchor': izquierda ? 'end' : 'start',

@@ -35,16 +35,16 @@ test('la severidad solo referencia síntomas existentes', () => {
   }
 });
 
-test('los 23 indicadores contados suman exactamente el total', () => {
-  assert.equal(COUNTED_IDS.length, 23);
+test('los 25 indicadores contados suman exactamente el total', () => {
+  assert.equal(COUNTED_IDS.length, 25);
   const porSeccion = COUNTED_BY_SECTION.reduce((total, seccion) => total + seccion.ids.length, 0);
   assert.equal(porSeccion, COUNTED_IDS.length);
 });
 
-test('el formulario exige 33 campos habituales y 35 actuales', () => {
+test('el formulario exige 35 campos habituales y 37 actuales', () => {
   assert.equal(PROFILE_FIELDS.length, 6);
-  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length, 33);
-  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length + 2, 35);
+  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length, 35);
+  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length + 2, 37);
 });
 
 test('los ids de campo son únicos y las escalas están entre los contados', () => {

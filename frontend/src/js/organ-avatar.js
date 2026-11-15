@@ -33,7 +33,7 @@ const pct = (parte, total) => `${((parte / total) * 100).toFixed(2)}%`;
 
 function crearImagen(clase, sexo) {
   const base = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-  const picture = el('picture', { class: `astra-avatar__img ${clase}` });
+  const picture = el('picture', { class: `fintrax-avatar__img ${clase}` });
   picture.append(
     el('source', { srcset: `${base}.webp`, type: 'image/webp' }),
     el('img', {
@@ -52,7 +52,7 @@ function crearNodo(key, onSelect) {
   const forma = ORGAN_SHAPES[key];
 
   const grupo = svg('g', {
-    class: 'astra-organ-node',
+    class: 'fintrax-organ-node',
     'data-organ': key,
     'data-stroke': forma.stroke ? 'true' : null,
     transform: `translate(${meta.anchor.x} ${meta.anchor.y})`,
@@ -62,12 +62,12 @@ function crearNodo(key, onSelect) {
     style: `--organ:${meta.color}`
   });
 
-  grupo.append(svg('circle', { class: 'astra-organ-node__halo', r: forma.hit + 12 }));
+  grupo.append(svg('circle', { class: 'fintrax-organ-node__halo', r: forma.hit + 12 }));
 
   for (const d of forma.paths) {
     grupo.append(
       svg('path', {
-        class: 'astra-organ-node__shape',
+        class: 'fintrax-organ-node__shape',
         d,
         'stroke-width': forma.stroke || null,
         'stroke-linecap': forma.stroke ? 'round' : null,
@@ -77,11 +77,11 @@ function crearNodo(key, onSelect) {
   }
 
   for (const d of forma.details) {
-    grupo.append(svg('path', { class: 'astra-organ-node__detail', d }));
+    grupo.append(svg('path', { class: 'fintrax-organ-node__detail', d }));
   }
 
-  grupo.append(svg('circle', { class: 'astra-organ-node__ring', r: forma.hit + 5 }));
-  grupo.append(svg('circle', { class: 'astra-organ-node__target', r: forma.hit }));
+  grupo.append(svg('circle', { class: 'fintrax-organ-node__ring', r: forma.hit + 5 }));
+  grupo.append(svg('circle', { class: 'fintrax-organ-node__target', r: forma.hit }));
 
   const activar = () => onSelect?.(key);
   grupo.addEventListener('click', activar);
@@ -99,11 +99,11 @@ function crearNodo(key, onSelect) {
 function crearGuia(key) {
   const meta = ORGANOS[key];
   const puntos = meta.line.map(([x, y]) => `${x},${y}`).join(' ');
-  const grupo = svg('g', { class: 'astra-organ-leader', 'data-organ': key, style: `--organ:${meta.color}` });
-  grupo.append(svg('polyline', { class: 'astra-organ-leader__line', points: puntos }));
+  const grupo = svg('g', { class: 'fintrax-organ-leader', 'data-organ': key, style: `--organ:${meta.color}` });
+  grupo.append(svg('polyline', { class: 'fintrax-organ-leader__line', points: puntos }));
   grupo.append(
     svg('circle', {
-      class: 'astra-organ-leader__dot',
+      class: 'fintrax-organ-leader__dot',
       cx: meta.labelAt.x,
       cy: meta.labelAt.y,
       r: 5
@@ -118,7 +118,7 @@ function crearEtiqueta(key, onSelect) {
 
   const boton = el('button', {
     type: 'button',
-    class: 'astra-organ-tag',
+    class: 'fintrax-organ-tag',
     dataset: { organ: key, anchor: lado },
     style: [
       `--organ:${meta.color}`,
@@ -127,7 +127,7 @@ function crearEtiqueta(key, onSelect) {
     ].join(';'),
     'aria-label': `${meta.label}: sin datos`
   });
-  boton.append(el('span', { class: 'astra-organ-tag__name', text: meta.label }));
+  boton.append(el('span', { class: 'fintrax-organ-tag__name', text: meta.label }));
 
   const activar = () => onSelect?.(key);
   boton.addEventListener('click', activar);
@@ -139,22 +139,22 @@ function crearEtiqueta(key, onSelect) {
  */
 export function createOrganAvatar({ onSelect } = {}) {
   const root = el('div', {
-    class: 'astra-avatar astra-organ-avatar',
+    class: 'fintrax-avatar fintrax-organ-avatar',
     dataset: { sex: '', glow: 'na' }
   });
 
-  root.append(crearImagen('astra-avatar__img--female', 'Femenino'));
-  root.append(crearImagen('astra-avatar__img--male', 'Masculino'));
+  root.append(crearImagen('fintrax-avatar__img--female', 'Femenino'));
+  root.append(crearImagen('fintrax-avatar__img--male', 'Masculino'));
 
   const capa = svg('svg', {
-    class: 'astra-organ-avatar__layer',
+    class: 'fintrax-organ-avatar__layer',
     viewBox: `0 0 ${VIEWBOX.w} ${VIEWBOX.h}`,
     role: 'group',
     'aria-label': 'Órganos interactivos del cuerpo'
   });
 
-  const guias = svg('g', { class: 'astra-organ-leaders' });
-  const nodos = svg('g', { class: 'astra-organ-nodes' });
+  const guias = svg('g', { class: 'fintrax-organ-leaders' });
+  const nodos = svg('g', { class: 'fintrax-organ-nodes' });
 
   for (const key of ORGAN_ORDER) guias.append(crearGuia(key));
   for (const key of ORGAN_PAINT) nodos.append(crearNodo(key, onSelect));
@@ -162,18 +162,18 @@ export function createOrganAvatar({ onSelect } = {}) {
   capa.append(guias, nodos);
   root.append(capa);
 
-  const etiquetas = el('div', { class: 'astra-organ-tags' });
+  const etiquetas = el('div', { class: 'fintrax-organ-tags' });
   for (const key of ORGAN_ORDER) etiquetas.append(crearEtiqueta(key, onSelect));
   root.append(etiquetas);
 
   const nodosPorClave = new Map(
-    [...root.querySelectorAll('.astra-organ-node')].map((nodo) => [nodo.dataset.organ, nodo])
+    [...root.querySelectorAll('.fintrax-organ-node')].map((nodo) => [nodo.dataset.organ, nodo])
   );
   const guiasPorClave = new Map(
-    [...root.querySelectorAll('.astra-organ-leader')].map((nodo) => [nodo.dataset.organ, nodo])
+    [...root.querySelectorAll('.fintrax-organ-leader')].map((nodo) => [nodo.dataset.organ, nodo])
   );
   const etiquetasPorClave = new Map(
-    [...root.querySelectorAll('.astra-organ-tag')].map((nodo) => [nodo.dataset.organ, nodo])
+    [...root.querySelectorAll('.fintrax-organ-tag')].map((nodo) => [nodo.dataset.organ, nodo])
   );
 
   function setSex(sexo) {
@@ -212,7 +212,7 @@ export function createOrganAvatar({ onSelect } = {}) {
   }
 
   function setSelection(key) {
-    for (const nodo of root.querySelectorAll('.astra-organ-node, .astra-organ-tag')) {
+    for (const nodo of root.querySelectorAll('.fintrax-organ-node, .fintrax-organ-tag')) {
       nodo.dataset.selected = String(nodo.dataset.organ === key);
     }
   }

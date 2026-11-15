@@ -21,7 +21,7 @@ zona pélvica; al cambiarlo se retiran las molestias que dejan de existir.
 
 ## 2. Indicadores
 
-Cinco secciones y **23 indicadores médicos**. Hay cuatro controles auxiliares
+Cinco secciones y **25 indicadores médicos** (incluidas frecuencia respiratoria y temperatura, que exige el backend). Hay cuatro controles auxiliares
 (observaciones del ECG, región DXA, método de fuerza y horario del cortisol).
 Todos los controles son obligatorios y suman al progreso. La vista previa de
 peso/estatura utiliza los datos personales.
@@ -202,7 +202,7 @@ Cuatro series: frecuencia cardíaca, saturación, presión sistólica y temperat
 
 ## 7. Exportación JSON
 
-Archivo: `ASTRA_registro_premision.json`.
+Archivo: `FINTRAX_registro_premision.json`.
 
 La versión `2.0` incluye `registros.habituales` y `registros.actuales`, cada uno
 con el perfil, las cinco categorías y sus valores. Las claves superiores
@@ -213,7 +213,7 @@ Ejemplo parcial del contenido de una etapa:
 
 ```json
 {
-  "plataforma": "ASTRA - prototipo local",
+  "plataforma": "FINTRAX - prototipo local",
   "fecha": "2026-11-15T03:45:00.000Z",
   "perfil": {
     "nombre": "Ana Ríos",

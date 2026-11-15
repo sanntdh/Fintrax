@@ -6,7 +6,7 @@
 navegador carga sin empaquetar ni transpilar. No hay dependencias de ejecución,
 ni framework, ni paso de build: `npm start` solo sirve archivos estáticos.
 
-La aplicación se monta bajo `#astra-app`. Nada se cuelga de `window` y ningún
+La aplicación se monta bajo `#fintrax-app`. Nada se cuelga de `window` y ningún
 módulo lee el valor de un control para decidir: el **estado** es la fuente de
 verdad y el DOM es una proyección de ese estado.
 
@@ -14,7 +14,7 @@ verdad y el DOM es una proyección de ese estado.
 
 ```
 index.html
-  ├─ src/css/*.css        presentación (encapsulada bajo #astra-app)
+  ├─ src/css/*.css        presentación (encapsulada bajo #fintrax-app)
   └─ src/js/main.js       composición
         ├─ src/data/*     catálogos constantes y puros
         ├─ state.js       estado + acciones + suscripciones
@@ -82,7 +82,9 @@ degrada ni mejora el resultado.
 | --- | --- |
 | `main.js` | Compone todo, crea los avatares, controla la secuencia, ejecuta el análisis actual y la exportación. |
 | `intro.js`, `fintrax-background.js` | Reproducen el SVG y el fondo originales de FINTRAX; liberan animaciones, temporizadores y listeners al terminar. |
-| `form.js` | Genera las secciones desde `metrics.js`, restaura el borrador de cada etapa, valida y envía. |
+| `api.js` | Cliente HTTP del backend (clave en `sessionStorage`) y traducción perfil/lecturas/evaluación. |
+| `centro.js` | Conexión opcional con el centro médico: diálogo, envío de lecturas y franja de resultados. |
+| `form.js` | Genera las secciones desde `metrics.js`, las muestra como pasos (un bloque por pantalla, `irAPaso`), restaura el borrador de cada etapa, valida y envía. |
 | `validation.js` | Valida perfil, cada medición, metadatos, confirmaciones de escalas y respuesta de molestias; calcula el progreso. |
 | `symptoms-ui.js` | Construye chips en formulario y resultados, sincroniza selección y pinta tarjetas de orientación. |
 | `progress.js` | Barra, desglose por sección, IMC, zonas marcadas, conteo de molestias y cabecera del escaneo. |
@@ -117,7 +119,7 @@ actualiza banner, órganos, avatar y tarjetas sin recalcular dos veces.
 
 ## Vistas
 
-`#astra-app[data-step]` controla cinco estados: `intro`, `baseline`, `current`,
+`#fintrax-app[data-step]` controla cinco estados: `intro`, `baseline`, `current`,
 `transition` y `body`. Se reutiliza un formulario para los dos registros, con
 identificadores únicos. Las molestias y observaciones se muestran en `current`.
 El primer envío guarda la referencia y abre el segundo registro; solo el segundo
@@ -136,9 +138,9 @@ catálogo, lo que evita perder estado y simplifica el responsive.
 
 1. **Sin build.** Módulos ES nativos y un servidor estático de ~70 líneas. El
    `package.json` solo declara `start` y `test`.
-2. **CSS encapsulado.** Todas las reglas parten de `#astra-app`; los tokens
+2. **CSS encapsulado.** Todas las reglas parten de `#fintrax-app`; los tokens
    viven en `tokens.css`. Los selectores se apoyan en hooks `data-*`.
-3. **IDs con prefijo `astra-`.** Evita colisiones y deja claro qué pertenece a
+3. **IDs con prefijo `fintrax-`.** Evita colisiones y deja claro qué pertenece a
    la aplicación.
 4. **Sin `innerHTML`.** `dom.js` construye nodos con `textContent`, de modo que
    ningún dato de la persona usuaria se interpreta como HTML. Hay una prueba

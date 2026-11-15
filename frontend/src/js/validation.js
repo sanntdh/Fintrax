@@ -5,9 +5,9 @@ import { sintomaValido } from '../data/symptoms.js';
 export const PROFILE_FIELDS = [
   { id: 'sexo', label: 'Sexo biológico', kind: 'select', options: ['Femenino', 'Masculino'] },
   { id: 'nombre', label: 'Nombre completo', kind: 'text' },
-  { id: 'edad', label: 'Edad', kind: 'number', min: 1, max: 120, step: 1 },
-  { id: 'peso', label: 'Peso corporal', kind: 'number', min: 1, step: 0.1 },
-  { id: 'estatura', label: 'Estatura', kind: 'number', min: 0.5, max: 2.5, step: 0.01 },
+  { id: 'edad', label: 'Edad', kind: 'number', min: 18, max: 80, step: 1 },
+  { id: 'peso', label: 'Peso corporal', kind: 'number', min: 30, max: 200, step: 0.1 },
+  { id: 'estatura', label: 'Estatura', kind: 'number', min: 1.2, max: 2.2, step: 0.01 },
   { id: 'sangre', label: 'Grupo sanguíneo', kind: 'select', options: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] }
 ];
 

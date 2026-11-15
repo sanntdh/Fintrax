@@ -138,7 +138,7 @@ export function initResults({ onEdit, onExport }) {
     ];
 
     for (const [etiqueta, valor] of datos) {
-      const bloque = el('div', { class: 'astra-body__metric' });
+      const bloque = el('div', { class: 'fintrax-body__metric' });
       bloque.append(el('span', { text: etiqueta }), el('strong', { text: valor }));
       resumen.append(bloque);
     }
@@ -150,18 +150,18 @@ export function initResults({ onEdit, onExport }) {
     const estado = organo.state;
     const boton = el('button', {
       type: 'button',
-      class: 'astra-organ-pill',
+      class: 'fintrax-organ-pill',
       dataset: { organPill: key, st: estado },
       'aria-pressed': activo ? 'true' : 'false',
       style: `--organ:${organo.color}`
     });
     boton.append(
-      el('span', { class: 'astra-organ-pill__dot', 'aria-hidden': 'true' }),
-      el('span', { class: 'astra-organ-pill__body' }, [
+      el('span', { class: 'fintrax-organ-pill__dot', 'aria-hidden': 'true' }),
+      el('span', { class: 'fintrax-organ-pill__body' }, [
         el('b', { text: organo.label }),
-        el('span', { class: 'astra-organ-pill__summary', text: organo.summary })
+        el('span', { class: 'fintrax-organ-pill__summary', text: organo.summary })
       ]),
-      el('span', { class: 'astra-pill', dataset: { st: estado }, text: (ESTADOS[estado] || ESTADOS.na).t })
+      el('span', { class: 'fintrax-pill', dataset: { st: estado }, text: (ESTADOS[estado] || ESTADOS.na).t })
     );
     boton.addEventListener('click', () => seleccionarOrgano(key, { mover: true }));
     return boton;
@@ -199,47 +199,47 @@ export function initResults({ onEdit, onExport }) {
     ficha.style.setProperty('--organ', organo.color);
     limpiar(ficha);
 
-    const cabecera = el('header', { class: 'astra-organ-card__head' });
+    const cabecera = el('header', { class: 'fintrax-organ-card__head' });
     cabecera.append(
       el('span', {
-        class: 'astra-organ-card__index',
+        class: 'fintrax-organ-card__index',
         text: `ÓRGANO ${String(indice).padStart(2, '0')} / ${String(ORGAN_ORDER.length).padStart(2, '0')}`
       }),
       el('h3', { text: organo.label }),
       el('span', {
-        class: 'astra-pill astra-pill--lg',
+        class: 'fintrax-pill fintrax-pill--lg',
         dataset: { st: estado },
         text: (ESTADOS[estado] || ESTADOS.na).t
       })
     );
 
-    const cuerpo = el('div', { class: 'astra-organ-card__body' });
-    cuerpo.append(el('p', { class: 'astra-organ-card__desc', text: organo.summary }));
+    const cuerpo = el('div', { class: 'fintrax-organ-card__body' });
+    cuerpo.append(el('p', { class: 'fintrax-organ-card__desc', text: organo.summary }));
 
-    const indicacion = el('div', { class: 'astra-organ-card__block' });
+    const indicacion = el('div', { class: 'fintrax-organ-card__block' });
     indicacion.append(
       el('h4', { text: 'INDICACIÓN' }),
       el('p', { text: organo.guidance })
     );
     cuerpo.append(indicacion);
 
-    const fuentes = el('div', { class: 'astra-organ-card__block' });
+    const fuentes = el('div', { class: 'fintrax-organ-card__block' });
     fuentes.append(el('h4', { text: 'DATOS USADOS' }));
     if (organo.sources?.length) {
-      const lista = el('ul', { class: 'astra-organ-card__list' });
+      const lista = el('ul', { class: 'fintrax-organ-card__list' });
       for (const fuente of organo.sources) lista.append(el('li', { text: fuente }));
       fuentes.append(lista);
     } else {
       fuentes.append(
         el('p', {
-          class: 'astra-organ-card__empty',
+          class: 'fintrax-organ-card__empty',
           text: 'No hay mediciones ni molestias registradas para este órgano.'
         })
       );
     }
     cuerpo.append(fuentes);
 
-    const detalle = el('p', { class: 'astra-organ-card__meta', text: organo.description });
+    const detalle = el('p', { class: 'fintrax-organ-card__meta', text: organo.description });
     cuerpo.append(detalle);
 
     ficha.append(cabecera, cuerpo);
@@ -285,7 +285,7 @@ export function initResults({ onEdit, onExport }) {
     const sistemas = ['cardio', 'osteo', 'inmune', 'psico', 'neuro'];
     for (const [etapa, datosEtapa] of Object.entries(etapas)) {
       const actual = etapa === 'actuales';
-      const bloque = el('details', { class: 'astra-record-stage', open: actual, dataset: { recordStage: etapa } });
+      const bloque = el('details', { class: 'fintrax-record-stage', open: actual, dataset: { recordStage: etapa } });
       bloque.append(el('summary', { text: actual ? 'Etapa 2 · Datos actuales y evaluación' : 'Etapa 1 · Valores habituales de referencia' }));
       const perfil = datosEtapa.perfil;
       const filas = [
@@ -293,17 +293,17 @@ export function initResults({ onEdit, onExport }) {
         ['Peso', `${perfil.peso_kg} kg`], ['Estatura', `${perfil.estatura_m} m`],
         ['Grupo sanguíneo', perfil.grupo_sanguineo]
       ];
-      const lista = el('dl', { class: 'astra-record' });
+      const lista = el('dl', { class: 'fintrax-record' });
       for (const [etiqueta, valor] of filas) lista.append(el('dt', { text: etiqueta }), el('dd', { text: valor }));
       bloque.append(lista);
 
       datosEtapa.variables.forEach((grupo, i) => {
-        const seccion = el('section', { class: 'astra-record-group' });
+        const seccion = el('section', { class: 'fintrax-record-group' });
         const titulo = el('h3', { text: grupo.categoria });
         const estado = actual ? result.systems?.[sistemas[i]]?.st : null;
-        if (estado) titulo.append(el('span', { class: 'astra-pill', dataset: { st: estado }, text: ESTADOS[estado].t }));
+        if (estado) titulo.append(el('span', { class: 'fintrax-pill', dataset: { st: estado }, text: ESTADOS[estado].t }));
         seccion.append(titulo);
-        const valores = el('dl', { class: 'astra-record' });
+        const valores = el('dl', { class: 'fintrax-record' });
         for (const dato of grupo.registros) valores.append(el('dt', { text: dato.label }), el('dd', { text: dato.value }));
         seccion.append(valores);
         bloque.append(seccion);
@@ -311,8 +311,8 @@ export function initResults({ onEdit, onExport }) {
       if (actual) {
         const molestias = datosEtapa.sinMolestias ? 'Sin molestias declaradas'
           : datosEtapa.molestias.map((s) => `${s.zona}: ${s.molestia}`).join(' · ') || 'No declarado';
-        bloque.append(el('p', { class: 'astra-record__note', text: `Molestias: ${molestias}` }));
-        bloque.append(el('p', { class: 'astra-record__note', text: `Observaciones: ${datosEtapa.observaciones}` }));
+        bloque.append(el('p', { class: 'fintrax-record__note', text: `Molestias: ${molestias}` }));
+        bloque.append(el('p', { class: 'fintrax-record__note', text: `Observaciones: ${datosEtapa.observaciones}` }));
       }
       registro.append(bloque);
     }

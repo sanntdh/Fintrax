@@ -27,13 +27,13 @@ const INICIO_ORGANOS = 900;
 const PASO_ORGANO = 180;
 
 function crearFigura(clase) {
-  const contenedor = el('div', { class: `astra-transition__figure ${clase}` });
+  const contenedor = el('div', { class: `fintrax-transition__figure ${clase}` });
   for (const [sufijo, sexo] of [
     ['f', 'Femenino'],
     ['m', 'Masculino']
   ]) {
     const base = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-    const picture = el('picture', { class: `astra-transition__img astra-transition__img--${sufijo}` });
+    const picture = el('picture', { class: `fintrax-transition__img fintrax-transition__img--${sufijo}` });
     picture.append(
       el('source', { srcset: `${base}.webp`, type: 'image/webp' }),
       el('img', {
@@ -53,7 +53,7 @@ function construirOrgano(key) {
   const meta = ORGANOS[key];
   const forma = ORGAN_SHAPES[key];
   const grupo = svg('g', {
-    class: 'astra-transition__organ',
+    class: 'fintrax-transition__organ',
     transform: `translate(${meta.anchor.x} ${meta.anchor.y})`,
     style: `--organ:${meta.color}`
   });
@@ -61,7 +61,7 @@ function construirOrgano(key) {
   for (const d of forma.paths) {
     grupo.append(
       svg('path', {
-        class: 'astra-transition__organ-shape',
+        class: 'fintrax-transition__organ-shape',
         d,
         fill: forma.stroke ? 'none' : null,
         'stroke-width': forma.stroke || null,
@@ -70,7 +70,7 @@ function construirOrgano(key) {
     );
   }
 
-  grupo.append(svg('circle', { class: 'astra-transition__organ-halo', r: forma.hit + 14 }));
+  grupo.append(svg('circle', { class: 'fintrax-transition__organ-halo', r: forma.hit + 14 }));
   return grupo;
 }
 
@@ -92,23 +92,23 @@ export function createTransition({ onDone }) {
   let terminado = true;
 
   if (stage && !stage.childElementCount) {
-    const marco = el('div', { class: 'astra-transition__figure-wrap' });
-    marco.append(crearFigura('astra-transition__ghost'));
-    marco.append(crearFigura('astra-transition__fill'));
+    const marco = el('div', { class: 'fintrax-transition__figure-wrap' });
+    marco.append(crearFigura('fintrax-transition__ghost'));
+    marco.append(crearFigura('fintrax-transition__fill'));
 
     const capa = svg('svg', {
-      class: 'astra-transition__canvas',
+      class: 'fintrax-transition__canvas',
       viewBox: '0 0 941 1672',
       'aria-hidden': 'true',
       focusable: 'false'
     });
 
-    const organos = svg('g', { class: 'astra-transition__organs' });
+    const organos = svg('g', { class: 'fintrax-transition__organs' });
     for (const key of ORGAN_ORDER) organos.append(construirOrgano(key));
     capa.append(organos);
 
     const barrido = svg('rect', {
-      class: 'astra-transition__sweep',
+      class: 'fintrax-transition__sweep',
       x: 240,
       y: 1386,
       width: 470,
@@ -121,8 +121,8 @@ export function createTransition({ onDone }) {
     stage.append(marco);
   }
 
-  const relleno = root?.querySelector('.astra-transition__fill');
-  const organosNodos = [...(root?.querySelectorAll('.astra-transition__organ') || [])];
+  const relleno = root?.querySelector('.fintrax-transition__fill');
+  const organosNodos = [...(root?.querySelectorAll('.fintrax-transition__organ') || [])];
 
   function limpiarTimers() {
     for (const id of timers) clearTimeout(id);

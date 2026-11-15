@@ -11,7 +11,7 @@ function registroCompleto() {
     profile: { sexo: 'Femenino', nombre: 'Ana Ríos', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'O+' },
     values: {
       fc_reposo: '68', pa_sistolica: '120', pa_diastolica: '80',
-      ecg_estado: 'Sin hallazgos reportados', spo2: '98', ecg_informe: 'Ritmo sinusal',
+      ecg_estado: 'Sin hallazgos reportados', spo2: '98', fr: '14', temp: '36.6', ecg_informe: 'Ritmo sinusal',
       densidad_osea: '1.120', region_dxa: 'Columna lumbar', masa_muscular: '31.5',
       fuerza_muscular: '42', metodo_fuerza: 'Prensión manual (dinamómetro)',
       leucocitos: '6500', cortisol: '12', hora_cortisol: 'Mañana',

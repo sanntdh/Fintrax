@@ -1,10 +1,10 @@
 /* ==========================================================================
-   ASTRA · Tokens de diseño
-   Todo el sistema vive dentro de #astra-app para no filtrar estilos a una
+   FINTRAX · Tokens de diseño
+   Todo el sistema vive dentro de #fintrax-app para no filtrar estilos a una
    eventual aplicación anfitriona.
    ========================================================================== */
 
-#astra-app {
+#fintrax-app {
   color-scheme: dark;
 
   /* Color */

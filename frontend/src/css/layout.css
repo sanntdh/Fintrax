@@ -1,10 +1,10 @@
 /* ==========================================================================
-   ASTRA · Layout: barra superior, rejilla principal, paneles y botones
+   FINTRAX · Layout: barra superior, rejilla principal, paneles y botones
    ========================================================================== */
 
 /* --- Barra superior ------------------------------------------------------ */
 
-#astra-app .astra-topbar {
+#fintrax-app .fintrax-topbar {
   height: 68px;
   margin: 18px var(--shell-gutter) 0;
   padding: 0 var(--sp-5);
@@ -26,7 +26,7 @@
   backdrop-filter: blur(10px);
 }
 
-#astra-app .astra-brand {
+#fintrax-app .fintrax-brand {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
@@ -37,7 +37,7 @@
   text-shadow: 0 0 12px var(--cy);
 }
 
-#astra-app .astra-brand__badge {
+#fintrax-app .fintrax-brand__badge {
   padding: 3px 7px;
   border-radius: 4px;
   border: 1px solid var(--cy);
@@ -47,7 +47,7 @@
   letter-spacing: 1.5px;
 }
 
-#astra-app .astra-topinfo {
+#fintrax-app .fintrax-topinfo {
   display: flex;
   align-items: center;
   gap: var(--sp-5);
@@ -55,21 +55,21 @@
   letter-spacing: 1px;
 }
 
-#astra-app .astra-telemetry-item {
+#fintrax-app .fintrax-telemetry-item {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
   color: var(--mut);
 }
 
-#astra-app .astra-telemetry-item .val {
+#fintrax-app .fintrax-telemetry-item .val {
   color: #fff;
   font-family: var(--font-hud);
   font-size: 13px;
   font-weight: 600;
 }
 
-#astra-app .astra-status-pill {
+#fintrax-app .fintrax-status-pill {
   display: flex;
   align-items: center;
   gap: var(--sp-2);
@@ -83,16 +83,16 @@
   letter-spacing: 1.5px;
 }
 
-#astra-app .astra-pulse {
+#fintrax-app .fintrax-pulse {
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: var(--ok);
   box-shadow: 0 0 12px var(--ok);
-  animation: astra-pulse 1.8s infinite;
+  animation: fintrax-pulse 1.8s infinite;
 }
 
-@keyframes astra-pulse {
+@keyframes fintrax-pulse {
   0%,
   100% {
     opacity: 1;
@@ -106,7 +106,7 @@
 
 /* --- Rejilla principal --------------------------------------------------- */
 
-#astra-app .astra-main {
+#fintrax-app .fintrax-main {
   width: 96%;
   max-width: var(--shell-max);
   margin: var(--sp-5) auto 35px;
@@ -116,7 +116,7 @@
   align-items: stretch;
 }
 
-#astra-app .astra-panel {
+#fintrax-app .fintrax-panel {
   border: 1px solid rgba(0, 240, 255, 0.3);
   border-radius: var(--r-xl);
   background: linear-gradient(145deg, rgba(3, 15, 36, 0.92) 0%, rgba(5, 23, 52, 0.88) 100%);
@@ -126,7 +126,7 @@
   backdrop-filter: blur(10px);
 }
 
-#astra-app .astra-panel--human {
+#fintrax-app .fintrax-panel--human {
   position: sticky;
   top: 18px;
   align-self: start;
@@ -147,13 +147,13 @@
     inset 0 0 25px rgba(0, 210, 255, 0.06);
 }
 
-#astra-app .astra-panel--form {
+#fintrax-app .fintrax-panel--form {
   position: relative;
   padding: 30px var(--sp-6) 36px;
 }
 
-#astra-app .astra-panel--form::before,
-#astra-app .astra-panel--form::after {
+#fintrax-app .fintrax-panel--form::before,
+#fintrax-app .fintrax-panel--form::after {
   content: '';
   position: absolute;
   width: 24px;
@@ -162,7 +162,7 @@
   pointer-events: none;
 }
 
-#astra-app .astra-panel--form::before {
+#fintrax-app .fintrax-panel--form::before {
   top: -1px;
   left: -1px;
   border-right: 0;
@@ -170,7 +170,7 @@
   border-radius: var(--r-xl) 0 0 0;
 }
 
-#astra-app .astra-panel--form::after {
+#fintrax-app .fintrax-panel--form::after {
   right: -1px;
   bottom: -1px;
   border-top: 0;
@@ -180,14 +180,14 @@
 
 /* --- Encabezado ---------------------------------------------------------- */
 
-#astra-app .astra-heading {
+#fintrax-app .fintrax-heading {
   display: flex;
   align-items: center;
   gap: var(--sp-5);
   margin-bottom: var(--sp-5);
 }
 
-#astra-app .astra-heading__icon {
+#fintrax-app .fintrax-heading__icon {
   display: grid;
   place-items: center;
   width: 68px;
@@ -202,7 +202,7 @@
   font-size: 28px;
 }
 
-#astra-app .astra-heading h1 {
+#fintrax-app .fintrax-heading h1 {
   color: #fff;
   font-family: var(--font-hud);
   font-size: var(--fs-2xl);
@@ -211,7 +211,7 @@
   margin-bottom: var(--sp-1);
 }
 
-#astra-app .astra-heading p {
+#fintrax-app .fintrax-heading p {
   color: var(--mut);
   font-size: var(--fs-lg);
   letter-spacing: 0.5px;
@@ -219,11 +219,11 @@
 
 /* --- Progreso ------------------------------------------------------------ */
 
-#astra-app .astra-progress {
+#fintrax-app .fintrax-progress {
   margin-bottom: var(--sp-5);
 }
 
-#astra-app .astra-progress__track {
+#fintrax-app .fintrax-progress__track {
   position: relative;
   height: 6px;
   overflow: hidden;
@@ -232,7 +232,7 @@
   background: #051933;
 }
 
-#astra-app .astra-progress__fill {
+#fintrax-app .fintrax-progress__fill {
   display: block;
   width: 0;
   height: 100%;
@@ -241,7 +241,7 @@
   transition: width var(--dur-med) ease;
 }
 
-#astra-app .astra-progress__meta {
+#fintrax-app .fintrax-progress__meta {
   display: flex;
   justify-content: space-between;
   gap: var(--sp-3);
@@ -252,33 +252,91 @@
   letter-spacing: 1px;
 }
 
-#astra-app .astra-progress__sections {
+#fintrax-app .fintrax-stepper {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin-top: var(--sp-2);
+  gap: var(--sp-2);
+  margin-top: var(--sp-3);
 }
 
-#astra-app .astra-progress__chip {
-  padding: 3px 8px;
+#fintrax-app .fintrax-stepper__step {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 5px 10px 5px 5px;
   border: 1px solid rgba(0, 240, 255, 0.25);
   border-radius: var(--r-pill);
-  color: var(--mut-dim);
   background: rgba(0, 240, 255, 0.04);
-  font-family: var(--font-hud);
-  font-size: 9px;
-  letter-spacing: 1px;
+  color: #b9e6ff;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--dur-fast),
+    border-color var(--dur-fast),
+    color var(--dur-fast);
 }
 
-#astra-app .astra-progress__chip[data-complete='true'] {
-  border-color: rgba(0, 245, 180, 0.55);
+#fintrax-app .fintrax-stepper__step:hover {
+  border-color: var(--cy);
+  background: rgba(0, 240, 255, 0.12);
+  color: #fff;
+}
+
+#fintrax-app .fintrax-stepper__num {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid rgba(0, 240, 255, 0.4);
+  border-radius: 50%;
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+}
+
+#fintrax-app .fintrax-stepper__label {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Solo el paso activo muestra su conteo; el resto se resume con número o ✓. */
+#fintrax-app .fintrax-stepper__step:not([aria-current='step']) .fintrax-stepper__count {
+  display: none;
+}
+
+#fintrax-app .fintrax-stepper__count {
+  color: var(--mut-dim);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+}
+
+#fintrax-app .fintrax-stepper__step[data-complete='true'] {
+  border-color: rgba(0, 245, 180, 0.45);
   color: var(--ok);
-  background: rgba(0, 245, 180, 0.1);
+}
+
+#fintrax-app .fintrax-stepper__step[data-complete='true'] .fintrax-stepper__num {
+  border-color: var(--ok);
+  background: rgba(0, 245, 180, 0.15);
+}
+
+#fintrax-app .fintrax-stepper__step[aria-current='step'] {
+  border-color: var(--cy);
+  background: rgba(0, 240, 255, 0.16);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.25);
+}
+
+#fintrax-app .fintrax-stepper__step[aria-current='step'] .fintrax-stepper__num {
+  border-color: var(--cy);
+  background: var(--cy);
+  color: #021022;
 }
 
 /* --- Botones ------------------------------------------------------------- */
 
-#astra-app .astra-btn {
+#fintrax-app .fintrax-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -300,16 +358,16 @@
     background var(--dur-fast) var(--ease-out);
 }
 
-#astra-app .astra-btn:hover {
+#fintrax-app .fintrax-btn:hover {
   background: rgba(0, 240, 255, 0.18);
   box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
 }
 
-#astra-app .astra-btn:active {
+#fintrax-app .fintrax-btn:active {
   transform: translateY(1px);
 }
 
-#astra-app .astra-btn--primary {
+#fintrax-app .fintrax-btn--primary {
   min-width: min(420px, 100%);
   padding: 18px 36px;
   border: 2px solid var(--cy);
@@ -323,7 +381,7 @@
   letter-spacing: 3px;
 }
 
-#astra-app .astra-btn--primary:hover {
+#fintrax-app .fintrax-btn--primary:hover {
   background: linear-gradient(90deg, #0d5296 0%, #1682cf 50%, #0d5296 100%);
   box-shadow:
     0 0 35px rgba(0, 240, 255, 0.7),
@@ -332,8 +390,8 @@
 }
 
 /* Solo se avanza con todos los campos válidos. */
-#astra-app .astra-btn:disabled,
-#astra-app .astra-btn[aria-disabled='true'] {
+#fintrax-app .fintrax-btn:disabled,
+#fintrax-app .fintrax-btn[aria-disabled='true'] {
   cursor: not-allowed;
   opacity: 0.42;
   filter: saturate(0.4);
@@ -341,18 +399,18 @@
   box-shadow: none;
 }
 
-#astra-app .astra-btn--primary:disabled {
+#fintrax-app .fintrax-btn--primary:disabled {
   border-color: rgba(0, 240, 255, 0.35);
   background: linear-gradient(90deg, #062744 0%, #08375c 50%, #062744 100%);
 }
 
-#astra-app .astra-btn--primary:disabled:hover {
+#fintrax-app .fintrax-btn--primary:disabled:hover {
   background: linear-gradient(90deg, #062744 0%, #08375c 50%, #062744 100%);
   transform: none;
   box-shadow: none;
 }
 
-#astra-app .astra-btn--secondary {
+#fintrax-app .fintrax-btn--secondary {
   border-color: rgba(0, 240, 255, 0.65);
   border-radius: 9px;
   background: rgba(0, 240, 255, 0.08);
@@ -361,7 +419,7 @@
   letter-spacing: 1px;
 }
 
-#astra-app .astra-actions {
+#fintrax-app .fintrax-actions {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -369,53 +427,75 @@
   margin-top: 30px;
 }
 
-#astra-app .astra-actions .astra-btn--secondary {
+#fintrax-app .fintrax-actions .fintrax-btn--secondary {
   min-width: 260px;
+}
+
+#fintrax-app .fintrax-actions--steps {
+  align-items: center;
+  justify-content: space-between;
+}
+
+#fintrax-app .fintrax-actions--steps .fintrax-btn--secondary {
+  min-width: 0;
+}
+
+/* El botón principal queda siempre a la derecha, aunque falte «Anterior». */
+#fintrax-app .fintrax-actions--steps .fintrax-btn--primary {
+  min-width: min(280px, 100%);
+  margin-left: auto;
+}
+
+#fintrax-app .fintrax-step-count {
+  color: var(--mut);
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  letter-spacing: 1px;
 }
 
 /* --- Conmutación de pasos ------------------------------------------------ */
 
 /* Presentación FINTRAX a pantalla completa. */
-#astra-app[data-step='intro'] .astra-shell,
-#astra-app[data-step='intro'] .astra-bg,
-#astra-app[data-step='intro'] .astra-skip {
+#fintrax-app[data-step='intro'] .fintrax-shell,
+#fintrax-app[data-step='intro'] .fintrax-bg,
+#fintrax-app[data-step='intro'] .fintrax-skip {
   display: none;
 }
 
-#astra-app:not([data-step='intro']) .astra-intro {
+#fintrax-app:not([data-step='intro']) .fintrax-intro {
   display: none;
 }
 
 /* Las dos capturas usan el formulario y sus propios registros. */
-#astra-app[data-step='baseline'] .astra-results,
-#astra-app[data-step='current'] .astra-results,
-#astra-app[data-step='transition'] .astra-results {
+#fintrax-app[data-step='baseline'] .fintrax-results,
+#fintrax-app[data-step='current'] .fintrax-results,
+#fintrax-app[data-step='transition'] .fintrax-results {
   display: none;
 }
 
 /* Revisión final: mapa funcional. */
-#astra-app[data-step='body'] .astra-main {
+#fintrax-app[data-step='body'] .fintrax-main {
   display: none;
 }
 
 /* Transición: pantalla completa. La aplicación queda fuera del flujo para que
    nada se transparente bajo el overlay (antes se veía el formulario detrás). */
-#astra-app[data-step='transition'] .astra-shell {
+#fintrax-app[data-step='transition'] .fintrax-shell {
   display: none;
 }
 
-#astra-app:not([data-step='transition']) .astra-transition {
+#fintrax-app:not([data-step='transition']) .fintrax-transition {
   display: none;
 }
 
 /* --- Responsive ---------------------------------------------------------- */
 
 @media (max-width: 1100px) {
-  #astra-app .astra-main {
+  #fintrax-app .fintrax-main {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  #astra-app .astra-panel--human {
+  #fintrax-app .fintrax-panel--human {
     position: relative;
     top: 0;
     height: clamp(420px, 72vh, 680px);
@@ -423,44 +503,44 @@
 }
 
 @media (max-width: 720px) {
-  #astra-app .astra-topbar {
+  #fintrax-app .fintrax-topbar {
     height: auto;
     padding: var(--sp-3) var(--sp-4);
     flex-wrap: wrap;
     gap: var(--sp-2);
   }
 
-  #astra-app .astra-topinfo {
+  #fintrax-app .fintrax-topinfo {
     gap: var(--sp-3);
     font-size: var(--fs-sm);
   }
 
-  #astra-app .astra-panel--form {
+  #fintrax-app .fintrax-panel--form {
     padding: var(--sp-4);
   }
 
-  #astra-app .astra-heading__icon {
+  #fintrax-app .fintrax-heading__icon {
     width: 52px;
     height: 52px;
     flex-basis: 52px;
     font-size: 22px;
   }
 
-  #astra-app .astra-heading h1 {
+  #fintrax-app .fintrax-heading h1 {
     font-size: var(--fs-xl);
   }
 
-  #astra-app .astra-heading p {
+  #fintrax-app .fintrax-heading p {
     font-size: var(--fs-md);
   }
 }
 
 @media (max-width: 420px) {
-  #astra-app .astra-topinfo .astra-telemetry-item {
+  #fintrax-app .fintrax-topinfo .fintrax-telemetry-item {
     display: none;
   }
 
-  #astra-app .astra-btn--primary {
+  #fintrax-app .fintrax-btn--primary {
     min-width: 100%;
     letter-spacing: 2px;
   }

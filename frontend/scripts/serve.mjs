@@ -63,5 +63,5 @@ const servidor = createServer(async (request, response) => {
 });
 
 servidor.listen(PUERTO, () => {
-  console.log(`ASTRA disponible en http://localhost:${PUERTO}`);
+  console.log(`FINTRAX disponible en http://localhost:${PUERTO}`);
 });

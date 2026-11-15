@@ -32,13 +32,13 @@ function construir(contenedor, variante, sexo) {
   limpiar(contenedor);
 
   for (const [zona, [nombre, lista]] of Object.entries(zonasPara(sexo))) {
-    const bloque = el('div', { class: 'astra-zone', dataset: { zone: zona } });
+    const bloque = el('div', { class: 'fintrax-zone', dataset: { zone: zona } });
     bloque.append(el('h3', { text: nombre }));
 
-    const chips = el('div', { class: 'astra-chips' });
+    const chips = el('div', { class: 'fintrax-chips' });
     for (const sintoma of lista.split('|')) {
-      const id = `astra-sym-${variante}-${zona}-${sinAcentos(sintoma)}`;
-      const chip = el('label', { class: 'astra-chip', for: id });
+      const id = `fintrax-sym-${variante}-${zona}-${sinAcentos(sintoma)}`;
+      const chip = el('label', { class: 'fintrax-chip', for: id });
       chip.append(
         el('input', {
           type: 'checkbox',
@@ -56,11 +56,11 @@ function construir(contenedor, variante, sexo) {
   }
 
   {
-    const bloque = el('div', { class: 'astra-zone' });
+    const bloque = el('div', { class: 'fintrax-zone' });
     bloque.append(el('h3', { text: 'Estado general' }));
-    const chips = el('div', { class: 'astra-chips' });
-    const id = `astra-wellbeing-${variante}`;
-    const chip = el('label', { class: 'astra-chip astra-chip--none', for: id });
+    const chips = el('div', { class: 'fintrax-chips' });
+    const id = `fintrax-wellbeing-${variante}`;
+    const chip = el('label', { class: 'fintrax-chip fintrax-chip--none', for: id });
     chip.append(
       el('input', { type: 'checkbox', id, dataset: { wellbeing: '' } }),
       el('span', { text: '✓ Me siento en óptimas condiciones' })
@@ -83,7 +83,7 @@ function sincronizar(state) {
     if (bien) bien.checked = state.wellBeing;
 
     const zonasActivas = new Set([...state.symptoms].map((clave) => clave.slice(0, clave.indexOf('|'))));
-    for (const bloque of contenedor.querySelectorAll('.astra-zone[data-zone]')) {
+    for (const bloque of contenedor.querySelectorAll('.fintrax-zone[data-zone]')) {
       bloque.classList.toggle('hl', zonasActivas.has(bloque.dataset.zone));
     }
   }
@@ -101,7 +101,7 @@ function renderTarjetas(state) {
   if (state.symptoms.size === 0) {
     caja.append(
       el('div', {
-        class: 'astra-sym-empty',
+        class: 'fintrax-sym-empty',
         text: state.wellBeing
           ? 'Marcaste que te sientes en óptimas condiciones. Mantén el monitoreo rutinario.'
           : 'Aún no has marcado ningún síntoma. Si no sientes nada, marca «Me siento en óptimas condiciones» en la lista.'
@@ -123,16 +123,16 @@ function renderTarjetas(state) {
   for (const [zona, lista] of porZona) {
     const resumen = state.result?.zones?.[zona];
     const estado = resumen?.st || 'na';
-    const tarjeta = el('div', { class: 'astra-sym-card', dataset: { st: estado } });
+    const tarjeta = el('div', { class: 'fintrax-sym-card', dataset: { st: estado } });
 
     const cabecera = el('header');
     cabecera.append(
       el('b', { text: nombreZona(zona, state.profile.sexo).toUpperCase() }),
-      el('span', { class: 'astra-pill', dataset: { st: estado }, text: (ESTADOS[estado] || ESTADOS.na).t })
+      el('span', { class: 'fintrax-pill', dataset: { st: estado }, text: (ESTADOS[estado] || ESTADOS.na).t })
     );
     tarjeta.append(cabecera);
 
-    tarjeta.append(el('p', { class: 'astra-sym-s' }, [el('b', { text: 'Sientes: ' }), lista.join(' · ')]));
+    tarjeta.append(el('p', { class: 'fintrax-sym-s' }, [el('b', { text: 'Sientes: ' }), lista.join(' · ')]));
 
     const causas = [...new Set(lista.flatMap((valor) => (CAUSAS[valor] || 'Causa por determinar').split('|')))].slice(0, 4);
     tarjeta.append(el('h4', { text: 'POSIBLEMENTE SEA…' }));
@@ -142,7 +142,7 @@ function renderTarjetas(state) {
 
     const contexto = (CTX[zona] || []).flatMap((sistema) => state.result?.systems?.[sistema]?.notes || []);
     if (contexto.length) {
-      tarjeta.append(el('p', { class: 'astra-sym-ctx', text: `Tus datos registrados también muestran: ${contexto.join(' · ')}.` }));
+      tarjeta.append(el('p', { class: 'fintrax-sym-ctx', text: `Tus datos registrados también muestran: ${contexto.join(' · ')}.` }));
     }
 
     tarjeta.append(el('h4', { text: 'QUÉ HACER' }));
@@ -153,14 +153,14 @@ function renderTarjetas(state) {
     if (estado === 'bad') {
       tarjeta.append(
         el('p', {
-          class: 'astra-sym-urgent',
+          class: 'fintrax-sym-urgent',
           text: '⚠ Nivel GRAVE: contacta ahora al médico de vuelo o a Control de Misión.'
         })
       );
     }
 
     if (ALERTA[zona]) {
-      tarjeta.append(el('p', { class: 'astra-sym-alert', text: `Busca atención inmediata si aparece: ${ALERTA[zona]}.` }));
+      tarjeta.append(el('p', { class: 'fintrax-sym-alert', text: `Busca atención inmediata si aparece: ${ALERTA[zona]}.` }));
     }
 
     caja.append(tarjeta);
@@ -168,7 +168,7 @@ function renderTarjetas(state) {
 
   caja.append(
     el('small', {
-      class: 'astra-sym-disc',
+      class: 'fintrax-sym-disc',
       text: 'Orientación general basada en lo que marcaste; no es un diagnóstico ni sustituye al médico.'
     })
   );

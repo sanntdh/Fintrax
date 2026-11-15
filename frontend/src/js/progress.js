@@ -6,7 +6,6 @@
 
 import { $ } from './dom.js';
 import { subscribe, getState } from './state.js';
-import { METRIC_SECTIONS } from '../data/metrics.js';
 import { progresoRegistro } from './validation.js';
 import { categoriaImc, formatearImc, imcDe, plural } from './format.js';
 
@@ -17,22 +16,6 @@ const COLORES_IMC = {
   obesidad: 'var(--alert)',
   'sin-datos': 'var(--cy)'
 };
-
-function pintarSecciones(errores) {
-  const host = $('[data-progress-sections]');
-  if (!host) return;
-  host.replaceChildren();
-
-  for (const seccion of METRIC_SECTIONS) {
-    const ids = seccion.fields.flatMap((field) => field.ids ? field.ids.map((item) => item.id) : field.id ? [field.id] : []);
-    const hechos = ids.filter((id) => !errores[id]).length;
-    const chip = document.createElement('span');
-    chip.className = 'astra-progress__chip';
-    chip.dataset.complete = String(hechos === ids.length);
-    chip.textContent = `${seccion.title} ${hechos}/${ids.length}`;
-    host.append(chip);
-  }
-}
 
 function pintarImc(state) {
   const valor = $('[data-imc-value]');
@@ -96,7 +79,7 @@ function pintarEscaneo(state) {
 }
 
 export function actualizarProgreso(state) {
-  const { porcentaje, completos, total, errores } = progresoRegistro(state, state.activeRecord);
+  const { porcentaje, completos, total } = progresoRegistro(state, state.activeRecord);
 
   const barra = $('[data-progress-bar]');
   if (barra) barra.style.width = `${porcentaje}%`;
@@ -104,7 +87,6 @@ export function actualizarProgreso(state) {
   const texto = $('[data-progress-text]');
   if (texto) texto.textContent = `${porcentaje}% · ${completos}/${total} campos`;
 
-  pintarSecciones(errores);
   pintarImc(state);
   pintarZonas(state);
   pintarConteoSintomas(state);

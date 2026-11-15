@@ -13,7 +13,7 @@ async function leer(relativa) {
 test('index.html declara todos los puntos de montaje', async () => {
   const html = await leer('index.html');
   const ganchos = [
-    'id="astra-app"',
+    'id="fintrax-app"',
     'data-step="intro"',
     'data-intro',
     'id="fintrax-logo"',
@@ -29,7 +29,16 @@ test('index.html declara todos los puntos de montaje', async () => {
     'data-quicknav',
     'data-progress-bar',
     'data-progress-text',
-    'data-progress-sections',
+    'data-step-panel="perfil"',
+    'data-step-panel="molestias"',
+    'data-step-only="current"',
+    'data-step-prev',
+    'data-step-next',
+    'data-step-count',
+    'data-centro-toggle',
+    'data-centro-dialog',
+    'data-centro-form',
+    'data-centro data-estado="off"',
     'data-imc-value',
     'data-imc-category',
     'data-zone-count',
@@ -98,4 +107,13 @@ test('el HTML referencia las hojas de estilo existentes', async () => {
   for (const estilo of estilos) {
     await fs.access(join(RAIZ, estilo));
   }
+});
+
+test('el formulario se recorre por pasos, un bloque cada vez', async () => {
+  const html = await leer('index.html');
+  const form = await leer('src/js/form.js');
+  assert.equal(html.includes('data-progress-sections'), false, 'El progreso por secciones vuelve a duplicarse');
+  assert.equal(html.includes('fintrax-metric-intro'), false, 'Sobra el recuadro de instrucciones generales');
+  assert.ok(form.includes('dataset.stepPanel = section.id'), 'Cada sección de indicadores debe ser un paso');
+  assert.ok(/export function irAPaso\(/.test(form), 'Falta la navegación pública entre pasos');
 });

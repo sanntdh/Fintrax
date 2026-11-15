@@ -1,10 +1,10 @@
 /**
- * Estructura del registro médico: 5 secciones y 23 indicadores contados.
+ * Estructura del registro médico: 5 secciones y 25 indicadores contados.
  *
  * Cada campo describe cómo se pinta y cómo se lee. El motor de evaluación
  * consume los mismos `id`, de modo que no hay dos listas que puedan divergir.
  *
- * `counted: true` identifica las 23 mediciones del informe. Todos los campos,
+ * `counted: true` identifica las 25 mediciones del informe. Todos los campos,
  * incluidos los metadatos, son obligatorios y suman al progreso del formulario.
  */
 
@@ -24,8 +24,8 @@ export const METRIC_SECTIONS = [
   {
     id: 'cardio',
     icon: '♡',
-    title: 'CARDIOVASCULAR',
-    subtitle: 'Mediciones de reposo y exploración cardiopulmonar',
+    title: 'SIGNOS VITALES',
+    subtitle: 'Signos vitales y exploración cardiopulmonar en reposo',
     index: '01 / 05',
     fields: [
       {
@@ -63,10 +63,33 @@ export const METRIC_SECTIONS = [
         id: 'spo2',
         label: 'Saturación de oxígeno (SpO₂)',
         unit: '%',
-        min: 0,
+        min: 50,
         max: 100,
         step: 0.1,
         placeholder: 'Ej. 98',
+        counted: true
+      },
+      {
+        kind: 'number',
+        id: 'fr',
+        label: 'Frecuencia respiratoria',
+        unit: 'RPM',
+        min: 4,
+        max: 60,
+        step: 1,
+        placeholder: 'Ej. 14',
+        helper: 'Respiraciones por minuto en reposo',
+        counted: true
+      },
+      {
+        kind: 'number',
+        id: 'temp',
+        label: 'Temperatura corporal',
+        unit: '°C',
+        min: 30,
+        max: 43,
+        step: 0.1,
+        placeholder: 'Ej. 36.6',
         counted: true
       },
       {

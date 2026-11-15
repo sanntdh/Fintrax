@@ -6,10 +6,10 @@
  * `DATOS.md` y en las pruebas del contrato.
  */
 
-export const PLATAFORMA = 'ASTRA - prototipo local';
+export const PLATAFORMA = 'FINTRAX - prototipo local';
 export const AVISO =
   'Registro de datos autodeclarados o mediciones previas. No constituye diagnóstico ni aptitud para vuelo.';
-export const NOMBRE_ARCHIVO = 'ASTRA_registro_premision.json';
+export const NOMBRE_ARCHIVO = 'FINTRAX_registro_premision.json';
 
 /**
  * @typedef {'Femenino'|'Masculino'|''} Sexo

@@ -14,7 +14,7 @@ const COLORES = { ok: '#00f5b4', warn: '#ffaa33', bad: '#ff3860', na: '#8ebad9' 
 const PUNTOS = 60;
 
 function crearTarjeta(serie) {
-  const card = el('article', { class: 'astra-chart', dataset: { hasData: 'false', st: 'na' } });
+  const card = el('article', { class: 'fintrax-chart', dataset: { hasData: 'false', st: 'na' } });
 
   const cabecera = el('header');
   cabecera.append(el('span', { text: serie.name }));
@@ -26,8 +26,8 @@ function crearTarjeta(serie) {
   card.append(cabecera);
 
   const canvas = el('canvas', { 'aria-hidden': 'true' });
-  const vacio = el('div', { class: 'astra-chart__empty', text: serie.source });
-  const fuente = el('span', { class: 'astra-chart__source', text: serie.source });
+  const vacio = el('div', { class: 'fintrax-chart__empty', text: serie.source });
+  const fuente = el('span', { class: 'fintrax-chart__source', text: serie.source });
   card.append(canvas, vacio, fuente);
 
   return { card, canvas, valor, vacio, fuente, serie, data: [] };
