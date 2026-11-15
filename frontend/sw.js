@@ -4,8 +4,8 @@
  * - Al instalarse guarda en caché todos los archivos de la app (PRECACHE).
  * - Responde desde la caché y actualiza en segundo plano
  *   (stale-while-revalidate): los cambios llegan en la siguiente apertura.
- * - `config.json` se pide primero a la red (puede cambiar en el equipo) y se
- *   guarda como respaldo; no se precarga porque no se versiona.
+ * - `config.json` y `config.demo.json` se piden primero a la red (pueden
+ *   cambiar) y se guardan como respaldo; no van en PRECACHE porque son opcionales.
  * - Las peticiones al backend (otro origen) no pasan por la caché.
  *
  * Al añadir o quitar archivos de src/ o assets/, actualiza PRECACHE: un test
@@ -81,8 +81,9 @@ self.addEventListener('install', (event) => {
     caches.open(VERSION)
       .then(async (cache) => {
         await cache.addAll(PRECACHE);
-        // Opcional: sin config.json la app sigue en modo de configuración manual.
+        // Opcionales: sin configuración la app sigue en modo de conexión manual.
         await cache.add('config.json').catch(() => {});
+        await cache.add('config.demo.json').catch(() => {});
       })
       .then(() => self.skipWaiting())
   );
@@ -126,5 +127,6 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  event.respondWith(url.pathname.endsWith('/config.json') ? primeroRed(request) : cacheYActualiza(request));
+  const esConfig = url.pathname.endsWith('/config.json') || url.pathname.endsWith('/config.demo.json');
+  event.respondWith(esConfig ? primeroRed(request) : cacheYActualiza(request));
 });

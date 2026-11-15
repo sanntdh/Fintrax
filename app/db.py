@@ -54,6 +54,10 @@ def crear_engine(url: str) -> Engine:
         opciones["connect_args"] = {"check_same_thread": False}
         if _es_memoria(url):
             opciones["poolclass"] = StaticPool
+    else:
+        # Los PostgreSQL gestionados (Neon) cierran conexiones inactivas: se
+        # comprueba cada una antes de usarla y se renueva si ya no sirve.
+        opciones["pool_pre_ping"] = True
     motor = create_engine(url, **opciones)
     if url.startswith("sqlite"):
         event.listen(motor, "connect", _activar_fk)

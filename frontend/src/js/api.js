@@ -458,7 +458,9 @@ export function normalizarConfig(raw) {
   if (!raw || typeof raw !== 'object') return null;
   const backend = normalizarBase(raw.backend);
   if (!backend) return null;
-  const clave = typeof raw.clave === 'string' ? raw.clave.trim() : '';
+  // Un marcador como «<clave …>» es un hueco sin rellenar, no una clave.
+  const texto = typeof raw.clave === 'string' ? raw.clave.trim() : '';
+  const clave = /^<.*>$/.test(texto) ? '' : texto;
   const id = raw.astronautaId;
   return {
     backend,

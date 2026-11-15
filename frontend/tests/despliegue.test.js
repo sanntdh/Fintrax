@@ -47,3 +47,25 @@ test('no se publican la clave del equipo, las pruebas ni los HTML de referencia'
     assert.ok(ignorados.includes(patron), `.vercelignore debe excluir ${patron}`);
   }
 });
+
+test('la demo pública conecta sola con el backend publicado', async () => {
+  const { normalizarConfig } = await import('../src/js/api.js');
+  const demo = normalizarConfig(JSON.parse(await leer('config.demo.json')));
+  assert.equal(demo.backend, 'https://fintrax-pxxs.onrender.com');
+  assert.match(await leer('src/js/centro.js'), /'config\.json', 'config\.demo\.json'/, 'config.demo.json debe ser el respaldo de config.json');
+  for (const archivo of ['.vercelignore', '.gitignore']) {
+    assert.equal((await leer(archivo)).split('\n').includes('config.demo.json'), false, `${archivo} no debe excluir la demo`);
+  }
+});
+
+test('la configuración de la demo se pide a la red y se guarda para usarla sin conexión', async () => {
+  const sw = await leer('sw.js');
+  assert.match(sw, /cache\.add\('config\.demo\.json'\)/);
+  assert.match(sw, /config\.demo\.json/);
+  assert.match((await cabeceras('/config.demo.json'))['cache-control'], /max-age=0/);
+});
+
+test('un marcador de clave sin rellenar no se usa como clave', async () => {
+  const { normalizarConfig } = await import('../src/js/api.js');
+  assert.equal(normalizarConfig({ backend: 'https://nave.local', clave: '<clave del astronauta de demo>' }).clave, '');
+});

@@ -430,3 +430,10 @@ def test_url_con_driver_o_sqlite_no_cambia():
     from app.db import crear_engine
     assert crear_engine("postgresql+psycopg://u:c@h/db").dialect.driver == "psycopg"
     assert crear_engine("sqlite:///:memory:").dialect.name == "sqlite"
+
+
+def test_postgres_comprueba_la_conexion_antes_de_usarla():
+    # Neon suspende el cómputo sin uso y cierra las conexiones del pool; sin
+    # comprobación previa, la primera petición tras despertar devuelve un 500.
+    from app.db import crear_engine
+    assert crear_engine("postgresql://u:c@h/db").pool._pre_ping is True

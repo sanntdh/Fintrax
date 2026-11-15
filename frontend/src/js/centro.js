@@ -74,6 +74,8 @@ let ultimoEstado = null;
 
 const claveActual = () => leerApiKey(sesion()) || config?.clave || '';
 const modoMantenimiento = () => new URLSearchParams(location.search).has('mantenimiento');
+/** Con una configuración completa la tripulación no ve el diálogo; sin clave, sí. */
+const conexionAutomatica = () => Boolean(config?.clave) && !modoMantenimiento();
 
 function apiActual() {
   // Prioridad: ?api= (pruebas) > config.json (misión) > URL guardada a mano.
@@ -100,7 +102,7 @@ function pintarIndicador() {
   };
   boton.dataset.estado = enlace === 'on' ? 'on' : 'off';
   $('[data-centro-label]', boton).textContent = textos[enlace];
-  boton.title = config && !modoMantenimiento() ? 'Pulsa para reintentar la conexión' : 'Configurar la conexión';
+  boton.title = conexionAutomatica() ? 'Pulsa para reintentar la conexión' : 'Configurar la conexión';
 }
 
 /**
@@ -128,17 +130,26 @@ async function comprobarEnlace() {
   return enlace === 'on';
 }
 
+/**
+ * `config.json` es la configuración privada de un equipo de a bordo (no se
+ * versiona); `config.demo.json`, la pública de la demo desplegada, con una
+ * cuenta de rol «astronauta». Se usa la primera que exista y sea válida.
+ */
 async function cargarConfig() {
-  try {
-    const respuesta = await fetch('config.json', { cache: 'no-store' });
-    config = respuesta.ok ? normalizarConfig(await respuesta.json()) : null;
-  } catch {
-    config = null;
+  config = null;
+  for (const archivo of ['config.json', 'config.demo.json']) {
+    try {
+      const respuesta = await fetch(archivo, { cache: 'no-store' });
+      config = respuesta.ok ? normalizarConfig(await respuesta.json()) : null;
+    } catch {
+      config = null;
+    }
+    if (config) return;
   }
 }
 
 async function alPulsarIndicador() {
-  if (!config || modoMantenimiento()) {
+  if (!conexionAutomatica()) {
     abrirDialogo();
     return;
   }
@@ -237,7 +248,7 @@ function pintarFranja({ estado, titulo, texto = '', resumen = null }) {
   host.append(cabecera);
 
   if (estado === 'off') {
-    const reintentar = Boolean(config) && !modoMantenimiento();
+    const reintentar = conexionAutomatica();
     const boton = el('button', { type: 'button', class: 'fintrax-btn fintrax-btn--secondary', text: reintentar ? 'Reintentar' : 'Conectar' });
     boton.addEventListener('click', () => (reintentar ? enviarAlCentro(ultimoEstado) : abrirDialogo()));
     host.append(boton);
