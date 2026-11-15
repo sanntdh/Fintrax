@@ -251,12 +251,10 @@ def registrar_medicion(db, astro, datos, usuario=None):
     try:
         validar_entradas(p, s, ambiente)
         bases = bases_activas(db, astro)
-        if datos.contexto != "preflight" and None not in bases:
-            raise ErrorNegocio(409, "Calcule una línea base personal vigente antes de evaluar en misión")
         base = datos_base(bases[None]) if None in bases else None
         fases = {k: datos_base(v) for k, v in bases.items() if k is not None}
         r = None if datos.contexto == "preflight" else evaluar(p, s, ambiente,
-            LineaBase(**base), {k: LineaBase(**v) for k, v in fases.items()},
+            LineaBase(**base) if base is not None else None, {k: LineaBase(**v) for k, v in fases.items()},
             reglas=reglas, complementarios=_complementarios(comp))
     except (ValueError, TypeError) as exc:
         raise ErrorNegocio(422, str(exc)) from exc
@@ -283,6 +281,10 @@ def registrar_medicion(db, astro, datos, usuario=None):
     db.add(e)
     db.flush()
     _alertas_evaluacion(db, e, reglas)
+    if base is None:
+        aviso_base = emitir_alerta(db, astro.id, "sin_linea_base", 1,
+                                  "Sin línea base personal: solicitar cálculo al médico", e.id, e.ts)
+        aviso_base.destinatarios = ["medico"]
     if (ultima is None or datos.ts >= ultima) and ahora() - datos.ts <= timedelta(hours=reglas.horas_sin_medicion):
         for alerta in db.scalars(select(Alerta).where(Alerta.astronauta_id == astro.id,
                     Alerta.tipo == "sin_medicion", Alerta.estado != "resuelta")):
@@ -313,7 +315,8 @@ def reproducir_evaluacion(db, evaluacion):
     version = db.get(ReglasVersion, e.version_reglas)
     entrada = e.entrada
     r = evaluar(Perfil(**entrada["perfil"]), Signos(**entrada["signos"]), Ambiente(**entrada["ambiente"]),
-                LineaBase(**entrada["base"]), {k: LineaBase(**v) for k, v in entrada["base_por_fase"].items()},
+                LineaBase(**entrada["base"]) if entrada["base"] is not None else None,
+                {k: LineaBase(**v) for k, v in entrada["base_por_fase"].items()},
                 reglas=Reglas.desde_dict(version.contenido), complementarios=_complementarios(entrada["complementarios"]))
     resultado = serializar_resultado(r)
     campos = ("nivel", "news2_total", "niveles_capas", "alertas")

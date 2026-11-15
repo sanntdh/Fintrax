@@ -66,17 +66,40 @@ def test_preflight_solo_persiste_y_flujo_alertas_reproduccion(entorno):
     assert c.post(f"/alertas/{aid}/reconocer", headers=h).status_code == 409
 
 
-def test_invalida_y_sin_base_no_dejan_mediciones(entorno):
+def test_sin_base_evalua_y_entradas_invalidas_no_se_guardan(entorno):
     c, app, h = entorno
     a = astronauta(c, h)
-    assert lectura(c, h, a, contexto="vuelo").status_code == 409
+    assert lectura(c, h, a, contexto="vuelo").status_code == 201
     assert lectura(c, h, a, complementarios={"cambio_visual": True}).status_code == 422
     assert lectura(c, h, a, signos={"fr": "NaN", "pas": -5, "spo2": 98, "fc": 64, "temp": 36.6}).status_code == 422
     with app.state.SessionLocal() as db:
-        assert db.scalar(select(func.count()).select_from(Medicion)) == 0
+        assert db.scalar(select(func.count()).select_from(Medicion)) == 1
     r = c.post(f"/astronautas/{a}/linea-base", headers=h)
     assert r.status_code == 409
     assert "faltan" in r.text.lower()
+
+
+@pytest.mark.parametrize("signos,extras,tipo,nivel", [
+    ({"fc":135,"fr":26,"spo2":90,"pas":115,"temp":36.6,"conciencia":"confuso"}, {}, "news2", 2),
+    ({"fc":64,"fr":14,"spo2":98,"pas":115,"temp":36.6}, {"co2_mmhg":5.5}, "co2", 2),
+    ({"fc":64,"fr":14,"spo2":98,"pas":115,"temp":36.6}, {"complementarios":{"cambio_visual":True}}, "cribado:sans", 0),
+])
+def test_mision_sin_base_conserva_piso_y_reproduce(entorno, signos, extras, tipo, nivel):
+    c, app, h = entorno
+    a = astronauta(c, h)
+    r = lectura(c, h, a, contexto="vuelo", dias=0, signos=signos, **extras)
+    assert r.status_code == 201, r.text
+    e = r.json()["evaluacion"]
+    assert e["nivel"] == nivel
+    assert e["entrada"]["base"] is None
+    assert e["resultado"]["niveles_capas"]["desviacion"] == 0
+    assert any("Sin linea base personal" in n for n in e["resultado"]["notas"])
+    alertas = c.get("/alertas", headers=h).json()
+    assert tipo in {aviso["tipo"] for aviso in alertas}
+    aviso = next(aviso for aviso in alertas if aviso["tipo"] == "sin_linea_base")
+    assert int(aviso["nivel"]) == 1 and aviso["destinatarios"] == ["medico"]
+    repro = c.post(f'/evaluaciones/{e["id"]}/reproducir', headers=h)
+    assert repro.status_code == 200 and repro.json()["coincide"]
 
 
 def test_permisos_auditoria_y_tierra_oculta_ciclo(entorno):

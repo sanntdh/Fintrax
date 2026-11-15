@@ -66,8 +66,8 @@ def test_base_outliers_version_y_masa(db):
     assert not primera.activa
     medir(db, a, contexto="vuelo", masa_kg=84)
     assert not segunda.activa
-    with pytest.raises(s.ErrorNegocio):
-        medir(db, a, contexto="vuelo")
+    sin_base = medir(db, a, contexto="vuelo")["evaluacion"]
+    assert sin_base.entrada["base"] is None
 
 
 def test_base_general_sin_lutea_y_fases(db):
