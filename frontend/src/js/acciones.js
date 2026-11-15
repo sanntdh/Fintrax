@@ -4,7 +4,7 @@
  */
 
 import { el, limpiar } from './dom.js';
-import { AREAS, SINTOMAS_POR_AREA, SISTEMAS_POR_AREA, SINTOMAS_URGENTES } from '../data/acciones.js';
+import { AREAS, FUENTES, CONFERENCIA_MEDICA, SINTOMAS_POR_AREA, SISTEMAS_POR_AREA, SINTOMAS_URGENTES } from '../data/acciones.js';
 
 const NOMBRES_SISTEMA = {
   cardio: 'signos vitales',
@@ -41,6 +41,16 @@ export function accionesPara({ symptoms = [], systems = {} } = {}) {
   return { urgente, areas };
 }
 
+/** Referencia visible: nombre y página; las de NASA enlazan al documento público. */
+function referencia(accion) {
+  const fuente = FUENTES[accion.fuente] || { nombre: accion.fuente };
+  const texto = `${fuente.nombre} · p. ${accion.pagina}`;
+  if (!fuente.url) return el('cite', { text: texto });
+  const cita = el('cite');
+  cita.append(el('a', { href: fuente.url, target: '_blank', rel: 'noopener noreferrer', text: texto }));
+  return cita;
+}
+
 function tarjeta(area) {
   const card = el('article', { class: 'fintrax-accion', dataset: { respaldada: String(area.respaldada) } });
   card.append(el('h3', { text: area.titulo }), el('p', { class: 'fintrax-accion__motivo', text: `Por: ${area.motivos.join(' · ')}` }));
@@ -51,7 +61,7 @@ function tarjeta(area) {
   const lista = el('ol');
   for (const accion of area.acciones) {
     const item = el('li');
-    item.append(el('span', { text: accion.texto }), el('cite', { text: `${accion.fuente} · p. ${accion.pagina}` }));
+    item.append(el('span', { text: accion.texto }), referencia(accion));
     lista.append(item);
   }
   card.append(lista);
@@ -70,7 +80,9 @@ export function createAcciones(host) {
         const aviso = el('div', { class: 'fintrax-accion-urgente', role: 'alert' });
         aviso.append(
           el('strong', { text: 'Avisa ahora al equipo médico de vuelo.' }),
-          el('span', { text: 'Protocolo Fintrax ante dolor en el pecho, falta de aire o signos vitales en rango de atención.' })
+          el('span', { text: 'Protocolo Fintrax ante dolor en el pecho, falta de aire o signos vitales en rango de atención.' }),
+          el('span', { text: CONFERENCIA_MEDICA.texto }),
+          referencia(CONFERENCIA_MEDICA)
         );
         host.append(aviso);
       }
@@ -90,7 +102,7 @@ export function createAcciones(host) {
 
       host.append(el('p', {
         class: 'fintrax-acciones-nota',
-        text: 'Acciones tomadas de las fuentes del proyecto (EXON, FISIO, LIMEN), con su página. No sustituyen al equipo médico.'
+        text: 'Acciones de las fuentes del proyecto (EXON, FISIO) y de documentos públicos de NASA, con su página. No sustituyen al equipo médico.'
       }));
     }
   };

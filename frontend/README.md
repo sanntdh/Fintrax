@@ -109,7 +109,9 @@ Documentación detallada:
 - Avatar holográfico con zonas interactivas, conmutación por sexo y estados por color.
 - Evaluación por zona y por sistema, con estado explícito «SIN DATOS» cuando no hay medición.
 - **Qué hacer** (pestaña inicial): acciones según molestias y sistemas
-  alterados, cada una con fuente y página (`src/data/acciones.js`).
+  alterados, cada una con fuente y página (`src/data/acciones.js`): EXON y FISIO
+  para mareo, músculo, hueso y defensas; documentos públicos de NASA, enlazados,
+  para visión, sueño y ánimo (ver «Fuentes de NASA» en `docs/FUENTES.md`).
 - **Comparativa** estática habitual frente a actual de seis indicadores, con las
   anomalías primero. No hay telemetría: Fintrax no monitoriza de forma continua.
 - Tarjetas de orientación por síntoma (posible causa, qué hacer, señal de alarma).

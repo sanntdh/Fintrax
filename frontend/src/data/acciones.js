@@ -6,12 +6,48 @@
  * - FISIO: Physiotherapy Beyond Earth (IJFMR).
  * - LIMEN: Astronaut Genetic Persona Mapping (paper de congreso).
  *
+ * Más documentos públicos de NASA para visión, sueño y ánimo (ver la sección
+ * «Fuentes de NASA» de docs/FUENTES.md).
+ *
  * `pagina` es la página del PDF contada desde 1 y `cita` el texto literal que
- * respalda la acción. Las fuentes describen contramedidas y rehabilitación,
- * no primeros auxilios ni signos de alarma: un área sin respaldo se muestra
- * como tal, sin inventar acciones. Los `id` coinciden con los códigos de
- * condición del backend.
+ * respalda la acción. Ninguna fuente describe signos de alarma: un área sin
+ * respaldo se mostraría como tal, sin inventar acciones. Los `id` coinciden
+ * con los códigos de condición del backend.
  */
+
+export const FUENTES = {
+  EXON: { nombre: 'EXON' },
+  FISIO: { nombre: 'FISIO' },
+  LIMEN: { nombre: 'LIMEN' },
+  'SANS-MTB': {
+    nombre: 'NASA · SANS (OCHMO-MTB-001)',
+    nasa: true,
+    url: 'https://www.nasa.gov/wp-content/uploads/2024/02/ochmo-mtb-001-sans.pdf'
+  },
+  'SLEEP-ER': {
+    nombre: 'NASA HRP · Evidence Report de sueño',
+    nasa: true,
+    url: 'https://humanresearchroadmap.nasa.gov/Evidence/reports/Sleep.pdf'
+  },
+  'BHP-OPS': {
+    nombre: 'NASA · Behavioral Health and Performance',
+    nasa: true,
+    url: 'https://ntrs.nasa.gov/api/citations/20170003866/downloads/20170003866.pdf'
+  },
+  'ISS-MEDOPS': {
+    nombre: 'NASA · ISS Medical Operations',
+    nasa: true,
+    url: 'https://ntrs.nasa.gov/api/citations/20080010877/downloads/20080010877.pdf'
+  }
+};
+
+/** Respaldo de NASA para «avisa al equipo médico»: la PMC se pide cuando se quiera. */
+export const CONFERENCIA_MEDICA = {
+  texto: 'Puedes pedir una conferencia médica privada con tu cirujano de vuelo en cualquier momento.',
+  fuente: 'ISS-MEDOPS',
+  pagina: 1,
+  cita: 'Private medical conferences (PMCs) are conducted regularly and upon crew request'
+};
 
 export const AREAS = {
   alteracion_vestibular: {
@@ -87,8 +123,40 @@ export const AREAS = {
       }
     ]
   },
-  sans: { titulo: 'Visión', acciones: [] },
-  salud_mental_sueno: { titulo: 'Sueño, ánimo y concentración', acciones: [] }
+  sans: {
+    titulo: 'Visión',
+    acciones: [
+      {
+        texto: 'Si ves borroso, usa las gafas de ajuste que lleva la nave.',
+        fuente: 'SANS-MTB',
+        pagina: 12,
+        cita: 'All crew fly with at least 3 pairs of prescription lenses of varying power to help compensate for vision decrements in-flight.'
+      },
+      {
+        texto: 'Comunica el cambio: en vuelo se hacen pruebas de agudeza visual y rejilla de Amsler.',
+        fuente: 'SANS-MTB',
+        pagina: 7,
+        cita: 'Amsler Grid … Pre-, in-, and post-flight'
+      }
+    ]
+  },
+  salud_mental_sueno: {
+    titulo: 'Sueño, ánimo y concentración',
+    acciones: [
+      {
+        texto: 'Evita actividades con luz adicional antes de dormir.',
+        fuente: 'SLEEP-ER',
+        pagina: 34,
+        cita: 'access to activities that do not involve supplemental light exposure before sleep'
+      },
+      {
+        texto: 'Habla de sueño, fatiga, ánimo o concentración en tu conferencia psicológica privada.',
+        fuente: 'BHP-OPS',
+        pagina: 16,
+        cita: 'Sleep (duration and quality) and sleep shift issues; Fatigue level; Mood and Cognition'
+      }
+    ]
+  }
 };
 
 /** Molestias que activan cada área (mismos criterios que los complementarios del backend). */

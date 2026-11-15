@@ -324,6 +324,18 @@
   letter-spacing: 0.5px;
 }
 
+#fintrax-app .fintrax-accion cite a,
+#fintrax-app .fintrax-accion-urgente cite a {
+  color: var(--cy);
+  font-style: normal;
+  text-underline-offset: 2px;
+}
+
+#fintrax-app .fintrax-accion-urgente cite {
+  font-size: var(--fs-xs);
+  font-style: normal;
+}
+
 #fintrax-app .fintrax-accion-vacio,
 #fintrax-app .fintrax-acciones-nota,
 #fintrax-app .fintrax-comp-intro {
