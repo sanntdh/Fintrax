@@ -156,6 +156,47 @@ def _evento(db, alerta, accion, usuario=None, nota=None):
                        rol=usuario.rol if usuario else "sistema", accion=accion, nota=nota))
 
 
+DESTINATARIOS_ALTO = ("astronauta", "medico", "tierra")
+DESTINATARIOS_MEDIO = ("astronauta", "medico")
+DESTINATARIOS_SIN_MEDICION = ("medico", "tierra")
+DESTINATARIOS_SIN_LINEA_BASE = ("medico",)
+DESTINATARIOS_CRIBADO = ("medico", "astronauta")
+
+
+def nivel_numerico(nivel):
+    """Nivel como entero; tolera el texto histórico ALTO/MEDIO sin romper la lectura."""
+    try:
+        return int(nivel)
+    except (TypeError, ValueError):
+        return 2 if str(nivel).strip().upper() == "ALTO" else 1
+
+
+def destinatarios_politica(tipo, nivel):
+    """Destinatarios canónicos por tipo y nivel vigente, sin consultar la base."""
+    if tipo == "sin_linea_base":
+        return list(DESTINATARIOS_SIN_LINEA_BASE)
+    if tipo == "sin_medicion":
+        return list(DESTINATARIOS_SIN_MEDICION)
+    if isinstance(tipo, str) and tipo.startswith("cribado:"):
+        return list(DESTINATARIOS_CRIBADO)
+    return list(DESTINATARIOS_ALTO) if nivel_numerico(nivel) >= 2 else list(DESTINATARIOS_MEDIO)
+
+
+def alerta_visible(alerta, rol):
+    """Visibilidad de una alerta para un rol.
+
+    admin y medico ven siempre. tierra y astronauta solo si el rol figura tanto en
+    los destinatarios almacenados como en la política vigente por tipo y nivel; la
+    intersección evita filtrar alertas antiguas con destinatarios demasiado amplios.
+    """
+    rol = (rol or "").lower()
+    if rol in ("admin", "medico"):
+        return True
+    if rol not in ("tierra", "astronauta"):
+        return False
+    return rol in (alerta.destinatarios or []) and rol in destinatarios_politica(alerta.tipo, alerta.nivel)
+
+
 def emitir_alerta(db, astro_id, tipo, nivel, mensaje, evaluacion_id=None, ts=None):
     nivel = int(nivel)
     abierta = db.scalar(select(Alerta).where(Alerta.astronauta_id == astro_id, Alerta.tipo == tipo,
@@ -168,12 +209,13 @@ def emitir_alerta(db, astro_id, tipo, nivel, mensaje, evaluacion_id=None, ts=Non
             abierta.estado = "nueva"
             abierta.mensaje = mensaje
             abierta.evaluacion_id = evaluacion_id
+            abierta.destinatarios = destinatarios_politica(tipo, nivel)
             _evento(db, abierta, "escalada")
         else:
             _evento(db, abierta, "reiterada")
         return abierta
     nueva = Alerta(astronauta_id=astro_id, evaluacion_id=evaluacion_id, tipo=tipo, nivel=str(nivel),
-                    mensaje=mensaje, estado="nueva", destinatarios=["astronauta", "medico", "tierra"],
+                    mensaje=mensaje, estado="nueva", destinatarios=destinatarios_politica(tipo, nivel),
                     ocurrencias=1, ultima_ts=ts or ahora())
     db.add(nueva)
     db.flush()

@@ -38,24 +38,32 @@ def publico(datos, usuario):
     if usuario.rol != "tierra":
         return datos
     sensibles = {"entrada", "ciclo", "fase", "fase_ciclo", "ultima_menstruacion", "duracion_ciclo"}
+    cribado = {"condiciones", "evidencia"}
     patron = re.compile(r"cicl|fase|menstr|l[uú]te|folicul|ovul", re.IGNORECASE)
+    omitido = object()
 
     def limpiar(valor):
         if isinstance(valor, dict):
+            if isinstance(valor.get("tipo"), str) and valor["tipo"].startswith("cribado:"):
+                return omitido
             salida = {}
             for k, v in valor.items():
-                if k in sensibles:
+                if k in sensibles or k in cribado:
                     continue
                 if k in ("nota", "mensaje", "detalle") and isinstance(v, str) and patron.search(v):
                     v = "Información clínica restringida"
                 if k in ("notas", "avisos") and isinstance(v, list):
                     v = [t for t in v if not isinstance(t, str) or not patron.search(t)]
-                salida[k] = limpiar(v)
+                limpio = limpiar(v)
+                if limpio is not omitido:
+                    salida[k] = limpio
             return salida
         if isinstance(valor, list):
-            return [limpiar(v) for v in valor]
+            return [x for x in (limpiar(v) for v in valor) if x is not omitido]
         return valor
-    return limpiar(datos)
+
+    resultado = limpiar(datos)
+    return {} if resultado is omitido else resultado
 
 
 def create_app(database_url=None, revision_minutos=None):
@@ -241,16 +249,25 @@ def create_app(database_url=None, revision_minutos=None):
 
     @app.get("/alertas")
     def alertas(db: Session = Depends(get_db), u=Depends(requiere("leer")), limite: int = Query(100, ge=1, le=200)):
-        q = select(Alerta).order_by(Alerta.creada.desc(), Alerta.id.desc()).limit(limite)
+        q = select(Alerta).order_by(Alerta.creada.desc(), Alerta.id.desc())
         if u.rol == "astronauta":
             q = q.where(Alerta.astronauta_id == u.astronauta_id)
-        return publico([fila(a) for a in db.scalars(q)], u)
+        if u.rol in ("admin", "medico"):
+            return publico([fila(a) for a in db.scalars(q.limit(limite))], u)
+        # tierra/astronauta: filtra por destinatarios antes de aplicar el límite.
+        visibles = [a for a in db.scalars(q) if svc.alerta_visible(a, u.rol)][:limite]
+        return publico([fila(a) for a in visibles], u)
 
     def ver_alerta(db, u, id, permiso="leer"):
         a = db.get(Alerta, id)
         if a is None:
             raise svc.ErrorNegocio(404, "Alerta no disponible")
         astro_autorizado(db, u, a.astronauta_id, permiso)
+        if not svc.alerta_visible(a, u.rol):
+            auditar(db, u, "acceso", "alerta", astronauta_id=a.astronauta_id,
+                    detalle="denegado por destinatarios", exito=False)
+            db.commit()
+            raise HTTPException(403, "Acceso no autorizado")
         return a
 
     @app.get("/alertas/{id}")
