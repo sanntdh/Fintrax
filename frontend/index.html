@@ -16,6 +16,7 @@
 <link rel="stylesheet" href="src/css/form.css">
 <link rel="stylesheet" href="src/css/avatar.css">
 <link rel="stylesheet" href="src/css/results.css">
+<link rel="stylesheet" href="src/css/api-panel.css">
 <link rel="stylesheet" href="src/css/a11y.css">
 </head>
 <body>
@@ -184,6 +185,77 @@
         <p class="astra-field__error" data-form-status role="status" aria-live="polite"></p>
       </form>
     </section>
+
+    <!-- Enlace con el backend de monitoreo -->
+    <section class="astra-panel astra-panel--api" id="astra-api" aria-labelledby="astra-api-title">
+      <div class="astra-heading">
+        <span class="astra-heading__icon" aria-hidden="true">🛰</span>
+        <div>
+          <h2 id="astra-api-title">Enlace con el backend de monitoreo</h2>
+          <p>Línea base y misión contra la API real. El servidor es la referencia autoritativa; el cálculo local sigue siendo orientativo.</p>
+        </div>
+      </div>
+
+      <div class="astra-api-grid">
+        <div class="astra-api-block">
+          <h3>Conexión</h3>
+          <label for="astra-api-base">URL del backend (http o https)</label>
+          <input type="url" id="astra-api-base" data-api-base placeholder="https://servidor:8000" autocomplete="off" spellcheck="false">
+          <label for="astra-api-key">Clave de API (X-API-Key)</label>
+          <input type="password" id="astra-api-key" data-api-key autocomplete="off" spellcheck="false">
+          <label for="astra-api-rol">Rol declarado (orientativo; el servidor autoriza)</label>
+          <select id="astra-api-rol" data-api-rol>
+            <option value="astronauta">Astronauta</option>
+            <option value="medico">Médico</option>
+            <option value="admin">Administrador</option>
+            <option value="tierra">Tierra</option>
+          </select>
+          <p class="astra-api-hint">La clave se guarda solo en la sesión de esta pestaña; nunca en el repositorio ni en la URL.</p>
+          <button type="button" class="astra-btn astra-btn--secondary" data-api-conectar>Conectar y listar astronautas</button>
+          <p class="astra-api-status" data-api-estado role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="astra-api-block" data-api-astro-block hidden>
+          <h3>Astronauta</h3>
+          <label for="astra-api-astro">Seleccionar de la lista</label>
+          <select id="astra-api-astro" data-api-astro></select>
+          <label for="astra-api-astro-id">…o indicar el id</label>
+          <div class="astra-api-row">
+            <input type="number" id="astra-api-astro-id" data-api-astro-id min="1" step="1" inputmode="numeric" placeholder="Ej. 1">
+            <button type="button" class="astra-btn astra-btn--secondary" data-api-usar-astro>Usar id</button>
+          </div>
+          <p class="astra-api-status" data-api-astro-estado role="status" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <div class="astra-api-step" data-api-preflight hidden>
+        <h3>Paso 1 · Línea base (cinco lecturas en reposo)</h3>
+        <p class="astra-api-hint">Cada lectura se envía por separado con contexto «preflight», sin complementarios ni ejercicio. El borrador se conserva aunque falle un envío.</p>
+        <p class="astra-api-progreso" data-api-preflight-progreso>0 de 5 lecturas enviadas</p>
+        <div data-api-preflight-lecturas></div>
+        <div class="astra-api-actions">
+          <button type="button" class="astra-btn astra-btn--secondary" data-api-preflight-enviar>Enviar lecturas pendientes</button>
+          <button type="button" class="astra-btn astra-btn--primary" data-api-calcular-base>Calcular línea base</button>
+        </div>
+        <p class="astra-api-error" data-api-preflight-error role="alert"></p>
+        <div data-api-base-lista></div>
+      </div>
+
+      <div class="astra-api-step" data-api-mision hidden>
+        <h3>Paso 2 · Misión (lectura en vuelo)</h3>
+        <p class="astra-api-hint">Registra la lectura actual. Los complementarios se deducen de los síntomas marcados en el formulario; el mapeo es aproximado y pierde matices. Un síntoma no marcado queda como desconocido, nunca como negativo.</p>
+        <div data-api-mision-signos></div>
+        <fieldset class="astra-api-comp">
+          <legend>Complementarios observados (checkboxes dedicados)</legend>
+          <div data-api-complementarios></div>
+        </fieldset>
+        <div class="astra-api-actions">
+          <button type="button" class="astra-btn astra-btn--primary" data-api-mision-enviar>Registrar lectura de misión</button>
+        </div>
+        <p class="astra-api-error" data-api-mision-error role="alert"></p>
+        <div data-api-oficial></div>
+      </div>
+    </section>
   </main>
 
   <!-- Resultados -->
@@ -193,6 +265,7 @@
         <h2 id="astra-banner-title" data-banner-title>◇ SIN DATOS SUFICIENTES</h2>
         <p data-banner-text>Completa el registro para obtener orientación.</p>
         <small>Resultado informativo y simulado a partir de tus datos; no sustituye una evaluación médica.</small>
+        <p class="astra-local-note" data-local-note>Orientación local, no resultado oficial</p>
       </div>
       <div class="astra-banner__chips" data-banner-chips></div>
     </div>
@@ -214,10 +287,10 @@
         </div>
       </div>
 
-      <aside class="astra-res-col" aria-label="Telemetría simulada">
-        <div class="astra-col-title">◆ TELEMETRÍA SIMULADA · ÚLTIMOS 60 S</div>
+      <aside class="astra-res-col" aria-label="Historial oficial del backend">
+        <div class="astra-col-title">◆ HISTORIAL OFICIAL · NEWS2 Y SIGNOS</div>
         <div class="astra-res-col" data-charts></div>
-        <p class="astra-charts-note">Series generadas a partir de tus mediciones. Las tarjetas sin medición real se muestran vacías: no se inventan lecturas.</p>
+        <p class="astra-charts-note">Series tomadas del historial del backend y de la línea base. Las tarjetas sin datos reales se muestran vacías: no se inventan lecturas.</p>
       </aside>
     </div>
 

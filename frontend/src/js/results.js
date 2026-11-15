@@ -8,8 +8,7 @@
 import { $, el, limpiar, desplazarA } from './dom.js';
 import { MENSAJES, SIN_ALTERACIONES, CONSEJO_ESTADO } from '../data/content.js';
 import { ESTADOS } from '../data/severity.js';
-import { configurarSeries } from './evaluation.js';
-import { createCharts } from './charts.js';
+import { createCharts, construirSeriesHistorial } from './charts.js';
 import { beep } from './audio.js';
 
 function nombresEn(result, estado) {
@@ -152,7 +151,7 @@ export function initResults({ avatar }) {
     avatar.setGlow(result.overall === 'unknown' ? 'na' : result.overall);
     avatar.setSelection(seleccion);
 
-    charts.update(configurarSeries(result));
+    charts.update(construirSeriesHistorial(state.backend?.historial, state.backend?.base));
   }
 
   return {

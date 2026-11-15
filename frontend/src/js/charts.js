@@ -1,17 +1,75 @@
 /**
- * Telemetría de las cuatro series (frecuencia cardíaca, saturación, presión y
- * temperatura).
+ * Gráficas del historial oficial.
  *
- * Diferencia deliberada con el prototipo: si no hay una medición real, la
- * tarjeta muestra «sin datos» y no dibuja ninguna curva inventada. El título de
- * la columna ya advierte que la telemetría es simulada.
+ * Sustituyen a la telemetría simulada del prototipo: ya no hay temporizadores
+ * ni valores aleatorios. Cada serie se construye a partir de `GET /historial`
+ * (evaluaciones reales, ordenadas por tiempo) y de la línea base activa
+ * (`GET /linea-base`) como referencia. Un dato ausente queda en `null`: la
+ * gráfica no lo inventa.
  */
 
-import { el, limpiar, movimientoReducido } from './dom.js';
-import { escala } from './format.js';
+import { el, limpiar } from './dom.js';
+import { escala, num } from './format.js';
 
 const COLORES = { ok: '#00f5b4', warn: '#ffaa33', bad: '#ff3860', na: '#8ebad9' };
-const PUNTOS = 60;
+
+/** Series mostradas: NEWS2 y los cinco signos frente a la línea base. */
+const DEFINICIONES = [
+  { id: 'news2', name: 'NEWS2', unit: '', decimals: 0, lo: 0, hi: 12, ok: [0, 4], wn: [0, 6], campo: null },
+  { id: 'fc', name: 'FRECUENCIA CARDÍACA', unit: 'bpm', decimals: 0, lo: 40, hi: 160, ok: [50, 100], wn: [40, 130], campo: 'fc' },
+  { id: 'spo2', name: 'SATURACIÓN DE OXÍGENO', unit: '%', decimals: 0, lo: 85, hi: 100, ok: [96, 100], wn: [92, 100], campo: 'spo2' },
+  { id: 'pas', name: 'PRESIÓN SISTÓLICA', unit: 'mmHg', decimals: 0, lo: 70, hi: 180, ok: [90, 129], wn: [85, 159], campo: 'pas' },
+  { id: 'fr', name: 'FRECUENCIA RESPIRATORIA', unit: 'rpm', decimals: 0, lo: 6, hi: 40, ok: [12, 20], wn: [9, 24], campo: 'fr' },
+  { id: 'temp', name: 'TEMPERATURA CORPORAL', unit: '°C', decimals: 1, lo: 35, hi: 40, ok: [36.1, 37.5], wn: [35.5, 38.5], campo: 'temp' }
+];
+
+/** Base general activa (fase_ciclo nulo) o, si no existe, la última activa. */
+export function baseActiva(bases) {
+  if (!Array.isArray(bases) || bases.length === 0) return null;
+  const activas = bases.filter((base) => base && base.activa !== false);
+  const candidatas = activas.length ? activas : bases;
+  return candidatas.find((base) => base.fase_ciclo === null || base.fase_ciclo === undefined) || candidatas[candidatas.length - 1];
+}
+
+/**
+ * Ordena el historial por tiempo real y extrae los valores por evaluación.
+ * Los signos ausentes quedan como `null`, nunca como cero.
+ * @param {object[]} historial
+ */
+export function extraerPuntos(historial) {
+  const lista = Array.isArray(historial) ? historial.filter(Boolean) : [];
+  return [...lista]
+    .sort((a, b) => String(a.ts ?? '').localeCompare(String(b.ts ?? '')))
+    .map((evaluacion) => ({
+      t: evaluacion.ts ?? null,
+      news2: num(evaluacion.news2_total),
+      signos: evaluacion.entrada && evaluacion.entrada.signos ? evaluacion.entrada.signos : null
+    }));
+}
+
+/**
+ * Construye las series del historial frente a la línea base.
+ * @param {object[]} historial
+ * @param {object[]} bases
+ */
+export function construirSeriesHistorial(historial, bases) {
+  const puntos = extraerPuntos(historial);
+  const base = baseActiva(bases);
+
+  return DEFINICIONES.map((definicion) => {
+    const points = puntos.map((punto) => ({
+      t: punto.t,
+      v: definicion.campo === null ? punto.news2 : num(punto.signos ? punto.signos[definicion.campo] : null)
+    }));
+    const baseValor = definicion.campo === null ? null : num(base ? base[definicion.campo] : null);
+    return {
+      ...definicion,
+      baseValor,
+      points,
+      hasData: points.some((punto) => punto.v !== null)
+    };
+  });
+}
 
 function crearTarjeta(serie) {
   const card = el('article', { class: 'astra-chart', dataset: { hasData: 'false', st: 'na' } });
@@ -20,38 +78,34 @@ function crearTarjeta(serie) {
   cabecera.append(el('span', { text: serie.name }));
   const lectura = el('span');
   const valor = el('b', { text: '—' });
-  const unidad = el('small', { text: serie.unit });
-  lectura.append(valor, unidad);
+  lectura.append(valor, el('small', { text: serie.unit }));
   cabecera.append(lectura);
   card.append(cabecera);
 
   const canvas = el('canvas', { 'aria-hidden': 'true' });
-  const vacio = el('div', { class: 'astra-chart__empty', text: serie.source });
-  const fuente = el('span', { class: 'astra-chart__source', text: serie.source });
+  const vacio = el('div', { class: 'astra-chart__empty', text: 'Sin datos del historial' });
+  const fuente = el('span', { class: 'astra-chart__source', text: '' });
   card.append(canvas, vacio, fuente);
 
-  return { card, canvas, valor, vacio, fuente, serie, data: [] };
+  return { card, canvas, valor, vacio, fuente, serie, points: [] };
 }
 
-function generar(serie) {
-  let valor = serie.base;
-  const data = [];
-  for (let i = 0; i < PUNTOS; i++) {
-    valor = serie.base + (valor - serie.base) * 0.7 + (Math.random() - 0.5) * serie.ripple * 2;
-    data.push(valor);
+function ultimoValor(points) {
+  for (let i = points.length - 1; i >= 0; i--) {
+    if (points[i].v !== null) return points[i].v;
   }
-  return data;
+  return null;
 }
 
 function dibujar(tarjeta) {
-  const { canvas, serie, data } = tarjeta;
-  if (!serie.hasData || data.length === 0) return;
+  const { canvas, serie, points } = tarjeta;
+  if (!serie.hasData || points.length === 0) return;
 
   const ancho = canvas.clientWidth;
   const alto = canvas.clientHeight;
   if (!ancho || !alto) return;
 
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min((typeof window !== 'undefined' && window.devicePixelRatio) || 1, 2);
   canvas.width = Math.round(ancho * dpr);
   canvas.height = Math.round(alto * dpr);
 
@@ -66,9 +120,10 @@ function dibujar(tarjeta) {
   const margenInf = 14;
   const util = ancho - margenIzq - margenDer;
   const altoUtil = alto - margenSup - margenInf;
+  const n = points.length;
 
   const py = (v) => alto - margenInf - ((v - serie.lo) / (serie.hi - serie.lo)) * (alto - 22);
-  const px = (i) => margenIzq + (i / (PUNTOS - 1)) * util;
+  const px = (i) => (n === 1 ? margenIzq + util / 2 : margenIzq + (i / (n - 1)) * util);
   const color = COLORES[tarjeta.card.dataset.st] || COLORES.na;
 
   // Banda de normalidad.
@@ -85,41 +140,37 @@ function dibujar(tarjeta) {
     ctx.lineTo(ancho - margenDer, y);
     ctx.stroke();
   }
-  for (let i = 0; i <= 6; i++) {
-    const x = margenIzq + (i * util) / 6;
+
+  // Referencia de la línea base.
+  if (serie.baseValor !== null) {
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = 'rgba(56,225,255,.75)';
     ctx.beginPath();
-    ctx.moveTo(x, margenSup);
-    ctx.lineTo(x, alto - margenInf);
+    ctx.moveTo(margenIzq, py(serie.baseValor));
+    ctx.lineTo(ancho - margenDer, py(serie.baseValor));
     ctx.stroke();
+    ctx.setLineDash([]);
   }
 
-  // Límites de la banda.
-  ctx.setLineDash([4, 4]);
-  ctx.strokeStyle = 'rgba(0,245,180,.4)';
-  for (const limite of [serie.ok[0], serie.ok[1]]) {
-    if (limite > serie.lo && limite < serie.hi) {
-      ctx.beginPath();
-      ctx.moveTo(margenIzq, py(limite));
-      ctx.lineTo(ancho - margenDer, py(limite));
-      ctx.stroke();
-    }
-  }
-  ctx.setLineDash([]);
-
-  // Área y línea.
+  // Área y línea, rompiendo en los huecos.
   const gradiente = ctx.createLinearGradient(0, 0, 0, alto);
   gradiente.addColorStop(0, `${color}55`);
   gradiente.addColorStop(1, `${color}00`);
 
   ctx.beginPath();
-  data.forEach((v, i) => (i ? ctx.lineTo(px(i), py(v)) : ctx.moveTo(px(i), py(v))));
-  ctx.lineTo(px(PUNTOS - 1), alto - margenInf);
-  ctx.lineTo(px(0), alto - margenInf);
-  ctx.fillStyle = gradiente;
-  ctx.fill();
-
-  ctx.beginPath();
-  data.forEach((v, i) => (i ? ctx.lineTo(px(i), py(v)) : ctx.moveTo(px(i), py(v))));
+  let trazando = false;
+  points.forEach((punto, i) => {
+    if (punto.v === null) {
+      trazando = false;
+      return;
+    }
+    if (!trazando) {
+      ctx.moveTo(px(i), py(punto.v));
+      trazando = true;
+    } else {
+      ctx.lineTo(px(i), py(punto.v));
+    }
+  });
   ctx.strokeStyle = color;
   ctx.lineWidth = 2;
   ctx.shadowColor = color;
@@ -128,11 +179,15 @@ function dibujar(tarjeta) {
   ctx.stroke();
   ctx.shadowBlur = 0;
 
-  const ultimo = data[data.length - 1];
-  ctx.beginPath();
-  ctx.arc(px(PUNTOS - 1), py(ultimo), 4, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff';
-  ctx.fill();
+  // Último punto válido.
+  const ultimo = ultimoValor(points);
+  if (ultimo !== null) {
+    const indice = points.map((punto) => punto.v).lastIndexOf(ultimo);
+    ctx.beginPath();
+    ctx.arc(px(indice), py(ultimo), 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+  }
 
   // Etiquetas.
   ctx.fillStyle = '#8ebad9';
@@ -141,29 +196,28 @@ function dibujar(tarjeta) {
   ctx.fillText(String(serie.hi), margenIzq - 4, margenSup + 8);
   ctx.fillText(String(serie.lo), margenIzq - 4, alto - margenInf + 2);
   ctx.textAlign = 'left';
-  ctx.fillText('−60 s', margenIzq, alto - 2);
+  ctx.fillText('INICIO', margenIzq, alto - 2);
   ctx.textAlign = 'right';
   ctx.fillText('AHORA', ancho - margenDer, alto - 2);
   ctx.textAlign = 'left';
 }
 
 function actualizarLectura(tarjeta) {
-  const { serie, data, card, valor, vacio, fuente } = tarjeta;
+  const { serie, points, card, valor, vacio, fuente } = tarjeta;
 
   card.dataset.hasData = String(serie.hasData);
-  fuente.textContent = serie.source;
-  vacio.textContent = 'Sin datos disponibles';
+  vacio.textContent = 'Sin datos del historial';
   vacio.hidden = serie.hasData;
+  fuente.textContent = serie.baseValor === null ? '' : `Referencia base: ${serie.baseValor}`;
 
-  if (!serie.hasData || data.length === 0) {
+  const ultimo = ultimoValor(points);
+  if (!serie.hasData || ultimo === null) {
     valor.textContent = '—';
     card.dataset.st = 'na';
     return;
   }
 
-  const ultimo = data[data.length - 1];
-  const estado = escala(ultimo, serie);
-  card.dataset.st = estado;
+  card.dataset.st = escala(ultimo, serie);
   valor.textContent = ultimo.toFixed(serie.decimals);
   dibujar(tarjeta);
 }
@@ -175,13 +229,9 @@ export function createCharts(host) {
   if (!host) return { update() {}, destroy() {} };
 
   let tarjetas = [];
-  let timer = null;
   let observer = null;
-  const reducido = movimientoReducido();
 
   function destruirTarjetas() {
-    clearInterval(timer);
-    timer = null;
     if (observer) {
       observer.disconnect();
       observer = null;
@@ -190,25 +240,11 @@ export function createCharts(host) {
     tarjetas = [];
   }
 
-  function tick() {
-    for (const tarjeta of tarjetas) {
-      if (!tarjeta.serie.hasData) continue;
-      const previo = tarjeta.data[tarjeta.data.length - 1];
-      const siguiente =
-        tarjeta.serie.base +
-        (previo - tarjeta.serie.base) * 0.7 +
-        (Math.random() - 0.5) * tarjeta.serie.ripple * 2;
-      tarjeta.data.push(siguiente);
-      tarjeta.data.shift();
-      actualizarLectura(tarjeta);
-    }
-  }
-
   function construir(series) {
     destruirTarjetas();
     for (const serie of series) {
       const tarjeta = crearTarjeta(serie);
-      tarjeta.data = serie.hasData ? generar(serie) : [];
+      tarjeta.points = serie.points || [];
       host.append(tarjeta.card);
       tarjetas.push(tarjeta);
       actualizarLectura(tarjeta);
@@ -220,26 +256,22 @@ export function createCharts(host) {
       });
       for (const tarjeta of tarjetas) observer.observe(tarjeta.canvas);
     }
-
-    if (!reducido) timer = setInterval(tick, 1000);
   }
 
   function update(series) {
+    const lista = Array.isArray(series) ? series : [];
     const mismas =
-      tarjetas.length === series.length &&
-      tarjetas.every((tarjeta, i) => tarjeta.serie.id === series[i].id);
+      tarjetas.length === lista.length &&
+      tarjetas.every((tarjeta, i) => tarjeta.serie.id === lista[i].id);
 
     if (!mismas) {
-      construir(series);
+      construir(lista);
       return;
     }
 
     tarjetas.forEach((tarjeta, i) => {
-      const nueva = series[i];
-      const teniaDatos = tarjeta.serie.hasData;
-      tarjeta.serie = nueva;
-      if (nueva.hasData && !teniaDatos) tarjeta.data = generar(nueva);
-      if (!nueva.hasData) tarjeta.data = [];
+      tarjeta.serie = lista[i];
+      tarjeta.points = lista[i].points || [];
       actualizarLectura(tarjeta);
     });
   }

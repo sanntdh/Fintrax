@@ -13,6 +13,7 @@ import { initForm } from './form.js';
 import { initProgress } from './progress.js';
 import { initSymptoms } from './symptoms-ui.js';
 import { initResults } from './results.js';
+import { initBackendPanel } from './backend-panel.js';
 import { construirRegistro, descargarRegistro } from './export.js';
 import { showToast } from './toast.js';
 import { beep } from './audio.js';
@@ -121,6 +122,7 @@ initProgress();
 initSymptoms();
 results = initResults({ avatar: avatarResultados });
 initForm({ onSubmit: iniciarAnalisis });
+initBackendPanel();
 
 $('[data-back]')?.addEventListener('click', () => {
   beep('click');

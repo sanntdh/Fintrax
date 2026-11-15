@@ -19,8 +19,9 @@ index.html
         ├─ src/data/*     catálogos constantes y puros
         ├─ state.js       estado + acciones + suscripciones
         ├─ evaluation.js  motor puro (sin DOM)
+        ├─ api.js         cliente HTTP + contrato de lecturas (sin DOM)
         └─ UI             form · symptoms-ui · progress · avatar · results · charts
-                          export · toast · audio · starfield
+                          backend-panel · export · toast · audio · starfield
 ```
 
 ### Datos (`src/data/`)
@@ -79,10 +80,68 @@ degrada ni mejora el resultado.
 | `progress.js` | Barra, desglose por sección, IMC, zonas marcadas, conteo de molestias y cabecera del escaneo. |
 | `avatar.js` | Crea el avatar (imagen + hotspots SVG) y expone `setSex`, `setActive`, `setSelection`, `setGlow`, `setStatuses`. |
 | `results.js` | Banner, órganos, sistemas, integración con avatar y gráficas. |
-| `charts.js` | Cuatro tarjetas Canvas con estados vacíos y dibujo responsive. |
+| `charts.js` | Gráficas del historial oficial (NEWS2 y signos frente a la línea base) y dibujo responsive. |
+| `api.js` | Cliente HTTP del backend: URL base, clave, errores y contrato de las lecturas. |
+| `backend-panel.js` | Pasos de línea base y misión contra la API; nunca decide el nivel clínico. |
 | `export.js` | Construye y descarga el JSON desde el estado. |
 | `toast.js`, `audio.js`, `starfield.js` | Aviso flotante, señales sonoras opcionales y fondo animado. |
 | `dom.js`, `format.js` | Utilidades sin estado: creación segura de nodos, delegación, formato numérico y de IMC. |
+
+### Enlace con el backend (`api.js` + `backend-panel.js`)
+
+El cálculo local (`evaluation.js`) sigue siendo **orientación por zonas**, con
+la etiqueta visible «Orientación local, no resultado oficial». El nivel clínico
+lo decide siempre el backend y se muestra tal cual llega; si la API falla o no
+hay conexión, no se sustituye por el resultado local.
+
+Decisiones:
+
+1. **Transporte aislado.** `api.js` concentra la URL base, la clave, el mapeo de
+   errores y el contrato de las lecturas. Recibe `fetch` y los almacenes por
+   inyección, de modo que sus funciones puras se prueban con `node:test` sin
+   navegador.
+2. **La clave vive solo en `sessionStorage`.** Nunca se escribe en
+   `localStorage`, en la URL ni en el repositorio. La URL base sí puede venir de
+   `?api=` o de `localStorage`, pero siempre validada: solo `http`/`https`, sin
+   credenciales embebidas, sin query ni fragmento.
+3. **No hay backend anónimo.** Sin clave configurada el cliente no abre ninguna
+   conexión. Las peticiones usan `credentials: 'omit'`, así que un CORS con
+   comodín nunca viaja con cookies.
+4. **Errores en español.** 401/403/409/422 (y 404/red) se traducen a mensajes
+   claros; el 409 de la línea base conserva el conteo («faltan N muestras») tal
+   como lo entrega el backend. Un fallo nunca borra el borrador ni simula éxito,
+   y una respuesta 200 sin JSON válido (HTML, JSON roto o vacío) se rechaza con
+   un error explícito en lugar de devolverse como `null`.
+5. **Pasos explícitos.** El panel ofrece la conexión, la selección de astronauta
+   (por lista o por id, sin inventar un «whoami»), cinco lecturas de línea base
+   enviadas una a una con contexto `preflight` (sin complementarios ni
+   ejercicio), el botón de cálculo (solo médico/admin en la interfaz; el servidor
+   autoriza) y la lectura de misión. La cantidad real enviada se conserva aunque
+   falle una lectura, de modo que el reintento continúa desde la primera fallida
+   y un segundo clic concurrente no duplica envíos. Cambiar de astronauta o de
+   conexión descarta borradores, historial, línea base y resultado oficial del
+   paciente anterior (el borrador es por astronauta y no persiste PHI), y las
+   respuestas asíncronas se aceptan solo si su generación e identidad siguen
+   vigentes. Registrar otra misión invalida el resultado anterior y el oficial
+   siempre muestra su fecha; sin JSON no hay resultado.
+6. **Mapeo de síntomas a complementarios.** Los siete booleanos
+   (`cambio_visual`, `sintomas_al_incorporarse`, `alteracion_sueno`,
+   `alteracion_animo`, `dificultad_cognitiva`, `mareo_desorientacion`,
+   `evaluacion_inmune_anormal`) solo se activan con síntomas nombrados
+   explícitamente o con los checkboxes dedicados. Una escala subjetiva baja sin
+   confirmación no activa ninguna bandera (no se valida ningún umbral de escala),
+   y un síntoma no marcado queda como desconocido (`null`, se omite), nunca como
+   negativo. Un mareo o vértigo genérico activa `mareo_desorientacion`, pero NO
+   `sintomas_al_incorporarse`: ese flag solo lo activa el checkbox posicional
+   explícito. La última bandera solo se activa con su checkbox (informe de
+   laboratorio interpretado), no se deduce por fatiga.
+7. **Gráficas con datos reales.** `charts.js` se alimenta de `GET /historial` y
+   de `GET /linea-base`: NEWS2 y los cinco signos ordenados por tiempo, con la
+   línea base como referencia. Se eliminaron los temporizadores y los valores
+   aleatorios del prototipo; un dato ausente queda en `null` y no se inventa.
+8. **CORS.** El backend habilita CORS solo si `MONITOREO_CORS_ORIGINS` declara
+   orígenes concretos; vacío equivale a sin CORS y nunca se combina `*` con
+   credenciales. El frontend no envía credenciales de navegador.
 
 ## Flujo de datos
 

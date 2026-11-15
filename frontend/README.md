@@ -26,11 +26,13 @@ python3 -m http.server 5173
 ## Pruebas
 
 ```bash
-npm test           # node --test tests/
+node --test        # desde frontend/, con Node 22
 ```
 
-20 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
-contrato del HTML y ausencia de `innerHTML`/manejadores inline.
+46 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
+contrato del HTML, cliente HTTP y contrato de lecturas, pasos de línea base y
+misión, y series del historial. La clave y las funciones puras se prueban con
+`fetch` y almacenes simulados, sin navegador.
 
 ## Estructura
 
@@ -51,12 +53,50 @@ Documentación detallada:
 - [`DATOS.md`](DATOS.md): catálogos, umbrales, algoritmo y contrato del JSON.
 - [`PARIDAD.md`](PARIDAD.md): matriz de funcionalidades conservadas respecto al prototipo v2.
 
+## Enlace con el backend de monitoreo
+
+El cálculo local es **orientación por zonas** y así queda etiquetado («Orientación
+local, no resultado oficial»). El nivel clínico (NEWS2 y capas de riesgo) lo
+emite el backend y la interfaz lo muestra sin reinterpretarlo.
+
+Pasos en la pantalla **Enlace con el backend**:
+
+1. **Conexión.** Indica la URL del backend (`http`/`https`, sin credenciales) y
+   la clave `X-API-Key`. La clave se guarda solo en `sessionStorage` de esa
+   pestaña; la URL puede venir además de `?api=` o de `localStorage`.
+2. **Astronauta.** Elige uno de la lista que devuelve el backend o escribe su id.
+3. **Paso 1 · Línea base.** Registra las cinco lecturas en reposo (FC, PAS, FR,
+   temperatura y SpO₂) y envíalas: cada una viaja por separado con contexto
+   `preflight`, sin complementarios. El borrador se conserva si un envío falla y
+   el reintento continúa desde la primera lectura fallida (no reenvía las ya
+   aceptadas). El botón **Calcular línea base** está disponible para médico y
+   administrador (el servidor autoriza); si faltan muestras, muestra el conteo
+   del error 409.
+4. **Paso 2 · Misión.** Registra una lectura en vuelo. Los siete complementarios
+   solo se activan con síntomas nombrados explícitamente o con los checkboxes
+   dedicados (una escala baja sin confirmación no infiere nada; un mareo genérico
+   no implica síntomas al incorporarse). El resultado oficial (nivel, desglose
+   NEWS2, capas, alertas, notas y su fecha) aparece al pie; registrar otra misión
+   invalida el anterior y un error no deja un resultado viejo en pantalla.
+
+Cambiar de astronauta o de conexión descarta el borrador, el historial, la línea
+base y el resultado anterior: el borrador es por astronauta y no persiste PHI.
+
+Las gráficas de resultados se alimentan del historial y de la línea base del
+backend: no generan datos aleatorios y muestran «sin datos» cuando no hay
+lecturas.
+
+> **Seguridad:** nunca se escribe la clave en el repositorio, en la URL ni en
+> `localStorage`. El cliente no abre el backend sin clave y omite credenciales de
+> navegador, por lo que el CORS del backend puede seguir siendo restrictivo.
+
 ## Características
 
 - Formulario generado desde datos (`src/data/metrics.js`): 5 secciones y 23 indicadores contados.
 - Avatar holográfico con zonas interactivas, conmutación por sexo y estados por color.
 - Evaluación por zona y por sistema, con estado explícito «SIN DATOS» cuando no hay medición.
-- Telemetría de cuatro series: solo se dibuja si existe una medición real.
+- Enlace con el backend: línea base (cinco lecturas en reposo) y lectura de misión, con resultado oficial NEWS2 y complementarios.
+- Gráficas del historial oficial (NEWS2 y signos frente a la línea base); sin datos aleatorios ni curvas inventadas.
 - Tarjetas de orientación por síntoma (posible causa, qué hacer, señal de alarma).
 - Exportación del registro a `ASTRA_registro_premision.json`.
 - Accesibilidad: foco visible, etiquetas, `aria-live`, navegación por teclado y

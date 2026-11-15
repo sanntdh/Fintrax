@@ -1,0 +1,200 @@
+/* ==========================================================================
+   ASTRA · Panel de enlace con el backend (línea base y misión)
+   Reutiliza los tokens y el lenguaje visual del HUD; no introduce un sistema
+   nuevo.
+   ========================================================================== */
+
+#astra-app .astra-panel--api {
+  grid-column: 1 / -1;
+  padding: 30px var(--sp-6) 36px;
+}
+
+#astra-app .astra-local-note {
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--warn);
+}
+
+#astra-app .astra-api-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 22px;
+  margin-bottom: var(--sp-5);
+}
+
+#astra-app .astra-api-block {
+  padding: var(--sp-4);
+  border: 1px solid var(--ln);
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+}
+
+#astra-app .astra-api-block h3,
+#astra-app .astra-api-step h3 {
+  margin: 0 0 var(--sp-3);
+  font-family: var(--font-hud);
+  font-size: var(--fs-md);
+  letter-spacing: 2px;
+  color: var(--cy);
+}
+
+#astra-app .astra-api-block h4,
+#astra-app .astra-api-lectura h4 {
+  margin: var(--sp-3) 0 var(--sp-2);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  letter-spacing: 1.5px;
+  color: var(--mut);
+}
+
+#astra-app .astra-api-block label,
+#astra-app .astra-api-campo span,
+#astra-app .astra-api-step > label {
+  display: block;
+  margin: var(--sp-3) 0 var(--sp-1);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.5px;
+  color: var(--mut);
+}
+
+#astra-app .astra-api-block input,
+#astra-app .astra-api-block select,
+#astra-app .astra-api-campo input,
+#astra-app .astra-api-campo select {
+  width: 100%;
+  padding: 9px 11px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--r-sm);
+  background: var(--field-bg);
+  color: var(--tx);
+  font-family: var(--font-main);
+  font-size: var(--fs-md);
+}
+
+#astra-app .astra-api-block input:focus-visible,
+#astra-app .astra-api-block select:focus-visible,
+#astra-app .astra-api-campo input:focus-visible,
+#astra-app .astra-api-campo select:focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 1px;
+}
+
+#astra-app .astra-api-step {
+  margin-top: var(--sp-5);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--ln);
+}
+
+#astra-app .astra-api-signos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--sp-3);
+}
+
+#astra-app .astra-api-extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+#astra-app .astra-api-lectura {
+  padding: var(--sp-3);
+  margin-bottom: var(--sp-3);
+  border: 1px solid var(--ln);
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+}
+
+#astra-app .astra-api-row {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: center;
+  margin-top: var(--sp-2);
+}
+
+#astra-app .astra-api-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+#astra-app .astra-api-hint {
+  margin: var(--sp-2) 0;
+  font-size: var(--fs-sm);
+  color: var(--mut-dim);
+}
+
+#astra-app .astra-api-status,
+#astra-app .astra-api-progreso {
+  margin: var(--sp-2) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--mut);
+}
+
+#astra-app .astra-api-error {
+  margin: var(--sp-2) 0 0;
+  min-height: 1em;
+  font-size: var(--fs-sm);
+  color: var(--alert);
+}
+
+#astra-app .astra-api-check {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-2) 0;
+  font-size: var(--fs-md);
+  color: var(--tx);
+}
+
+#astra-app .astra-api-check input {
+  width: auto;
+}
+
+#astra-app .astra-api-comp {
+  margin: var(--sp-4) 0 0;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px solid var(--ln);
+  border-radius: var(--r-md);
+  background: var(--surface-3);
+}
+
+#astra-app .astra-api-comp legend {
+  padding: 0 var(--sp-2);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  letter-spacing: 1.5px;
+  color: var(--cy);
+}
+
+#astra-app .astra-api-lista {
+  margin: var(--sp-2) 0;
+  padding-left: var(--sp-5);
+  font-size: var(--fs-md);
+  color: var(--tx);
+}
+
+#astra-app .astra-api-lista--alerta {
+  color: var(--warn);
+}
+
+#astra-app .astra-api-oficial {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4);
+  border: 1px solid var(--cy);
+  border-radius: var(--r-md);
+  background: var(--surface-1);
+}
+
+#astra-app .astra-api-oficial header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-2);
+}

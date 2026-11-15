@@ -7,11 +7,13 @@ import math
 import os
 import re
 import secrets
+from urllib.parse import urlsplit
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import func, inspect, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, sessionmaker
@@ -67,6 +69,18 @@ def publico(datos, usuario):
 
 
 def create_app(database_url=None, revision_minutos=None):
+    origenes = []
+    for valor in os.getenv("MONITOREO_CORS_ORIGINS", "").split(","):
+        origen = valor.strip().rstrip("/")
+        if not origen:
+            continue
+        partes = urlsplit(origen)
+        if (partes.scheme not in ("http", "https") or not partes.netloc
+                or partes.username or partes.password or partes.path
+                or partes.query or partes.fragment or "*" in origen
+                or any(c.isspace() for c in origen)):
+            raise ValueError("MONITOREO_CORS_ORIGINS requiere un origen http/https explícito, sin credenciales ni rutas")
+        origenes.append(origen)
     engine = crear_engine(database_url or os.getenv("MONITOREO_DB", "sqlite:///monitoreo.db"))
     sesiones = sessionmaker(engine, expire_on_commit=False)
     revision = float(os.getenv("MONITOREO_REVISION_MIN", "0")) if revision_minutos is None else revision_minutos
@@ -107,6 +121,10 @@ def create_app(database_url=None, revision_minutos=None):
 
     app = FastAPI(title="Monitoreo de salud de astronautas", version="3.0.0", lifespan=lifespan)
     app.state.engine, app.state.SessionLocal = engine, sesiones
+    if origenes:
+        app.add_middleware(CORSMiddleware, allow_origins=origenes, allow_credentials=False,
+                           allow_methods=["GET", "POST", "PUT", "PATCH", "OPTIONS"],
+                           allow_headers=["X-API-Key", "Content-Type"])
 
     @app.middleware("http")
     async def sin_cache(request, call_next):

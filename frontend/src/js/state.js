@@ -20,7 +20,21 @@ const state = {
   otherText: '',
   view: 'form',
   result: null,
-  exportData: null
+  exportData: null,
+  backend: {
+    baseUrl: '',
+    rol: 'astronauta',
+    conectado: false,
+    cargando: false,
+    generacion: 0,
+    astronauta: null,
+    astronautas: [],
+    preflight: { lecturas: [], enviadas: 0, error: '', aviso: '' },
+    mision: { borrador: { fc: '', pas: '', fr: '', temp: '', spo2: '' }, explicitos: {}, error: '' },
+    oficial: null,
+    historial: [],
+    base: []
+  }
 };
 
 /** Estado actual (objeto vivo, de solo lectura por convención). */
@@ -133,6 +147,24 @@ export const actions = {
   volverAlFormulario() {
     state.view = 'form';
     state.result = null;
+    emit();
+  },
+
+  /** Mezcla un parcial en el estado del enlace con el backend. */
+  setBackend(parcial) {
+    Object.assign(state.backend, parcial);
+    emit();
+  },
+
+  /** Mezcla un parcial en el borrador de la línea base (preflight). */
+  setPreflight(parcial) {
+    Object.assign(state.backend.preflight, parcial);
+    emit();
+  },
+
+  /** Mezcla un parcial en el borrador de la lectura de misión. */
+  setMision(parcial) {
+    Object.assign(state.backend.mision, parcial);
     emit();
   }
 };
