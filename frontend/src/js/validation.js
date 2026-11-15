@@ -13,7 +13,7 @@ export const PROFILE_FIELDS = [
 
 function errorCampo(field, value, confirmado = true) {
   const texto = String(value ?? '').trim();
-  if (!texto) return `Completa «${field.label}».`;
+  if (!texto) return field.optional ? '' : `Completa «${field.label}».`;
   if (!confirmado) return `Selecciona o confirma el valor de «${field.label}».`;
   if (field.kind === 'select' && !field.options.includes(texto)) return `Selecciona una opción de «${field.label}».`;
   if (field.kind !== 'number' && field.kind !== 'range') return '';
@@ -55,16 +55,14 @@ export function erroresRegistro(record, etapa = 'baseline') {
     if ((!sintomas.length && !record.wellBeing) || !validos || (sintomas.length && record.wellBeing)) {
       errores.symptoms = 'Selecciona tus molestias o «Me siento en óptimas condiciones».';
     }
-    if (!String(record.otherText ?? '').trim()) {
-      errores.otherText = 'Completa las observaciones; puedes escribir «Sin observaciones».';
-    }
   }
   return errores;
 }
 
 export function progresoRegistro(record, etapa = 'baseline') {
   const errores = erroresRegistro(record, etapa);
-  const total = PROFILE_FIELDS.length + FORM_FIELDS.length + (etapa === 'current' ? 2 : 0);
-  const completos = total - Object.keys(errores).length;
+  // Solo cuentan los obligatorios; un opcional mal escrito sí resta.
+  const total = PROFILE_FIELDS.length + FORM_FIELDS.filter((field) => !field.optional).length + (etapa === 'current' ? 1 : 0);
+  const completos = Math.max(0, total - Object.keys(errores).length);
   return { errores, total, completos, porcentaje: Math.floor(completos / total * 100) };
 }

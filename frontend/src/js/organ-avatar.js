@@ -16,6 +16,7 @@
  */
 
 import { el, svg } from './dom.js';
+import { imagenAvatar } from './avatar.js';
 import { ORGANOS, ORGAN_ORDER } from '../data/organs.js';
 import { ORGAN_SHAPES } from '../data/organ-shapes.js';
 import { ESTADOS } from '../data/severity.js';
@@ -31,21 +32,7 @@ const ORGAN_PAINT = ['rinones', 'higado', 'intestinos', 'estomago', 'pulmones', 
 
 const pct = (parte, total) => `${((parte / total) * 100).toFixed(2)}%`;
 
-function crearImagen(clase, sexo) {
-  const base = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-  const picture = el('picture', { class: `fintrax-avatar__img ${clase}` });
-  picture.append(
-    el('source', { srcset: `${base}.webp`, type: 'image/webp' }),
-    el('img', {
-      src: `${base}.png`,
-      alt: '',
-      width: 941,
-      height: 1672,
-      decoding: 'async'
-    })
-  );
-  return picture;
-}
+const crearImagen = (clase, sexo) => imagenAvatar(sexo, `fintrax-avatar__img ${clase}`);
 
 function crearNodo(key, onSelect) {
   const meta = ORGANOS[key];

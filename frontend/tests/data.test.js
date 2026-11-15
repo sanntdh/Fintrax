@@ -41,10 +41,10 @@ test('los 25 indicadores contados suman exactamente el total', () => {
   assert.equal(porSeccion, COUNTED_IDS.length);
 });
 
-test('el formulario exige 35 campos habituales y 37 actuales', () => {
+test('el formulario exige 34 campos habituales y 35 actuales', () => {
   assert.equal(PROFILE_FIELDS.length, 6);
-  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length, 35);
-  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length + 2, 37);
+  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length, 34);
+  assert.equal(PROFILE_FIELDS.length + FIELD_IDS.length + 1, 35);
 });
 
 test('los ids de campo son únicos y las escalas están entre los contados', () => {

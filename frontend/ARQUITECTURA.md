@@ -21,7 +21,7 @@ index.html
         ├─ validation.js  validación de todos los campos y progreso
         ├─ evaluation.js  motor puro (sin DOM)
         ├─ intro.js       animación FINTRAX de un ciclo + fintrax-background.js
-        └─ UI             form · symptoms-ui · progress · avatar · results · charts
+        └─ UI             form · symptoms-ui · progress · avatar · results · acciones · comparativa
                           export · toast · audio · starfield
 ```
 
@@ -66,8 +66,6 @@ Funciones puras:
 - `evaluate(input)`: recibe un snapshot (`profile`, `values`, `symptoms`,
   `ratingsTouched`, `wellBeing`) y devuelve zonas, sistemas, estado global, IMC,
   banderas de completitud y conteos.
-- `configurarSeries(result)`: define las cuatro series de telemetría y si cada
-  una tiene medición real (`hasData`).
 - `isFilled` / `isPending`: qué cuenta como dato y qué es «pendiente».
 
 Las zonas se calculan sumando síntomas y los sistemas asociados
@@ -90,7 +88,8 @@ degrada ni mejora el resultado.
 | `progress.js` | Barra, desglose por sección, IMC, zonas marcadas, conteo de molestias y cabecera del escaneo. |
 | `avatar.js` | Crea el avatar (imagen + hotspots SVG) y expone `setSex`, `setActive`, `setSelection`, `setGlow`, `setStatuses`. |
 | `results.js` | Banner, órganos, sistemas, integración con avatar y gráficas. |
-| `charts.js` | Cuatro tarjetas Canvas con estados vacíos y dibujo responsive. |
+| `acciones.js` | «Qué hacer»: acciones con fuente y página según molestias y sistemas; aviso urgente (protocolo Fintrax). |
+| `comparativa.js` | Comparativa estática habitual/actual en SVG; anomalías por rango o por cambio notable. |
 | `export.js` | Construye y descarga el JSON de ambas etapas desde el estado. |
 | `toast.js`, `audio.js`, `starfield.js` | Aviso flotante, señales sonoras opcionales y fondo animado. |
 | `dom.js`, `format.js` | Utilidades sin estado: creación segura de nodos, delegación, formato numérico y de IMC. |
@@ -109,7 +108,7 @@ intro → terminarIntro → baseline
 submit habitual → validar todos los campos → completarHabituales → current
 submit actual → validar todos los campos → evaluate(snapshot actual)
               → comenzarAnalisis → transition → terminarAnalisis → body
-              → results.render(result) → charts.update(configurarSeries(result))
+              → results.render(result) → acciones.update() · comparativa.update()
 ```
 
 `main.js` guarda una firma del estado relevante. Mientras la vista sea
@@ -146,7 +145,7 @@ catálogo, lo que evita perder estado y simplifica el responsive.
    ningún dato de la persona usuaria se interpreta como HTML. Hay una prueba
    estructural que lo verifica.
 5. **Estado explícito «sin datos».** Un sistema sin medición no es «BIEN»: es
-   `na`. La telemetría tampoco inventa curvas.
+   `na`. La comparativa tampoco inventa valores: sin medición no hay estado.
 6. **Formulario generado.** Añadir un indicador es editar `metrics.js`; el
    formulario, el progreso, la evaluación y la exportación lo recogen.
 7. **Assets locales.** Avatar en PNG con `<picture>`/WebP y fuentes

@@ -11,6 +11,9 @@
 /** Ids de las escalas subjetivas 0–10 (solo cuentan si se tocan). */
 export const RATING_IDS = ['estres', 'estado_animo', 'ansiedad', 'sueno_calidad', 'memoria', 'atencion', 'concentracion'];
 
+/** Resultado resumido de un análisis de laboratorio; evita escribir informes. */
+export const OPCIONES_LABORATORIO = ['Dentro de rango', 'Fuera de rango', 'No disponible'];
+
 /** Opciones compartidas por equilibrio y coordinación. */
 const OPCIONES_NEURO = [
   'Sin dificultades percibidas',
@@ -91,13 +94,6 @@ export const METRIC_SECTIONS = [
         step: 0.1,
         placeholder: 'Ej. 36.6',
         counted: true
-      },
-      {
-        kind: 'textarea',
-        id: 'ecg_informe',
-        label: 'Observaciones del ECG',
-        placeholder: 'Ej. Ritmo sinusal, fecha de estudio y observaciones del profesional...',
-        wide: true
       }
     ]
   },
@@ -111,6 +107,7 @@ export const METRIC_SECTIONS = [
       {
         kind: 'number',
         id: 'densidad_osea',
+        optional: true,
         label: 'Densidad mineral ósea (DXA)',
         unit: 'g/cm²',
         min: 0,
@@ -124,6 +121,7 @@ export const METRIC_SECTIONS = [
       {
         kind: 'select',
         id: 'region_dxa',
+        optional: true,
         label: 'Región evaluada (DXA)',
         placeholder: 'Seleccionar región',
         options: ['Columna lumbar', 'Cadera total', 'Cuello femoral', 'Cuerpo completo', 'Otra / no especificada']
@@ -182,6 +180,7 @@ export const METRIC_SECTIONS = [
       {
         kind: 'number',
         id: 'leucocitos',
+        optional: true,
         label: 'Recuento de glóbulos blancos',
         unit: '/µL',
         min: 0,
@@ -195,6 +194,7 @@ export const METRIC_SECTIONS = [
       {
         kind: 'number',
         id: 'cortisol',
+        optional: true,
         label: 'Cortisol',
         unit: 'µg/dL',
         min: 0,
@@ -208,26 +208,30 @@ export const METRIC_SECTIONS = [
       {
         kind: 'select',
         id: 'hora_cortisol',
+        optional: true,
         label: 'Momento de toma de cortisol',
         placeholder: 'Seleccionar',
         options: ['Mañana', 'Tarde', 'Noche', 'Hora no registrada'],
         wide: true
       },
       {
-        kind: 'textarea',
+        kind: 'select',
         id: 'marcadores_inmunes',
+        optional: true,
         label: 'Marcadores inmunológicos',
-        placeholder:
-          'Anota marcador, resultado, unidad y fecha. Ej.: subpoblaciones linfocitarias, citocinas, etc.',
-        wide: true,
+        placeholder: 'Seleccionar resultado',
+        options: OPCIONES_LABORATORIO,
+        helper: 'Según el último análisis de laboratorio',
         counted: true
       },
       {
-        kind: 'textarea',
+        kind: 'select',
         id: 'hormonas_estres',
+        optional: true,
         label: 'Otras hormonas relacionadas con el estrés',
-        placeholder: 'Anota hormona, resultado, unidad y horario de muestra (si aplica).',
-        wide: true,
+        placeholder: 'Seleccionar resultado',
+        options: OPCIONES_LABORATORIO,
+        helper: 'Según el último análisis de laboratorio',
         counted: true
       }
     ]

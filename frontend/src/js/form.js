@@ -170,7 +170,12 @@ function crearCampo(field) {
     return el('div', { class: 'fintrax-divider-label', text: field.label });
   }
   const constructor = CONSTRUCTORES[field.kind];
-  return constructor ? constructor(field) : null;
+  const nodo = constructor ? constructor(field) : null;
+  if (nodo && field.optional) {
+    nodo.dataset.optional = 'true';
+    $('.fintrax-metric-label', nodo)?.append(el('small', { class: 'fintrax-opcional', text: ' (opcional)' }));
+  }
+  return nodo;
 }
 
 function crearSeccion(section) {
@@ -214,13 +219,14 @@ function pintarSecciones() {
 /** Nombre del campo de validación que escribe un control. */
 function campoDe(control) {
   if (control.matches('[data-symptoms] input')) return 'symptoms';
-  return control.dataset.profile || control.dataset.field || control.dataset.rating || (control.matches('[data-other]') ? 'otherText' : '');
+  return control.dataset.profile || control.dataset.field || control.dataset.rating || '';
 }
 
-/** Campos validados dentro de un paso, sin repetir los radios de un mismo grupo. */
+/** Campos obligatorios dentro de un paso, sin repetir los radios de un mismo grupo. */
 function camposDelPaso(panel) {
   const campos = new Set();
-  for (const control of panel.querySelectorAll('[data-profile], [data-field], [data-rating], [data-other], [data-symptoms] input')) {
+  for (const control of panel.querySelectorAll('[data-profile], [data-field], [data-rating], [data-symptoms] input')) {
+    if (control.closest('[data-optional]')) continue;
     const campo = campoDe(control);
     if (campo) campos.add(campo);
   }
@@ -296,12 +302,14 @@ export function initForm({ onSubmit }) {
           type: 'button',
           class: 'fintrax-stepper__step',
           dataset: { gotoStep: String(i), complete: String(hechos === campos.length) },
-          'aria-label': `Paso ${i + 1}: ${panel.dataset.stepLabel}, ${hechos} de ${campos.length} campos`
+          'aria-label': campos.length
+            ? `Paso ${i + 1}: ${panel.dataset.stepLabel}, ${hechos} de ${campos.length} campos`
+            : `Paso ${i + 1}: ${panel.dataset.stepLabel}, opcional`
         });
         boton.append(
           el('span', { class: 'fintrax-stepper__num', 'aria-hidden': 'true', text: hechos === campos.length ? '✓' : String(i + 1) }),
           el('span', { class: 'fintrax-stepper__label', text: panel.dataset.stepLabel }),
-          el('span', { class: 'fintrax-stepper__count', 'aria-hidden': 'true', text: `${hechos}/${campos.length}` })
+          el('span', { class: 'fintrax-stepper__count', 'aria-hidden': 'true', text: campos.length ? `${hechos}/${campos.length}` : 'opcional' })
         );
         if (i === paso) boton.setAttribute('aria-current', 'step');
         nav.append(boton);
@@ -367,6 +375,8 @@ export function initForm({ onSubmit }) {
     }
     error.id = `fintrax-error-${campo}`;
     control.setAttribute('aria-describedby', error.id);
+    // Observaciones y datos de laboratorio son opcionales; el resto es obligatorio.
+    if (control.matches('[data-other]') || control.closest('[data-optional]')) continue;
     control.setAttribute('aria-required', 'true');
     if (control.type !== 'range') control.required = true;
   }

@@ -49,9 +49,8 @@ justificación**.
 2. **Estado «sin datos».** Un sistema sin medición ya no se muestra en verde:
    queda en `na` («SIN DATOS»). `na` no participa en el resultado global, de modo
    que un formulario vacío devuelve `unknown`, no `ok`.
-3. **Telemetría honesta.** No se inventan curvas cuando falta la medición. La
-   temperatura siempre aparece vacía porque el formulario no la registra, y la
-   columna se rotula «SIMULADA».
+3. **Sin telemetría simulada.** Las curvas aleatorias del prototipo se sustituyen
+   por una comparativa estática habitual/actual: no hay monitorización continua.
 4. **Síntomas fuera del DOM oculto.** Los chips viven en el formulario y en la
    vista de resultados, no en un contenedor oculto que se movía entre paneles.
 5. **Una sola definición de `evaluar` y `cfgCharts`.** El prototipo declaraba dos
@@ -94,5 +93,5 @@ justificación**.
 - No hay persistencia entre recargas (solo exportación manual).
 - Los umbrales son orientativos y requieren revisión clínica antes de cualquier
   uso real.
-- La telemetría es una visualización de la medición registrada, no una captura
-  en vivo de sensores.
+- La comparativa muestra dos mediciones puntuales, no una captura en vivo de
+  sensores.

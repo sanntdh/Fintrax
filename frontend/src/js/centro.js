@@ -22,6 +22,7 @@ import {
   lecturaPreflight,
   lecturaMision,
   mapearComplementarios,
+  inmuneDeRegistro,
   resumirEvaluacion
 } from './api.js';
 
@@ -220,7 +221,10 @@ export async function enviarAlCentro(state) {
 
   const mision = lecturaMision({
     ...fuenteDeRegistro(current.values, current.profile),
-    complementarios: mapearComplementarios({ sintomas: current.symptoms })
+    complementarios: mapearComplementarios({
+      sintomas: current.symptoms,
+      explicitos: { evaluacion_inmune_anormal: inmuneDeRegistro(current.values) }
+    })
   });
   if (!mision.ok) {
     pintarFranja({ estado: 'error', titulo: 'No enviado', texto: `Faltan signos vitales: ${mision.faltantes.join(', ')}.` });

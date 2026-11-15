@@ -20,6 +20,7 @@ import { $, el, limpiar, movimientoReducido, enfocar, svg } from './dom.js';
 import { ORGANOS, ORGAN_ORDER } from '../data/organs.js';
 import { ORGAN_SHAPES } from '../data/organ-shapes.js';
 import { beep } from './audio.js';
+import { imagenAvatar } from './avatar.js';
 
 const DURACION = 3200;
 const RELLENO = 120;
@@ -32,19 +33,7 @@ function crearFigura(clase) {
     ['f', 'Femenino'],
     ['m', 'Masculino']
   ]) {
-    const base = sexo === 'Femenino' ? 'assets/avatar-female' : 'assets/avatar-male';
-    const picture = el('picture', { class: `fintrax-transition__img fintrax-transition__img--${sufijo}` });
-    picture.append(
-      el('source', { srcset: `${base}.webp`, type: 'image/webp' }),
-      el('img', {
-        src: `${base}.png`,
-        alt: '',
-        width: 941,
-        height: 1672,
-        decoding: 'async'
-      })
-    );
-    contenedor.append(picture);
+    contenedor.append(imagenAvatar(sexo, `fintrax-transition__img fintrax-transition__img--${sufijo}`));
   }
   return contenedor;
 }

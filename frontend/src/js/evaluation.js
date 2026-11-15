@@ -22,7 +22,7 @@ import {
   UMBRALES
 } from '../data/severity.js';
 import { COUNTED_IDS, RATING_IDS } from '../data/metrics.js';
-import { num, imcDe, categoriaImc, escala } from './format.js';
+import { num, imcDe, categoriaImc } from './format.js';
 
 /** Ids de escala 0–10: solo cuentan si la persona movió el control. */
 export const RATINGS = new Set(RATING_IDS);
@@ -208,6 +208,9 @@ export function evaluate(input = {}) {
     addSystem('inmune', points, `Leucocitos ${lc}/µL`);
   }
   if (co !== null) addSystem('inmune', co > u.cortisol.warnAlto ? 1 : 0, 'Cortisol alto');
+  for (const [id, nombre] of [['marcadores_inmunes', 'Marcadores inmunológicos'], ['hormonas_estres', 'Hormonas del estrés']]) {
+    if (values[id] === 'Fuera de rango') addSystem('inmune', 1, `${nombre} fuera de rango`);
+  }
 
   // Psicológico (solo si la escala se tocó)
   const alto = (id, label) => {
@@ -316,78 +319,3 @@ export function evaluate(input = {}) {
     imcEstado: categoriaImc(imc)
   };
 }
-
-/**
- * Configuración de las cuatro series de telemetría.
- * `hasData` indica si existe una medición real; si no, la gráfica se muestra
- * vacía en lugar de inventar una curva.
- */
-export function configurarSeries(result) {
-  const u = UMBRALES;
-  const pecho = result.zones.pecho?.score ?? 0;
-  const digestivo = (result.zones.estomago?.score ?? 0) + (result.zones.cabeza?.score ?? 0);
-  const imcPuntos = result.imc !== null && result.imc >= 30 ? 12 : 0;
-  const { fc, ps, pd, ox, temp } = result.base;
-  return [
-    {
-      id: 'fc',
-      name: 'FRECUENCIA CARDÍACA',
-      unit: 'bpm',
-      base: fc ?? 68 + (result.edad >= 50 ? 4 : 0) + pecho * 9,
-      ripple: 2.2,
-      lo: 40,
-      hi: 140,
-      decimals: 0,
-      ok: [u.fc.warnLow, u.fc.warnHigh],
-      wn: [u.fc.badLow, u.fc.badHigh],
-      hasData: fc !== null,
-      source: fc !== null ? 'Medición registrada' : 'Sin medición de frecuencia cardíaca'
-    },
-    {
-      id: 'spo2',
-      name: 'SATURACIÓN DE OXÍGENO',
-      unit: '%',
-      base: Math.min(99.5, ox ?? Math.max(88, 98 - pecho * 1.6)),
-      ripple: 0.5,
-      lo: 86,
-      hi: 100,
-      decimals: 0,
-      ok: [u.spo2.warn, 100],
-      wn: [u.spo2.bad, 100],
-      hasData: ox !== null,
-      source: ox !== null ? 'Medición registrada' : 'Sin medición de saturación'
-    },
-    {
-      id: 'pa',
-      name: 'PRESIÓN SISTÓLICA',
-      unit: 'mmHg',
-      base: ps ?? 116 + imcPuntos + pecho * 6,
-      ripple: 2,
-      lo: 70,
-      hi: 180,
-      decimals: 0,
-      // Se conservan las bandas de la gráfica del prototipo v2 (85–159).
-      ok: [90, 129],
-      wn: [85, 159],
-      hasData: ps !== null,
-      source: ps !== null ? (pd !== null ? 'Medición registrada' : 'Solo sistólica registrada') : 'Sin medición de presión'
-    },
-    {
-      id: 'temp',
-      name: 'TEMPERATURA CORPORAL',
-      unit: '°C',
-      base: temp ?? 36.6 + digestivo * 0.2,
-      ripple: 0.06,
-      lo: 35,
-      hi: 40,
-      decimals: 1,
-      ok: [36.1, 37.5],
-      wn: [35.5, 38.5],
-      hasData: temp !== null,
-      source: temp !== null ? 'Medición registrada' : 'Sin medición de temperatura'
-    }
-  ];
-}
-
-/** Estado de una lectura concreta (usado por las gráficas). */
-export const estadoLectura = (value, serie) => escala(value, serie);

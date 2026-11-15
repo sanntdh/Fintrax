@@ -137,7 +137,7 @@
             <i class="fintrax-progress__fill" data-progress-bar></i>
           </div>
           <div class="fintrax-progress__meta">
-            <span>TODOS LOS CAMPOS SON OBLIGATORIOS</span>
+            <span>OBLIGATORIOS SALVO LOS MARCADOS «OPCIONAL»</span>
             <span data-progress-text>0%</span>
           </div>
           <nav class="fintrax-stepper" data-quicknav aria-label="Pasos del registro"></nav>
@@ -227,8 +227,8 @@
             <div class="fintrax-field fintrax-field--full" data-current-only hidden>
               <div class="fintrax-zones" data-symptoms="form" role="group" aria-labelledby="fintrax-zones-label" aria-describedby="fintrax-error-symptoms"></div>
               <p class="fintrax-field__error" id="fintrax-error-symptoms" data-error-for="symptoms" aria-live="polite"></p>
-              <label for="fintrax-otras">Observaciones actuales</label>
-              <textarea id="fintrax-otras" data-other required disabled placeholder="Describe tus observaciones o escribe «Sin observaciones»."></textarea>
+              <label for="fintrax-otras">Observaciones actuales <small>(opcional)</small></label>
+              <textarea id="fintrax-otras" data-other disabled placeholder="Si quieres, describe algo más que notes."></textarea>
               <p class="fintrax-field__error" data-error-for="otherText" aria-live="polite"></p>
               <div class="fintrax-count" data-count="form" aria-live="polite"></div>
             </div>
@@ -296,14 +296,19 @@
 
       <div class="fintrax-body__detail">
         <nav class="fintrax-tabs" role="tablist" aria-label="Detalle del análisis">
-          <button type="button" class="fintrax-tab" role="tab" data-body-tab="telemetry" aria-selected="true" aria-controls="fintrax-tab-telemetry" id="fintrax-tabbtn-telemetry">Telemetría</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="acciones" aria-selected="true" aria-controls="fintrax-tab-acciones" id="fintrax-tabbtn-acciones">Qué hacer</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="comparativa" aria-selected="false" aria-controls="fintrax-tab-comparativa" id="fintrax-tabbtn-comparativa" tabindex="-1">Comparativa</button>
           <button type="button" class="fintrax-tab" role="tab" data-body-tab="symptoms" aria-selected="false" aria-controls="fintrax-tab-symptoms" id="fintrax-tabbtn-symptoms" tabindex="-1">Molestias</button>
           <button type="button" class="fintrax-tab" role="tab" data-body-tab="record" aria-selected="false" aria-controls="fintrax-tab-record" id="fintrax-tabbtn-record" tabindex="-1">Registro</button>
         </nav>
 
-        <section class="fintrax-tabpanel" data-tab-panel="telemetry" id="fintrax-tab-telemetry" role="tabpanel" aria-labelledby="fintrax-tabbtn-telemetry">
-          <div class="fintrax-charts-grid" data-charts></div>
-          <p class="fintrax-charts-note">Series generadas a partir de tus mediciones. Las tarjetas sin medición real se muestran vacías: no se inventan lecturas.</p>
+        <section class="fintrax-tabpanel" data-tab-panel="acciones" id="fintrax-tab-acciones" role="tabpanel" aria-labelledby="fintrax-tabbtn-acciones">
+          <div data-acciones></div>
+        </section>
+
+        <section class="fintrax-tabpanel" data-tab-panel="comparativa" id="fintrax-tab-comparativa" role="tabpanel" aria-labelledby="fintrax-tabbtn-comparativa" hidden>
+          <p class="fintrax-comp-intro">Tu registro habitual (<span class="fintrax-comp-clave fintrax-comp-clave--base">○</span>) frente al actual (<span class="fintrax-comp-clave fintrax-comp-clave--actual">●</span>). La franja verde es el rango normal. Son dos mediciones puntuales, no una monitorización continua.</p>
+          <div data-comparativa></div>
         </section>
 
         <section class="fintrax-tabpanel" data-tab-panel="symptoms" id="fintrax-tab-symptoms" role="tabpanel" aria-labelledby="fintrax-tabbtn-symptoms" hidden>

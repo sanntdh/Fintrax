@@ -28,21 +28,25 @@ python3 -m http.server 5173
    `Fintrax Código Error.html` (10 segundos). Con movimiento reducido, el emblema
    se muestra estático durante 1,2 segundos.
 2. **Etapa 1 · Datos habituales**, basada en `ASTRA_registro_etapa1.html`:
-   completar los 35 campos y pulsar **COMENZAR ANÁLISIS**. El formulario se recorre
+   completar los 34 campos y pulsar **COMENZAR ANÁLISIS**. El formulario se recorre
    por pasos (perfil y una sección médica por pantalla) con **Anterior** y
    **Siguiente**; la barra de pasos permite saltar a cualquiera.
 3. **Etapa 2 · Datos actuales**, basada en `ASTRA_version2_con_resultados.html`:
    nombre, sexo, edad y grupo sanguíneo aparecen precargados y editables; peso,
    estatura, mediciones, molestias y observaciones se registran para el momento
    actual. Las molestias tienen su propio paso, justo después del perfil; tocar el
-   holograma lleva a él. Completar sus 37 campos y pulsar **ANALIZAR DATOS ACTUALES**.
+   holograma lleva a él. Completar sus 35 campos y pulsar **ANALIZAR DATOS ACTUALES**.
 4. Tras la transición se muestra la revisión: órganos, gráficas, síntomas y el
    detalle de ambos registros en la pestaña **Registro**.
 
-Todos los campos son obligatorios, incluidos metadatos y textos. En las escalas
+Todos los campos son obligatorios salvo los datos de laboratorio (densidad ósea,
+glóbulos blancos, cortisol, marcadores y hormonas), que se marcan «(opcional)»:
+si se rellenan, se validan igual. En las escalas
 se puede mover el control o pulsar **Confirmar 5/10** para aceptar el valor
 central. En molestias se elige un síntoma o **Me siento en óptimas condiciones**;
-las observaciones pueden indicar **Sin observaciones**.
+las observaciones actuales son opcionales. Ningún campo obligatorio pide texto
+libre: los resultados de laboratorio se eligen entre *Dentro de rango*, *Fuera de
+rango* y *No disponible*.
 
 **Editar datos habituales** y **Editar datos actuales** conservan las respuestas
 de cada etapa. Los datos viven en memoria durante la visita; el botón de descarga
@@ -74,7 +78,7 @@ recomendaciones de los hallazgos que requieren evaluación.
 npm test           # node --test tests/
 ```
 
-63 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
+67 pruebas unitarias y estructurales: catálogo de datos, motor de evaluación,
 cliente del backend y traducción de lecturas,
 validación completa, orden de las etapas, conservación de registros, exportación
 y contrato del HTML.
@@ -104,7 +108,10 @@ Documentación detallada:
   25 indicadores médicos y 4 campos auxiliares, además del perfil.
 - Avatar holográfico con zonas interactivas, conmutación por sexo y estados por color.
 - Evaluación por zona y por sistema, con estado explícito «SIN DATOS» cuando no hay medición.
-- Telemetría de cuatro series: solo se dibuja si existe una medición real.
+- **Qué hacer** (pestaña inicial): acciones según molestias y sistemas
+  alterados, cada una con fuente y página (`src/data/acciones.js`).
+- **Comparativa** estática habitual frente a actual de seis indicadores, con las
+  anomalías primero. No hay telemetría: Fintrax no monitoriza de forma continua.
 - Tarjetas de orientación por síntoma (posible causa, qué hacer, señal de alarma).
 - Exportación del registro a `FINTRAX_registro_premision.json`.
 - Accesibilidad: foco visible, etiquetas, `aria-live`, navegación por teclado y
