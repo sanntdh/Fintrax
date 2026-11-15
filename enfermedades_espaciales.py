@@ -166,7 +166,8 @@ def evaluar_condiciones(datos: DatosComplementarios) -> list[CondicionEvaluada]:
     resultados.append(_comparacion("perdida_osea", "Perdida mineral osea", datos.densidad_osea,
                                    "densidad_osea", [f"{_EXON}, p. 8", f"{_FISIO}, p. 2"]))
     resultados.append(_comparacion("deterioro_muscular", "Deterioro de fuerza muscular",
-                                   datos.fuerza_muscular, "fuerza_muscular", [f"{_FISIO}, pp. 2, 12"]))
+                                   datos.fuerza_muscular, "fuerza_muscular",
+                                   [f"{_FISIO}, p. 2", f"{_FISIO}, p. 12 (contramedidas)"]))
     grupos = [
         ("sans", "Hallazgos compatibles con riesgo neuro-ocular (SANS)",
          ("cambio_visual", "hallazgo_ocular"),
@@ -175,7 +176,7 @@ def evaluar_condiciones(datos: DatosComplementarios) -> list[CondicionEvaluada]:
         ("intolerancia_ortostatica", "Sintomas compatibles con intolerancia ortostatica",
          ("sintomas_al_incorporarse",),
          "Evaluar postura, sintomas y presion arterial/FC con supervision clinica; no realizar pruebas de pie sin apoyo si hay presincope.",
-         [f"{_FISIO}, pp. 2, 12"]),
+         [f"{_FISIO}, pp. 2, 5", f"{_EXON}, pp. 2, 6"]),
         ("salud_mental_sueno", "Alteracion referida de sueno, animo o cognicion",
          ("alteracion_sueno", "alteracion_animo", "dificultad_cognitiva"),
          "Solicitar evaluacion de sueno y salud mental; estos datos no diagnostican depresion, ansiedad ni space fog.",
