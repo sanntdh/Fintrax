@@ -1,0 +1,421 @@
+/* ==========================================================================
+   ASTRA · Layout: barra superior, rejilla principal, paneles y botones
+   ========================================================================== */
+
+/* --- Barra superior ------------------------------------------------------ */
+
+#astra-app .astra-topbar {
+  height: 68px;
+  margin: 18px var(--shell-gutter) 0;
+  padding: 0 var(--sp-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(
+    90deg,
+    rgba(4, 16, 38, 0.92) 0%,
+    rgba(6, 25, 58, 0.85) 50%,
+    rgba(4, 16, 38, 0.92) 100%
+  );
+  box-shadow:
+    0 0 25px rgba(0, 210, 255, 0.12),
+    inset 0 0 15px rgba(0, 210, 255, 0.05);
+  backdrop-filter: blur(10px);
+}
+
+#astra-app .astra-brand {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xl);
+  letter-spacing: 3px;
+  color: #fff;
+  text-shadow: 0 0 12px var(--cy);
+}
+
+#astra-app .astra-brand__badge {
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--cy);
+  background: rgba(0, 240, 255, 0.15);
+  color: var(--cy);
+  font-size: var(--fs-2xs);
+  letter-spacing: 1.5px;
+}
+
+#astra-app .astra-topinfo {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  font-size: var(--fs-md);
+  letter-spacing: 1px;
+}
+
+#astra-app .astra-telemetry-item {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  color: var(--mut);
+}
+
+#astra-app .astra-telemetry-item .val {
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+#astra-app .astra-status-pill {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 6px 14px;
+  border: 1px solid rgba(0, 245, 180, 0.4);
+  border-radius: var(--r-pill);
+  background: rgba(0, 245, 180, 0.1);
+  color: var(--ok);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  letter-spacing: 1.5px;
+}
+
+#astra-app .astra-pulse {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 12px var(--ok);
+  animation: astra-pulse 1.8s infinite;
+}
+
+@keyframes astra-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.3;
+    transform: scale(0.75);
+  }
+}
+
+/* --- Rejilla principal --------------------------------------------------- */
+
+#astra-app .astra-main {
+  width: 96%;
+  max-width: var(--shell-max);
+  margin: var(--sp-5) auto 35px;
+  display: grid;
+  grid-template-columns: minmax(0, 36%) minmax(0, 64%);
+  gap: 22px;
+  align-items: stretch;
+}
+
+#astra-app .astra-panel {
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--r-xl);
+  background: linear-gradient(145deg, rgba(3, 15, 36, 0.92) 0%, rgba(5, 23, 52, 0.88) 100%);
+  box-shadow:
+    0 0 35px rgba(0, 200, 255, 0.1),
+    inset 0 0 30px rgba(0, 200, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+#astra-app .astra-panel--human {
+  position: sticky;
+  top: 18px;
+  align-self: start;
+  height: var(--panel-height);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 12, 32, 0.9) 0%,
+    rgba(4, 22, 54, 0.8) 60%,
+    rgba(2, 10, 26, 0.95) 100%
+  );
+  box-shadow:
+    0 0 35px rgba(0, 210, 255, 0.15),
+    inset 0 0 25px rgba(0, 210, 255, 0.06);
+}
+
+#astra-app .astra-panel--form {
+  position: relative;
+  padding: 30px var(--sp-6) 36px;
+}
+
+#astra-app .astra-panel--form::before,
+#astra-app .astra-panel--form::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--cy);
+  pointer-events: none;
+}
+
+#astra-app .astra-panel--form::before {
+  top: -1px;
+  left: -1px;
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: var(--r-xl) 0 0 0;
+}
+
+#astra-app .astra-panel--form::after {
+  right: -1px;
+  bottom: -1px;
+  border-top: 0;
+  border-left: 0;
+  border-radius: 0 0 var(--r-xl) 0;
+}
+
+/* --- Encabezado ---------------------------------------------------------- */
+
+#astra-app .astra-heading {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  margin-bottom: var(--sp-5);
+}
+
+#astra-app .astra-heading__icon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  flex: 0 0 68px;
+  border: 1.5px solid var(--cy);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.2) 0%, rgba(4, 20, 48, 0.8) 80%);
+  box-shadow:
+    0 0 22px rgba(0, 240, 255, 0.35),
+    inset 0 0 15px rgba(0, 240, 255, 0.25);
+  font-size: 28px;
+}
+
+#astra-app .astra-heading h1 {
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xl);
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+  margin-bottom: var(--sp-1);
+}
+
+#astra-app .astra-heading p {
+  color: var(--mut);
+  font-size: var(--fs-lg);
+  letter-spacing: 0.5px;
+}
+
+/* --- Progreso ------------------------------------------------------------ */
+
+#astra-app .astra-progress {
+  margin-bottom: var(--sp-5);
+}
+
+#astra-app .astra-progress__track {
+  position: relative;
+  height: 6px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  border-radius: 6px;
+  background: #051933;
+}
+
+#astra-app .astra-progress__fill {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #10629c, var(--cy));
+  box-shadow: 0 0 14px var(--cy);
+  transition: width var(--dur-med) ease;
+}
+
+#astra-app .astra-progress__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  margin-top: 6px;
+  color: var(--mut);
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  letter-spacing: 1px;
+}
+
+#astra-app .astra-progress__sections {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--sp-2);
+}
+
+#astra-app .astra-progress__chip {
+  padding: 3px 8px;
+  border: 1px solid rgba(0, 240, 255, 0.25);
+  border-radius: var(--r-pill);
+  color: var(--mut-dim);
+  background: rgba(0, 240, 255, 0.04);
+  font-family: var(--font-hud);
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+#astra-app .astra-progress__chip[data-complete='true'] {
+  border-color: rgba(0, 245, 180, 0.55);
+  color: var(--ok);
+  background: rgba(0, 245, 180, 0.1);
+}
+
+/* --- Botones ------------------------------------------------------------- */
+
+#astra-app .astra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  padding: 14px 22px;
+  border: 1px solid rgba(0, 240, 255, 0.6);
+  border-radius: var(--r-pill);
+  background: rgba(0, 240, 255, 0.08);
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    background var(--dur-fast) var(--ease-out);
+}
+
+#astra-app .astra-btn:hover {
+  background: rgba(0, 240, 255, 0.18);
+  box-shadow: 0 0 22px rgba(0, 240, 255, 0.35);
+}
+
+#astra-app .astra-btn:active {
+  transform: translateY(1px);
+}
+
+#astra-app .astra-btn--primary {
+  min-width: min(420px, 100%);
+  padding: 18px 36px;
+  border: 2px solid var(--cy);
+  border-radius: 40px;
+  background: linear-gradient(90deg, #093b6e 0%, #0d5f99 50%, #093b6e 100%);
+  box-shadow:
+    0 0 25px rgba(0, 240, 255, 0.4),
+    inset 0 0 15px rgba(0, 240, 255, 0.2);
+  font-size: var(--fs-lg);
+  font-weight: 800;
+  letter-spacing: 3px;
+}
+
+#astra-app .astra-btn--primary:hover {
+  background: linear-gradient(90deg, #0d5296 0%, #1682cf 50%, #0d5296 100%);
+  box-shadow:
+    0 0 35px rgba(0, 240, 255, 0.7),
+    inset 0 0 20px rgba(0, 240, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+#astra-app .astra-btn--secondary {
+  border-color: rgba(0, 240, 255, 0.65);
+  border-radius: 9px;
+  background: rgba(0, 240, 255, 0.08);
+  color: #bbfbff;
+  font-size: var(--fs-xs);
+  letter-spacing: 1px;
+}
+
+#astra-app .astra-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+  margin-top: 30px;
+}
+
+#astra-app .astra-actions .astra-btn--secondary {
+  min-width: 260px;
+}
+
+/* --- Conmutación de vista ------------------------------------------------- */
+
+#astra-app[data-view='form'] .astra-results {
+  display: none;
+}
+
+#astra-app[data-view='results'] .astra-main {
+  display: none;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  #astra-app .astra-main {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #astra-app .astra-panel--human {
+    position: relative;
+    top: 0;
+    height: clamp(420px, 72vh, 680px);
+  }
+}
+
+@media (max-width: 720px) {
+  #astra-app .astra-topbar {
+    height: auto;
+    padding: var(--sp-3) var(--sp-4);
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+  }
+
+  #astra-app .astra-topinfo {
+    gap: var(--sp-3);
+    font-size: var(--fs-sm);
+  }
+
+  #astra-app .astra-panel--form {
+    padding: var(--sp-4);
+  }
+
+  #astra-app .astra-heading__icon {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+    font-size: 22px;
+  }
+
+  #astra-app .astra-heading h1 {
+    font-size: var(--fs-xl);
+  }
+
+  #astra-app .astra-heading p {
+    font-size: var(--fs-md);
+  }
+}
+
+@media (max-width: 420px) {
+  #astra-app .astra-topinfo .astra-telemetry-item {
+    display: none;
+  }
+
+  #astra-app .astra-btn--primary {
+    min-width: 100%;
+    letter-spacing: 2px;
+  }
+}

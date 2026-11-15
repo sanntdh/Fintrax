@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020713">
+<meta name="description" content="ASTRA · Registro biomédico pre-misión. Prototipo local de evaluación orientativa con datos autodeclarados. No constituye diagnóstico.">
+<title>ASTRA | Registro Biomédico Premisión</title>
+
+<link rel="preload" href="assets/fonts/orbitron-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/rajdhani-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="src/css/fonts.css">
+<link rel="stylesheet" href="src/css/tokens.css">
+<link rel="stylesheet" href="src/css/base.css">
+<link rel="stylesheet" href="src/css/layout.css">
+<link rel="stylesheet" href="src/css/form.css">
+<link rel="stylesheet" href="src/css/avatar.css">
+<link rel="stylesheet" href="src/css/results.css">
+<link rel="stylesheet" href="src/css/a11y.css">
+</head>
+<body>
+
+<div id="astra-app" data-view="form">
+  <a class="astra-skip" href="#astra-form">Saltar al formulario</a>
+
+  <!-- Capas decorativas: siempre por debajo del contenido -->
+  <div class="astra-bg" aria-hidden="true">
+    <canvas class="astra-bg__stars" data-stars></canvas>
+    <div class="astra-bg__grid"></div>
+    <div class="astra-bg__scan"></div>
+    <div class="astra-bg__aurora"></div>
+    <div class="astra-bg__planet"></div>
+  </div>
+
+  <header class="astra-topbar">
+    <div class="astra-brand">
+      <span>ASTRA</span>
+      <span class="astra-brand__badge">BIO-SYS v5.0</span>
+    </div>
+    <div class="astra-topinfo">
+      <div class="astra-telemetry-item">
+        <span>ASTRONAUTA:</span>
+        <span class="val">AST-001</span>
+      </div>
+      <div class="astra-telemetry-item">
+        <span>MISIÓN:</span>
+        <span class="val">045 DEEP SPACE</span>
+      </div>
+      <div class="astra-status-pill">
+        <span class="astra-pulse" aria-hidden="true"></span>
+        <span>SISTEMA OPERATIVO</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="astra-main">
+    <!-- Panel del avatar -->
+    <section class="astra-panel astra-panel--human" aria-label="Escaneo holográfico corporal">
+      <div class="astra-hud-grid" aria-hidden="true"></div>
+      <div class="astra-scan-header">
+        <div class="astra-scan-header__title" data-scan-title>ESCANEO BIOMÉTRICO 3D</div>
+        <div class="astra-scan-header__sub" data-scan-sub>SELECCIONA TU SEXO PARA CALIBRAR EL HOLOGRAMA</div>
+      </div>
+      <div data-avatar-host="form"></div>
+      <div class="astra-holo-metric astra-holo-metric--left">
+        <span class="astra-holo-metric__tag">IMC ESTIMADO</span>
+        <span class="astra-holo-metric__num" data-imc-value>--</span>
+        <span class="astra-holo-metric__sub" data-imc-category>CALIBRANDO...</span>
+      </div>
+      <div class="astra-holo-metric astra-holo-metric--right">
+        <span class="astra-holo-metric__tag">ZONAS MARCADAS</span>
+        <span class="astra-holo-metric__num" data-zone-count>0</span>
+        <span class="astra-holo-metric__sub" data-zone-status>ESTADO NOMINAL</span>
+      </div>
+    </section>
+
+    <!-- Formulario -->
+    <section class="astra-panel astra-panel--form" id="astra-form" aria-labelledby="astra-form-title">
+      <div class="astra-heading">
+        <span class="astra-heading__icon" aria-hidden="true">👤</span>
+        <div>
+          <h1 id="astra-form-title">Registro Biomédico</h1>
+          <p>Evaluación de referencia previa a la misión · ASTRA</p>
+        </div>
+      </div>
+
+      <div class="astra-progress">
+        <div class="astra-progress__track">
+          <i class="astra-progress__fill" data-progress-bar></i>
+        </div>
+        <div class="astra-progress__meta">
+          <span>DATOS COMPLETADOS · PERFIL + INDICADORES</span>
+          <span data-progress-text>0%</span>
+        </div>
+        <div class="astra-progress__sections" data-progress-sections></div>
+      </div>
+
+      <form id="astra-personal-form" autocomplete="off" novalidate>
+        <div class="astra-form-grid">
+          <div class="astra-field">
+            <span class="astra-field__label" id="astra-sex-label">Selecciona tu avatar · Sexo biológico</span>
+            <div class="astra-sex-options" role="radiogroup" aria-labelledby="astra-sex-label">
+              <label class="astra-sex-option">
+                <input type="radio" name="sexo" value="Femenino" data-profile="sexo" required>
+                <span>♀ MUJER</span>
+              </label>
+              <label class="astra-sex-option">
+                <input type="radio" name="sexo" value="Masculino" data-profile="sexo" required>
+                <span>♂ HOMBRE</span>
+              </label>
+            </div>
+            <p class="astra-hint">Cambia el holograma y adapta las opciones de síntomas del formulario.</p>
+            <p class="astra-field__error" data-error-for="sexo" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field">
+            <label for="astra-nombre">Nombre completo</label>
+            <input type="text" id="astra-nombre" data-profile="nombre" placeholder="Ej. Alex Vance" autocomplete="name" required>
+            <p class="astra-field__error" data-error-for="nombre" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field">
+            <label for="astra-edad">Edad</label>
+            <div class="astra-unit">
+              <input type="number" id="astra-edad" data-profile="edad" placeholder="Ej. 28" min="1" max="120" step="1" inputmode="numeric" required>
+              <span>AÑOS</span>
+            </div>
+            <p class="astra-field__error" data-error-for="edad" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field">
+            <label for="astra-peso">Peso corporal</label>
+            <div class="astra-unit">
+              <input type="number" id="astra-peso" data-profile="peso" placeholder="Ej. 68.5" min="1" step="0.1" inputmode="decimal" required>
+              <span>KG</span>
+            </div>
+            <p class="astra-field__error" data-error-for="peso" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field">
+            <label for="astra-estatura">Estatura</label>
+            <div class="astra-unit">
+              <input type="number" id="astra-estatura" data-profile="estatura" placeholder="Ej. 1.75" min="0.5" max="2.5" step="0.01" inputmode="decimal" required>
+              <span>M</span>
+            </div>
+            <p class="astra-field__error" data-error-for="estatura" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field">
+            <label for="astra-sangre">Grupo sanguíneo</label>
+            <select id="astra-sangre" data-profile="sangre" required>
+              <option value="">Selecciona un tipo</option>
+              <option>A+</option><option>A-</option>
+              <option>B+</option><option>B-</option>
+              <option>AB+</option><option>AB-</option>
+              <option>O+</option><option>O-</option>
+            </select>
+            <p class="astra-field__error" data-error-for="sangre" aria-live="polite"></p>
+          </div>
+
+          <div class="astra-field astra-field--full">
+            <span class="astra-field__label" id="astra-zones-label">
+              ¿Sientes alguna alteración o molestia hoy? <small>(opcional)</small>
+            </span>
+            <div class="astra-zones" data-symptoms="form" role="group" aria-labelledby="astra-zones-label"></div>
+            <label class="astra-sr-only" for="astra-otras">Otras observaciones</label>
+            <textarea id="astra-otras" data-other placeholder="Describe cualquier otro síntoma o condición médica relevante..."></textarea>
+            <div class="astra-count" data-count="form" aria-live="polite"></div>
+          </div>
+        </div>
+
+        <div class="astra-metric-intro" id="astra-mediciones">
+          <strong>◈ PARÁMETROS MÉDICOS Y PSICOLÓGICOS</strong>
+          <p>Registra los resultados previos a la misión. Los datos de laboratorio o pruebas instrumentales pueden quedar vacíos si aún no se han realizado. Las escalas son autoevaluaciones, no diagnósticos.</p>
+        </div>
+
+        <nav class="astra-quicknav" data-quicknav aria-label="Secciones del registro médico"></nav>
+
+        <div data-metric-sections></div>
+
+        <div class="astra-actions">
+          <button type="submit" class="astra-btn astra-btn--primary">⚡ &nbsp; COMENZAR ANÁLISIS &nbsp; ›</button>
+        </div>
+        <p class="astra-field__error" data-form-status role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <!-- Resultados -->
+  <section class="astra-results" data-results aria-labelledby="astra-banner-title">
+    <div class="astra-banner" data-banner data-state="unknown">
+      <div>
+        <h2 id="astra-banner-title" data-banner-title>◇ SIN DATOS SUFICIENTES</h2>
+        <p data-banner-text>Completa el registro para obtener orientación.</p>
+        <small>Resultado informativo y simulado a partir de tus datos; no sustituye una evaluación médica.</small>
+      </div>
+      <div class="astra-banner__chips" data-banner-chips></div>
+    </div>
+
+    <div class="astra-res-grid">
+      <aside class="astra-res-col" aria-label="Estado de órganos">
+        <div class="astra-col-title">◆ ESTADO DE ÓRGANOS</div>
+        <div class="astra-res-col" data-organs></div>
+      </aside>
+
+      <div class="astra-res-center">
+        <div class="astra-hud-grid" aria-hidden="true"></div>
+        <div data-avatar-host="results"></div>
+        <div class="astra-res-legend" aria-hidden="true">
+          <span style="color:var(--ok)"><i style="background:var(--ok)"></i>BIEN</span>
+          <span style="color:var(--warn)"><i style="background:var(--warn)"></i>MEDIO</span>
+          <span style="color:var(--alert)"><i style="background:var(--alert)"></i>GRAVE</span>
+          <span style="color:var(--mut)"><i style="background:var(--mut)"></i>SIN DATOS</span>
+        </div>
+      </div>
+
+      <aside class="astra-res-col" aria-label="Telemetría simulada">
+        <div class="astra-col-title">◆ TELEMETRÍA SIMULADA · ÚLTIMOS 60 S</div>
+        <div class="astra-res-col" data-charts></div>
+        <p class="astra-charts-note">Series generadas a partir de tus mediciones. Las tarjetas sin medición real se muestran vacías: no se inventan lecturas.</p>
+      </aside>
+    </div>
+
+    <section class="astra-sym-panel" aria-labelledby="astra-sym-title">
+      <div class="astra-col-title" id="astra-sym-title">◆ ¿SIENTES ALGO PREOCUPANTE O GRAVE?</div>
+      <p class="astra-sym-intro">Elige lo que sientes ahora: te diremos qué podría ser y qué hacer, y el avatar se actualiza con tu respuesta.</p>
+      <div class="astra-sym-grid">
+        <div class="astra-zones" data-symptoms="results" role="group" aria-labelledby="astra-sym-title"></div>
+        <div class="astra-sym-results" data-sym-results aria-live="polite"></div>
+      </div>
+    </section>
+
+    <div class="astra-actions">
+      <button type="button" class="astra-btn astra-btn--primary" data-back>‹ &nbsp; Editar datos / Nuevo registro</button>
+      <button type="button" class="astra-btn astra-btn--secondary" data-export>↓ DESCARGAR DATOS JSON</button>
+    </div>
+  </section>
+
+  <div class="astra-analyzing" data-analyzing aria-hidden="true">
+    <div>
+      ANALIZANDO TELEMETRÍA
+      <i data-analyzing-bar></i>
+      <span data-analyzing-pct>0%</span>
+    </div>
+  </div>
+
+  <div class="astra-toast" data-toast role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="astra-noscript">ASTRA necesita JavaScript para calcular la evaluación. Actívalo y recarga la página.</p>
+  </noscript>
+</div>
+
+<script type="module" src="src/js/main.js"></script>
+</body>
+</html>
