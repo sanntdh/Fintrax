@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 
-import { perfilParaBackend, fuenteDeRegistro, resumirEvaluacion, lecturaMision, inmuneDeRegistro, mapearComplementarios } from '../src/js/api.js';
+import { perfilParaBackend, fuenteDeRegistro, resumirEvaluacion, lecturaMision, inmuneDeRegistro, mapearComplementarios, normalizarConfig } from '../src/js/api.js';
 import { FORM_FIELDS, COUNTED_IDS } from '../src/data/metrics.js';
 import { PROFILE_FIELDS } from '../src/js/validation.js';
 
@@ -99,4 +99,27 @@ test('un resultado inmunitario fuera de rango llega al backend como evaluación 
   assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'No disponible', hormonas_estres: 'Dentro de rango' }), null);
   const complementarios = mapearComplementarios({ explicitos: { evaluacion_inmune_anormal: true } });
   assert.equal(complementarios.evaluacion_inmune_anormal, true);
+});
+
+test('la configuración de la misión fija backend, clave y astronauta sin que lo teclee nadie', () => {
+  assert.deepEqual(
+    normalizarConfig({ backend: 'http://localhost:8000/', clave: ' clave-equipo ', astronautaId: 3 }),
+    { backend: 'http://localhost:8000', clave: 'clave-equipo', astronautaId: '3' }
+  );
+  assert.deepEqual(normalizarConfig({ backend: 'https://nave.local' }), { backend: 'https://nave.local', clave: '', astronautaId: '' });
+});
+
+test('una configuración inválida se ignora y la página sigue en modo local', () => {
+  for (const malo of [null, 'texto', {}, { backend: 'ftp://nave' }, { backend: 'http://usuario:pass@nave' }]) {
+    assert.equal(normalizarConfig(malo), null);
+  }
+});
+
+test('el ejemplo de configuración no lleva una clave real y la del equipo no se versiona', async () => {
+  const { readFile } = await import('node:fs/promises');
+  const ejemplo = JSON.parse(await readFile(new URL('../config.example.json', import.meta.url), 'utf8'));
+  assert.ok(normalizarConfig(ejemplo), 'El ejemplo debe ser una configuración válida');
+  assert.match(ejemplo.clave, /^<.*>$/, 'El ejemplo solo puede llevar un marcador, no una clave');
+  const ignorados = await readFile(new URL('../.gitignore', import.meta.url), 'utf8');
+  assert.match(ignorados, /^config\.json$/m);
 });

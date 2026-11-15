@@ -61,10 +61,18 @@ La conexión es opcional: sin ella la evaluación es local. Arranca el backend
 MONITOREO_ADMIN_KEY=<clave> MONITOREO_CORS_ORIGINS=http://localhost:5173 uvicorn app.main:app --port 8000
 ```
 
-En la barra superior, **CENTRO MÉDICO · SIN CONEXIÓN** abre el diálogo: URL del
-backend y clave de API. La URL se recuerda en `localStorage` (también admite
-`?api=`); la clave vive solo en `sessionStorage`. Si la clave no tiene ficha de
-astronauta, se crea con el perfil al analizar.
+**En un equipo de a bordo la tripulación no configura nada.** Operaciones copia
+`config.example.json` como `config.json` (no se versiona: lleva la clave del
+equipo) y rellena el backend, la clave y, si se quiere, `astronautaId`. Al abrir,
+la página conecta sola; el indicador de arriba muestra **EN LÍNEA**, **SIN
+ENLACE** o **CONECTANDO…**, y al pulsarlo reintenta. Si un análisis se hace sin
+enlace, queda en local y la franja ofrece **Reintentar**.
+
+El diálogo de URL y clave es solo para mantenimiento: aparece en equipos sin
+`config.json` o abriendo la página con `?mantenimiento`. Prioridad del backend:
+`?api=` > `config.json` > URL guardada a mano. Una clave escrita en el diálogo
+vive solo en `sessionStorage`. Si la clave no tiene ficha de astronauta, se crea
+con el perfil al analizar.
 
 Al pulsar **ANALIZAR DATOS ACTUALES** se envía el registro habitual como lectura
 `preflight` (una vez por astronauta y sesión) y el actual como lectura `vuelo`,

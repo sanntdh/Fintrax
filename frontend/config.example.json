@@ -1,0 +1,5 @@
+{
+  "backend": "http://localhost:8000",
+  "clave": "<clave de API asignada a este equipo>",
+  "astronautaId": null
+}

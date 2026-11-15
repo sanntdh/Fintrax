@@ -5,6 +5,11 @@
  * ella, al analizar se envían la lectura habitual (preflight, una vez por
  * astronauta y sesión) y la actual (vuelo), y la respuesta del backend se
  * resume en una franja de los resultados.
+ *
+ * En un equipo de a bordo, `config.json` (no versionado) fija backend, clave y
+ * astronauta: la página conecta sola y la tripulación no teclea nada. El
+ * diálogo de URL y clave queda para mantenimiento (`?mantenimiento`) o para
+ * equipos sin configurar.
  */
 
 import { $, el, limpiar } from './dom.js';
@@ -17,6 +22,7 @@ import {
   leerApiKey,
   guardarApiKey,
   borrarApiKey,
+  normalizarConfig,
   perfilParaBackend,
   fuenteDeRegistro,
   lecturaPreflight,
@@ -58,14 +64,27 @@ function escribir(store, clave, valor) {
   }
 }
 
+/** Configuración de la misión cargada al arrancar; `null` si no hay. */
+let config = null;
+/** Resultado de la última comprobación del enlace: 'on' | 'off' | 'probando'. */
+let enlace = 'off';
+
+/** Último estado analizado, para reintentar el envío sin repetir el análisis. */
+let ultimoEstado = null;
+
+const claveActual = () => leerApiKey(sesion()) || config?.clave || '';
+const modoMantenimiento = () => new URLSearchParams(location.search).has('mantenimiento');
+
 function apiActual() {
+  // Prioridad: ?api= (pruebas) > config.json (misión) > URL guardada a mano.
+  const desdeQuery = resolverBase({ search: location.search });
   return crearApi({
-    baseUrl: resolverBase({ search: location.search, almacen: local() }) || '',
-    getKey: () => leerApiKey(sesion())
+    baseUrl: desdeQuery || config?.backend || resolverBase({ almacen: local() }) || '',
+    getKey: claveActual
   });
 }
 
-const conectado = () => Boolean(apiActual().baseUrl && leerApiKey(sesion()));
+const conectado = () => Boolean(apiActual().baseUrl && claveActual());
 
 /* ------------------------------------------------------------------------- */
 /* Indicador y diálogo de conexión                                           */
@@ -74,9 +93,57 @@ const conectado = () => Boolean(apiActual().baseUrl && leerApiKey(sesion()));
 function pintarIndicador() {
   const boton = $('[data-centro-toggle]');
   if (!boton) return;
-  const enLinea = conectado();
-  boton.dataset.estado = enLinea ? 'on' : 'off';
-  $('[data-centro-label]', boton).textContent = enLinea ? 'CENTRO MÉDICO · EN LÍNEA' : 'CENTRO MÉDICO · SIN CONEXIÓN';
+  const textos = {
+    on: 'CENTRO MÉDICO · EN LÍNEA',
+    probando: 'CENTRO MÉDICO · CONECTANDO…',
+    off: conectado() ? 'CENTRO MÉDICO · SIN ENLACE' : 'CENTRO MÉDICO · SIN CONEXIÓN'
+  };
+  boton.dataset.estado = enlace === 'on' ? 'on' : 'off';
+  $('[data-centro-label]', boton).textContent = textos[enlace];
+  boton.title = config && !modoMantenimiento() ? 'Pulsa para reintentar la conexión' : 'Configurar la conexión';
+}
+
+/**
+ * Comprueba el enlace con el backend y fija el astronauta de este equipo:
+ * el de `config.json`, o el único que la clave puede ver.
+ * @returns {Promise<boolean>}
+ */
+async function comprobarEnlace() {
+  if (!conectado()) {
+    enlace = 'off';
+    pintarIndicador();
+    return false;
+  }
+  enlace = 'probando';
+  pintarIndicador();
+  try {
+    const astronautas = await apiActual().listarAstronautas();
+    if (config?.astronautaId) escribir(sesion(), CLAVE_ASTRONAUTA, config.astronautaId);
+    else if (astronautas.length === 1) escribir(sesion(), CLAVE_ASTRONAUTA, String(astronautas[0].id));
+    enlace = 'on';
+  } catch {
+    enlace = 'off';
+  }
+  pintarIndicador();
+  return enlace === 'on';
+}
+
+async function cargarConfig() {
+  try {
+    const respuesta = await fetch('config.json', { cache: 'no-store' });
+    config = respuesta.ok ? normalizarConfig(await respuesta.json()) : null;
+  } catch {
+    config = null;
+  }
+}
+
+async function alPulsarIndicador() {
+  if (!config || modoMantenimiento()) {
+    abrirDialogo();
+    return;
+  }
+  const ok = await comprobarEnlace();
+  showToast(ok ? 'Centro médico Fintrax en línea.' : 'Sin enlace con el centro médico. El análisis sigue siendo local.', ok ? '' : 'warn');
 }
 
 function mensajeDialogo(texto, tono = '') {
@@ -125,6 +192,7 @@ async function conectar(event) {
     else if (!astronautas.length) escribir(sesion(), CLAVE_ASTRONAUTA, '');
 
     $('[data-centro-clave]').value = '';
+    enlace = 'on';
     pintarIndicador();
     $('[data-centro-desconectar]').hidden = false;
     if (astronautas.length > 1 && !elegido) {
@@ -137,6 +205,7 @@ async function conectar(event) {
     showToast('Centro médico Fintrax en línea.');
   } catch (error) {
     borrarApiKey(sesion());
+    enlace = 'off';
     pintarIndicador();
     mensajeDialogo(error instanceof ApiError ? error.mensaje : 'No se pudo conectar.', 'error');
   }
@@ -145,6 +214,7 @@ async function conectar(event) {
 function desconectar() {
   borrarApiKey(sesion());
   escribir(sesion(), CLAVE_ASTRONAUTA, '');
+  enlace = 'off';
   pintarSelector([]);
   pintarIndicador();
   $('[data-centro-desconectar]').hidden = true;
@@ -167,8 +237,9 @@ function pintarFranja({ estado, titulo, texto = '', resumen = null }) {
   host.append(cabecera);
 
   if (estado === 'off') {
-    const boton = el('button', { type: 'button', class: 'fintrax-btn fintrax-btn--secondary', text: 'Conectar' });
-    boton.addEventListener('click', abrirDialogo);
+    const reintentar = Boolean(config) && !modoMantenimiento();
+    const boton = el('button', { type: 'button', class: 'fintrax-btn fintrax-btn--secondary', text: reintentar ? 'Reintentar' : 'Conectar' });
+    boton.addEventListener('click', () => (reintentar ? enviarAlCentro(ultimoEstado) : abrirDialogo()));
     host.append(boton);
   }
 
@@ -212,6 +283,8 @@ async function asegurarAstronauta(api, perfil) {
  * @param {ReturnType<import('./state.js').getState>} state
  */
 export async function enviarAlCentro(state) {
+  if (!state) return;
+  ultimoEstado = state;
   if (!conectado()) {
     pintarFranja({ estado: 'off', titulo: 'Evaluación local', texto: 'Conecta el centro médico para validar este análisis.' });
     return;
@@ -234,6 +307,10 @@ export async function enviarAlCentro(state) {
   pintarFranja({ estado: 'enviando', titulo: 'Enviando al centro médico…' });
   const api = apiActual();
   try {
+    if (enlace !== 'on' && !(await comprobarEnlace())) {
+      pintarFranja({ estado: 'off', titulo: 'Sin enlace', texto: 'No hay enlace con el centro médico; el análisis es local.' });
+      return;
+    }
     const id = await asegurarAstronauta(api, current.profile);
     const marca = PREFIJO_PREFLIGHT + id;
     if (baseline && !leer(sesion(), marca)) {
@@ -272,10 +349,12 @@ function abrirDialogo() {
   else dialogo.setAttribute('open', '');
 }
 
-export function initCentro() {
-  $('[data-centro-toggle]')?.addEventListener('click', abrirDialogo);
+export async function initCentro() {
+  $('[data-centro-toggle]')?.addEventListener('click', alPulsarIndicador);
   $('[data-centro-form]')?.addEventListener('submit', conectar);
   $('[data-centro-desconectar]')?.addEventListener('click', desconectar);
   $('[data-centro-cerrar]')?.addEventListener('click', () => $('[data-centro-dialog]').close());
   pintarIndicador();
+  await cargarConfig();
+  await comprobarEnlace();
 }

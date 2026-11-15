@@ -444,3 +444,25 @@ export function resumirEvaluacion(respuesta) {
     alertas: Array.isArray(resultado.alertas) ? resultado.alertas : []
   };
 }
+
+// --- Configuración de la misión --------------------------------------------
+
+/**
+ * Valida `config.json`, que el equipo de operaciones deja en cada equipo de a
+ * bordo para que la tripulación no teclee URL ni clave. Devuelve `null` si no
+ * hay un backend http(s) válido: la página sigue entonces en modo local.
+ * @param {unknown} raw
+ * @returns {{backend: string, clave: string, astronautaId: string}|null}
+ */
+export function normalizarConfig(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const backend = normalizarBase(raw.backend);
+  if (!backend) return null;
+  const clave = typeof raw.clave === 'string' ? raw.clave.trim() : '';
+  const id = raw.astronautaId;
+  return {
+    backend,
+    clave,
+    astronautaId: (typeof id === 'number' && Number.isInteger(id) && id > 0) || (typeof id === 'string' && /^\d+$/.test(id)) ? String(id) : ''
+  };
+}
