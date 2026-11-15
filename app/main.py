@@ -26,7 +26,10 @@ from parametros import Reglas
 
 
 def fila(objeto):
-    return {c.name: getattr(objeto, c.name) for c in objeto.__table__.columns}
+    datos = {c.name: getattr(objeto, c.name) for c in objeto.__table__.columns}
+    if isinstance(objeto, LineaBaseDB):
+        datos["desactualizada"] = objeto.desactualizada
+    return datos
 
 
 def publico(datos, usuario):
@@ -177,8 +180,6 @@ def create_app(database_url=None, revision_minutos=None):
         actual = fila(a)
         permitidos = set(AstronautaIn.model_fields)
         validados = AstronautaIn.model_validate({k: v for k, v in {**actual, **cambios}.items() if k in permitidos})
-        if "masa_kg" in cambios:
-            svc.marcar_desactualizada(db, a, validados.masa_kg, Reglas.desde_dict(svc.reglas_activas(db).contenido))
         for k, v in validados.model_dump().items():
             setattr(a, k, v)
         db.commit()

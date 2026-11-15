@@ -130,3 +130,32 @@ def test_historico_no_sustituye_masa_actual_y_reglas_versionadas(entorno):
     assert r.status_code == 200, r.text
     assert r.json()["id"] == 2
     assert c.put("/reglas", headers=h, json={"co2_alto": 1}).status_code == 422
+
+
+@pytest.mark.parametrize("origen", ["lectura", "perfil"])
+def test_masa_seis_por_ciento_no_desactiva_base(entorno, origen):
+    c, app, h = entorno
+    a = preparar(c, h)
+    propia = usuario(c, h, "astronauta", a)
+    inicial = c.get(f"/astronautas/{a}/linea-base", headers=propia).json()[-1]
+    assert inicial["desactualizada"] is False
+    if origen == "perfil":
+        assert c.patch(f"/astronautas/{a}", headers=propia, json={"masa_kg":75.2}).status_code == 200
+    else:
+        assert lectura(c, propia, a, contexto="vuelo", dias=0, masa_kg=75.2).status_code == 201
+    siguiente = lectura(c, propia, a, contexto="vuelo", dias=0)
+    assert siguiente.status_code == 201, siguiente.text
+    e = siguiente.json()["evaluacion"]
+    assert e["entrada"]["base"] is not None
+    assert any("80 kg" in n and "75.2 kg" in n and "recalcular" in n for n in e["resultado"]["notas"])
+    bases = c.get(f"/astronautas/{a}/linea-base", headers=propia).json()
+    assert bases[-1]["id"] == inicial["id"] and bases[-1]["activa"] is True
+    assert bases[-1]["desactualizada"] is True
+    assert c.get(f"/astronautas/{a}/resumen", headers=propia).json()["desactualizada"] is True
+    assert c.post(f'/evaluaciones/{e["id"]}/reproducir', headers=h).json()["coincide"]
+    with app.state.SessionLocal() as db:
+        from app.db import LineaBaseDB
+        assert "desactualizada" not in LineaBaseDB.__table__.columns
+    assert c.post(f"/astronautas/{a}/linea-base", headers=propia).status_code == 403
+    nuevas = c.post(f"/astronautas/{a}/linea-base", headers=h).json()
+    assert nuevas[0]["id"] != inicial["id"] and nuevas[0]["desactualizada"] is False

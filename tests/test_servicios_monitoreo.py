@@ -65,9 +65,9 @@ def test_base_outliers_version_y_masa(db):
     assert segunda.fc == 64 and segunda.n_muestras == 5
     assert not primera.activa
     medir(db, a, contexto="vuelo", masa_kg=84)
-    assert not segunda.activa
-    sin_base = medir(db, a, contexto="vuelo")["evaluacion"]
-    assert sin_base.entrada["base"] is None
+    assert segunda.activa and segunda.desactualizada
+    con_base = medir(db, a, contexto="vuelo")["evaluacion"]
+    assert con_base.entrada["base"] is not None
 
 
 def test_base_general_sin_lutea_y_fases(db):

@@ -15,8 +15,9 @@ from sqlalchemy import (
     String,
     create_engine,
     event,
+    select,
 )
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, object_session
 from sqlalchemy.pool import StaticPool
 
 
@@ -125,6 +126,21 @@ class LineaBaseDB(Base):
     masa_kg: Mapped[float] = mapped_column(Float, nullable=False)
     activa: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     creada: Mapped[datetime] = mapped_column(DateTime, default=ahora, nullable=False)
+
+    def desactualizada_para(self, masa_actual, umbral):
+        """Comparación calculada; nunca cambia la vigencia de la referencia."""
+        return abs(masa_actual - self.masa_kg) / self.masa_kg >= umbral - 1e-12
+
+    @property
+    def desactualizada(self):
+        sesion = object_session(self)
+        if sesion is None:
+            return None  # Sin sesión no se conoce la masa actual ni la política vigente.
+        astro = sesion.get(Astronauta, self.astronauta_id)
+        version = sesion.scalar(select(ReglasVersion).order_by(ReglasVersion.id.desc()).limit(1))
+        from parametros import REGLAS_DEFAULT
+        umbral = version.contenido["masa_cambio_recalcular"] if version else REGLAS_DEFAULT.masa_cambio_recalcular
+        return self.desactualizada_para(astro.masa_kg, umbral) if astro else None
 
 
 class ReglasVersion(Base):

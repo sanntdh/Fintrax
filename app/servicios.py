@@ -126,9 +126,15 @@ def datos_base(base):
 
 
 def marcar_desactualizada(db, astro, masa, reglas):
-    for base in bases_activas(db, astro).values():
-        if abs(masa - base.masa_kg) / base.masa_kg >= reglas.masa_cambio_recalcular - 1e-12:
-            base.activa = False
+    """Compatibilidad: consulta el estado, sin desactivar ni reemplazar bases."""
+    return {fase: base.desactualizada_para(masa, reglas.masa_cambio_recalcular)
+            for fase, base in bases_activas(db, astro).items()}
+
+
+def nota_masa_base(masa_base, masa_actual, reglas):
+    if masa_base is not None and abs(masa_actual-masa_base)/masa_base >= reglas.masa_cambio_recalcular-1e-12:
+        return f"Línea base calculada con {masa_base:g} kg; masa actual {masa_actual:g} kg: recalcular"
+    return None
 
 
 def _complementarios(datos):
@@ -266,16 +272,21 @@ def registrar_medicion(db, astro, datos, usuario=None):
     db.add(m)
     db.flush()
     if datos.masa_kg is not None and (ultima is None or datos.ts >= ultima):
-        marcar_desactualizada(db, astro, datos.masa_kg, reglas)
         astro.masa_kg = datos.masa_kg
     if r is None:
         return {"medicion": m, "evaluacion": None}
     astro.en_mision = True
     resultado = serializar_resultado(r)
+    base_usada = bases.get(fase, bases.get(None))
+    masa_base = base_usada.masa_kg if base_usada is not None else None
+    nota_masa = nota_masa_base(masa_base, p.masa_kg, reglas)
+    if nota_masa:
+        resultado["notas"].append(nota_masa)
     if aviso:
         resultado["notas"].append(aviso)
     entrada = {"perfil": asdict(p), "signos": asdict(s), "ambiente": asdict(ambiente),
-               "base": base, "base_por_fase": fases, "complementarios": comp, "avisos": [aviso] if aviso else []}
+               "base": base, "base_por_fase": fases, "masa_base": masa_base,
+               "complementarios": comp, "avisos": [aviso] if aviso else []}
     e = Evaluacion(medicion_id=m.id, astronauta_id=astro.id, ts=m.ts, nivel=int(r.nivel),
                    news2_total=r.news2_total, resultado=resultado, version_reglas=version.id, entrada=entrada)
     db.add(e)
@@ -319,6 +330,9 @@ def reproducir_evaluacion(db, evaluacion):
                 {k: LineaBase(**v) for k, v in entrada["base_por_fase"].items()},
                 reglas=Reglas.desde_dict(version.contenido), complementarios=_complementarios(entrada["complementarios"]))
     resultado = serializar_resultado(r)
+    nota_masa = nota_masa_base(entrada.get("masa_base"), entrada["perfil"]["masa_kg"], Reglas.desde_dict(version.contenido))
+    if nota_masa:
+        resultado["notas"].append(nota_masa)
     campos = ("nivel", "news2_total", "niveles_capas", "alertas")
     return {"coincide": all(resultado[k] == e.resultado[k] for k in campos), "resultado": resultado,
             "version_reglas": e.version_reglas}
@@ -329,7 +343,9 @@ def resumen_astronauta(db, astro):
     reglas = Reglas.desde_dict(reglas_activas(db).contenido)
     ultimas = list(db.scalars(select(Evaluacion).where(Evaluacion.astronauta_id == astro.id)
                      .order_by(Evaluacion.ts.desc(), Evaluacion.id.desc()).limit(reglas.tendencia_ventana)))
+    bases = bases_activas(db, astro)
     return {"astronauta_id": astro.id, "en_mision": astro.en_mision,
-            "linea_base_disponible": None in bases_activas(db, astro),
+            "linea_base_disponible": None in bases,
+            "desactualizada": any(b.desactualizada for b in bases.values()) if bases else None,
             "ultimo_news2": ultimas[0].news2_total if ultimas else None,
             "tendencia": tendencia(list(reversed(ultimas)), reglas.tendencia_pendiente)}
