@@ -1,0 +1,328 @@
+/* ==========================================================================
+   FINTRAX · Transición Etapa 1 → Etapa 2
+   Secuencia: contorno → relleno luminoso → órganos en orden.
+   Duraciones: relleno 900 ms, 180 ms entre órganos, total 3,2 s.
+   ========================================================================== */
+
+#fintrax-app .fintrax-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
+  align-items: center;
+  gap: clamp(16px, 4vw, 56px);
+  padding: clamp(18px, 4vh, 56px) clamp(18px, 5vw, 72px);
+  background:
+    radial-gradient(80% 70% at 32% 45%, rgba(0, 240, 255, 0.12), transparent 65%),
+    radial-gradient(60% 60% at 80% 20%, rgba(0, 245, 180, 0.08), transparent 70%),
+    rgba(2, 7, 19, 0.97);
+  overflow: hidden;
+}
+
+#fintrax-app .fintrax-transition__grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 240, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 240, 255, 0.06) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(ellipse 70% 60% at 35% 50%, #000 20%, transparent 80%);
+  pointer-events: none;
+}
+
+/* --- Escenario del cuerpo ------------------------------------------------ */
+
+#fintrax-app .fintrax-transition__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: min(74vh, 720px);
+  min-width: 0;
+}
+
+#fintrax-app .fintrax-transition__figure-wrap {
+  position: relative;
+  height: 100%;
+  aspect-ratio: 941 / 1672;
+  max-width: 100%;
+}
+
+#fintrax-app .fintrax-transition__figure-wrap::before {
+  position: absolute;
+  inset: 8% 12%;
+  border-radius: 50%;
+  background: radial-gradient(50% 45% at 50% 40%, rgba(0, 240, 255, 0.22), transparent 70%);
+  filter: blur(18px);
+  content: '';
+  pointer-events: none;
+}
+
+/* Silueta: la misma imagen de la Etapa 1, tratada como holograma. */
+#fintrax-app .fintrax-transition__figure {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse 70% 66% at 50% 50%, #000 62%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 66% at 50% 50%, #000 62%, transparent 100%);
+}
+
+#fintrax-app .fintrax-transition__img {
+  position: absolute;
+  inset: 0;
+  transition: opacity var(--dur-med) ease;
+}
+
+#fintrax-app .fintrax-transition__img img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+#fintrax-app .fintrax-transition__img--f {
+  opacity: 0;
+}
+
+#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--f {
+  opacity: 1;
+}
+
+#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--m {
+  opacity: 0;
+}
+
+/* Contorno tenue que después se rellena. */
+#fintrax-app .fintrax-transition__ghost {
+  opacity: 0.26;
+  filter: brightness(0.9) contrast(1.7) saturate(0.6);
+}
+
+/* Relleno luminoso: se revela de abajo arriba. */
+#fintrax-app .fintrax-transition__fill {
+  clip-path: inset(100% 0 0 0);
+  /* El contraste alto lleva el fondo casi negro del PNG a negro puro: con
+     `screen` solo se ve el cuerpo, sin el rectángulo de la imagen. */
+  filter: brightness(1.12) contrast(2) saturate(1.2);
+  transition: clip-path var(--dur-scan) var(--ease-out);
+}
+
+#fintrax-app .fintrax-transition__fill.is-filled {
+  clip-path: inset(0 0 0 0);
+}
+
+#fintrax-app .fintrax-transition__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 0 26px rgba(0, 240, 255, 0.28));
+}
+
+#fintrax-app .fintrax-transition__sweep {
+  fill: var(--cy);
+  opacity: 0;
+  filter: drop-shadow(0 0 10px var(--cy));
+}
+
+#fintrax-app .fintrax-transition__stage.is-scanning .fintrax-transition__sweep {
+  animation: fintrax-sweep var(--dur-scan) var(--ease-out) forwards;
+}
+
+@keyframes fintrax-sweep {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-1310px);
+    opacity: 0;
+  }
+}
+
+/* Órganos: aparecen en orden, con halo propio. */
+#fintrax-app .fintrax-transition__organ {
+  opacity: 0;
+  transition:
+    opacity 260ms var(--ease-out),
+    filter 260ms var(--ease-out);
+}
+
+#fintrax-app .fintrax-transition__organ.is-on {
+  opacity: 1;
+  filter: drop-shadow(0 0 14px var(--organ));
+}
+
+#fintrax-app .fintrax-transition__organ-shape {
+  fill: color-mix(in srgb, var(--organ) 34%, transparent);
+  stroke: var(--organ);
+  stroke-width: 1.4;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: round;
+}
+
+#fintrax-app .fintrax-transition__organ-halo {
+  fill: var(--organ);
+  opacity: 0.16;
+  filter: blur(6px);
+}
+
+/* --- HUD ----------------------------------------------------------------- */
+
+#fintrax-app .fintrax-transition__hud {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  padding: clamp(20px, 3vw, 34px);
+  border: 1px solid rgba(0, 240, 255, 0.24);
+  border-radius: var(--r-lg);
+  background: linear-gradient(180deg, rgba(4, 18, 42, 0.86), rgba(2, 9, 24, 0.92));
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.55);
+  animation: fintrax-transition-hud var(--dur-med) var(--ease-out);
+}
+
+@keyframes fintrax-transition-hud {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+#fintrax-app .fintrax-transition__kicker {
+  margin: 0 0 var(--sp-2);
+  color: var(--ok);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 4px;
+}
+
+#fintrax-app .fintrax-transition h2 {
+  margin: 0 0 var(--sp-2);
+  color: var(--tx);
+  font-family: var(--font-hud);
+  font-size: clamp(var(--fs-xl), 3.2vw, 28px);
+  letter-spacing: 1px;
+}
+
+#fintrax-app .fintrax-transition__sub {
+  margin: 0 0 var(--sp-5);
+  color: var(--mut);
+  font-size: var(--fs-lg);
+  line-height: 1.45;
+}
+
+#fintrax-app .fintrax-transition__bar {
+  position: relative;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: var(--r-pill);
+  background: rgba(0, 240, 255, 0.08);
+}
+
+#fintrax-app .fintrax-transition__bar i {
+  display: block;
+  width: var(--p, 0%);
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cy), var(--ok));
+  box-shadow: 0 0 14px rgba(0, 245, 180, 0.6);
+  transition: width 120ms linear;
+}
+
+#fintrax-app .fintrax-transition__pct {
+  margin: var(--sp-2) 0 var(--sp-4);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  letter-spacing: 2px;
+  text-align: right;
+}
+
+#fintrax-app .fintrax-transition__log {
+  min-height: 88px;
+  margin: 0 0 var(--sp-4);
+  padding: 0;
+  color: var(--mut);
+  font-size: var(--fs-sm);
+  list-style: none;
+}
+
+#fintrax-app .fintrax-transition__log li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 2px 0;
+  animation: fintrax-log-in 240ms var(--ease-out);
+}
+
+#fintrax-app .fintrax-transition__log li::before {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 8px var(--ok);
+  content: '';
+}
+
+@keyframes fintrax-log-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+
+#fintrax-app .fintrax-transition [data-skip-transition] {
+  width: 100%;
+  margin: 0;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  #fintrax-app .fintrax-transition {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: end;
+    padding-bottom: clamp(18px, 4vh, 40px);
+  }
+
+  #fintrax-app .fintrax-transition__stage {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    opacity: 0.4;
+  }
+
+  #fintrax-app .fintrax-transition__hud {
+    margin: 0 auto;
+    width: min(100%, 480px);
+  }
+
+  #fintrax-app .fintrax-transition__log {
+    min-height: 0;
+    max-height: 66px;
+    overflow: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #fintrax-app .fintrax-transition__fill,
+  #fintrax-app .fintrax-transition__organ {
+    transition: none;
+  }
+
+  #fintrax-app .fintrax-transition__sweep,
+  #fintrax-app .fintrax-transition__hud,
+  #fintrax-app .fintrax-transition__log li {
+    animation: none;
+  }
+}

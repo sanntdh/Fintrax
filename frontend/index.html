@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#020713">
+<meta name="description" content="FINTRAX · Registro biomédico pre-misión. Prototipo local de evaluación orientativa con datos autodeclarados. No constituye diagnóstico.">
+<title>FINTRAX | Registro y análisis biomédico</title>
+
+<link rel="preload" href="assets/fonts/orbitron-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/rajdhani-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="src/css/fonts.css">
+<link rel="stylesheet" href="src/css/tokens.css">
+<link rel="stylesheet" href="src/css/base.css">
+<link rel="stylesheet" href="src/css/layout.css">
+<link rel="stylesheet" href="src/css/form.css">
+<link rel="stylesheet" href="src/css/avatar.css">
+<link rel="stylesheet" href="src/css/results.css">
+<link rel="stylesheet" href="src/css/intro.css">
+<link rel="stylesheet" href="src/css/transition.css">
+<link rel="stylesheet" href="src/css/body.css">
+<link rel="stylesheet" href="src/css/centro.css">
+<link rel="stylesheet" href="src/css/a11y.css">
+</head>
+<body>
+
+<div id="fintrax-app" data-step="intro">
+  <a class="fintrax-skip" href="#fintrax-form">Saltar al formulario</a>
+
+  <!-- Capas decorativas: siempre por debajo del contenido -->
+  <div class="fintrax-bg" aria-hidden="true">
+    <canvas class="fintrax-bg__stars" data-stars></canvas>
+    <div class="fintrax-bg__grid"></div>
+    <div class="fintrax-bg__scan"></div>
+    <div class="fintrax-bg__aurora"></div>
+    <div class="fintrax-bg__planet"></div>
+  </div>
+
+  <!-- ---------------------------------------------------------------- -->
+  <!-- Animación original FINTRAX · un ciclo de 10 segundos              -->
+  <!-- ---------------------------------------------------------------- -->
+  <section class="fintrax-intro" data-intro aria-label="Presentación FINTRAX Código Error">
+    <canvas id="fintrax-fondo" role="img" aria-label="Planeta Tierra con atmósfera azul, una luna y estrellas"></canvas>
+    <svg id="fintrax-logo" viewBox="0 0 1000 1000" role="img" aria-label="Logo Fintrax Código Error: corazón con pulso y cruz médica">
+      <defs>
+        <path id="fintrax-heart" d="M0 90 C-85 25 -120 -20 -110 -65 C-100 -105 -35 -120 0 -75 C35 -120 100 -105 110 -65 C120 -20 85 25 0 90 Z"/>
+        <linearGradient id="fintrax-gTxt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#a9c0d6"/></linearGradient>
+        <linearGradient id="fintrax-gSw" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2fc9c0" stop-opacity="0"/><stop offset=".5" stop-color="#3ee0d0"/><stop offset="1" stop-color="#2fc9c0" stop-opacity=".2"/></linearGradient>
+        <radialGradient id="fintrax-gFlare"><stop offset="0" stop-color="#fff"/><stop offset=".15" stop-color="#9ff4ff"/><stop offset="1" stop-color="#2aa8ff" stop-opacity="0"/></radialGradient>
+        <radialGradient id="fintrax-gDisc"><stop offset="0" stop-color="#06303a" stop-opacity=".55"/><stop offset="1" stop-color="#02121c" stop-opacity=".2"/></radialGradient>
+        <linearGradient id="fintrax-gLine" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#52e07f" stop-opacity="0"/><stop offset=".5" stop-color="#52ffa0"/><stop offset="1" stop-color="#52e07f" stop-opacity="0"/></linearGradient>
+      </defs>
+      <ellipse id="fintrax-flare" cx="505" cy="490" rx="90" ry="26" fill="url(#fintrax-gFlare)"/>
+      <circle id="fintrax-disc" cx="505" cy="490" r="318" fill="url(#fintrax-gDisc)"/>
+      <circle id="fintrax-ringThin" cx="505" cy="490" r="328" fill="none" stroke="#3fd6cf" stroke-opacity=".45" stroke-width="1.5"/>
+      <circle id="fintrax-ringIn" cx="505" cy="490" r="312" fill="none" stroke="#3fd6cf" stroke-opacity=".3" stroke-width="1"/>
+      <g id="fintrax-ringSeg" transform="rotate(-90 505 490)"><circle cx="505" cy="490" r="320" fill="none" stroke="#5ff0e0" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray=".17 .08" style="filter:drop-shadow(0 0 5px #3ff)"/></g>
+      <g id="fintrax-ringArc" transform="rotate(-72 505 490)"><circle cx="505" cy="490" r="320" fill="none" stroke="#bffcff" stroke-width="5" stroke-linecap="round" pathLength="1" stroke-dasharray=".15 .85" style="filter:drop-shadow(0 0 8px #5ff)"/></g>
+      <g id="fintrax-heartG">
+        <use href="#fintrax-heart" transform="translate(505 392)" fill="rgba(10,40,60,.35)" stroke="#fff" stroke-width="5" stroke-linejoin="round" style="filter:drop-shadow(0 0 4px rgba(150,240,255,.6))"/>
+        <path id="fintrax-ecg1" d="M412 378 H462 L472 366 L482 398 L493 350 L505 396 L515 372 H596" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1"/>
+        <path id="fintrax-swoosh" d="M345 470 C390 515 540 515 640 440 C690 400 710 370 690 360 C720 395 640 470 520 500 C420 520 340 500 345 470 Z" fill="url(#fintrax-gSw)" opacity=".95"/>
+        <g id="fintrax-cross" transform="translate(596 303)" style="filter:drop-shadow(0 0 10px rgba(82,224,127,.8))"><rect x="-16" y="-46" width="32" height="92" rx="7" fill="#58e585"/><rect x="-46" y="-16" width="92" height="32" rx="7" fill="#58e585"/></g>
+      </g>
+      <text id="fintrax-txtSpace" x="510" y="588" text-anchor="middle" font-size="92" font-weight="900" textLength="470" lengthAdjust="spacingAndGlyphs" fill="url(#fintrax-gTxt)" style="filter:drop-shadow(0 0 8px rgba(150,230,255,.35))">FINTRAX</text>
+      <g id="fintrax-sub">
+        <text x="510" y="645" text-anchor="middle" font-size="28" font-weight="900" textLength="366" lengthAdjust="spacing" fill="#e8f6ff">CODIGO ERROR</text>
+        <g stroke="#52e07f" stroke-linecap="butt" style="filter:drop-shadow(0 0 6px rgba(82,224,127,.8))"><path d="M233 625 H300 M233 639 H312" stroke-width="5"/><path d="M778 625 H711 M778 639 H699" stroke-width="5"/></g>
+      </g>
+      <rect id="fintrax-gline" x="260" y="702" width="490" height="8" rx="4" fill="url(#fintrax-gLine)" style="filter:blur(1.5px)"/>
+      <path id="fintrax-ecgL" d="M0 502 H80 L100 490 L118 560 L132 430 L146 520 L162 497 H196" fill="none" stroke="#52f08f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1" style="filter:drop-shadow(0 0 7px #3f9)"/>
+      <path id="fintrax-ecgR" d="M1000 502 H920 L900 490 L882 560 L868 430 L854 520 L838 497 H818" fill="none" stroke="#52f08f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1" style="filter:drop-shadow(0 0 7px #3f9)"/>
+      <g id="fintrax-ic1"></g><g id="fintrax-ic2"></g><g id="fintrax-ic3"></g><g id="fintrax-ic4"></g>
+    </svg>
+    <p class="fintrax-intro__caption">FINTRAX · Preparando registro biomédico…</p>
+  </section>
+
+  <!-- ---------------------------------------------------------------- -->
+  <!-- Formularios de referencia / actuales y revisión final            -->
+  <!-- ---------------------------------------------------------------- -->
+  <div class="fintrax-shell">
+    <header class="fintrax-topbar">
+      <div class="fintrax-brand">
+        <span>FINTRAX</span>
+        <span class="fintrax-brand__badge">BIO-SYS v5.0</span>
+      </div>
+      <div class="fintrax-topinfo">
+        <div class="fintrax-telemetry-item">
+          <span>ASTRONAUTA:</span>
+          <span class="val">AST-001</span>
+        </div>
+        <div class="fintrax-telemetry-item">
+          <span>MISIÓN:</span>
+          <span class="val">045 DEEP SPACE</span>
+        </div>
+        <button type="button" class="fintrax-status-pill" data-centro-toggle data-estado="off" aria-haspopup="dialog">
+          <span class="fintrax-pulse" aria-hidden="true"></span>
+          <span data-centro-label>CENTRO MÉDICO · SIN CONEXIÓN</span>
+        </button>
+      </div>
+    </header>
+
+    <main class="fintrax-main">
+      <!-- Panel del avatar -->
+      <section class="fintrax-panel fintrax-panel--human" aria-label="Escaneo holográfico corporal">
+        <div class="fintrax-hud-grid" aria-hidden="true"></div>
+        <div class="fintrax-scan-header">
+          <div class="fintrax-scan-header__title" data-scan-title>ESCANEO BIOMÉTRICO 3D</div>
+          <div class="fintrax-scan-header__sub" data-scan-sub>SELECCIONA TU SEXO PARA CALIBRAR EL HOLOGRAMA</div>
+        </div>
+        <div data-avatar-host="form"></div>
+        <div class="fintrax-holo-metric fintrax-holo-metric--left">
+          <span class="fintrax-holo-metric__tag">IMC ESTIMADO</span>
+          <span class="fintrax-holo-metric__num" data-imc-value>--</span>
+          <span class="fintrax-holo-metric__sub" data-imc-category>CALIBRANDO...</span>
+        </div>
+      <div class="fintrax-holo-metric fintrax-holo-metric--right" data-current-only hidden>
+          <span class="fintrax-holo-metric__tag">ZONAS MARCADAS</span>
+          <span class="fintrax-holo-metric__num" data-zone-count>0</span>
+          <span class="fintrax-holo-metric__sub" data-zone-status>ESTADO NOMINAL</span>
+        </div>
+      </section>
+
+      <!-- Formulario -->
+      <section class="fintrax-panel fintrax-panel--form" id="fintrax-form" aria-labelledby="fintrax-form-title">
+        <div class="fintrax-heading">
+          <span class="fintrax-heading__icon" aria-hidden="true">👤</span>
+          <div>
+            <span class="fintrax-step" data-form-stage>ETAPA 1 DE 2 · DATOS HABITUALES</span>
+            <h1 id="fintrax-form-title" tabindex="-1">Registro Biomédico</h1>
+            <p data-form-subtitle>Evaluación de referencia previa a la misión · FINTRAX</p>
+          </div>
+        </div>
+
+        <div class="fintrax-progress">
+          <div class="fintrax-progress__track">
+            <i class="fintrax-progress__fill" data-progress-bar></i>
+          </div>
+          <div class="fintrax-progress__meta">
+            <span>TODOS LOS CAMPOS SON OBLIGATORIOS</span>
+            <span data-progress-text>0%</span>
+          </div>
+          <nav class="fintrax-stepper" data-quicknav aria-label="Pasos del registro"></nav>
+        </div>
+
+        <form id="fintrax-personal-form" autocomplete="off" novalidate>
+          <section class="fintrax-step-panel" data-step-panel="perfil" data-step-label="Perfil" aria-labelledby="fintrax-step-perfil-title">
+            <div class="fintrax-metric-header">
+              <span class="fintrax-metric-header__icon" aria-hidden="true">◎</span>
+              <div>
+                <h2 id="fintrax-step-perfil-title" tabindex="-1">Perfil del astronauta</h2>
+                <p>Datos básicos para calibrar el holograma.</p>
+              </div>
+            </div>
+            <div class="fintrax-form-grid">
+              <div class="fintrax-field">
+                <span class="fintrax-field__label" id="fintrax-sex-label">Selecciona tu avatar · Sexo biológico</span>
+                <div class="fintrax-sex-options" role="radiogroup" aria-labelledby="fintrax-sex-label">
+                  <label class="fintrax-sex-option">
+                    <input type="radio" name="sexo" value="Femenino" data-profile="sexo" required>
+                    <span>♀ MUJER</span>
+                  </label>
+                  <label class="fintrax-sex-option">
+                    <input type="radio" name="sexo" value="Masculino" data-profile="sexo" required>
+                    <span>♂ HOMBRE</span>
+                  </label>
+                </div>
+                <p class="fintrax-hint">Selecciona el perfil del holograma biométrico.</p>
+                <p class="fintrax-field__error" data-error-for="sexo" aria-live="polite"></p>
+              </div>
+
+              <div class="fintrax-field">
+                <label for="fintrax-nombre">Nombre completo</label>
+                <input type="text" id="fintrax-nombre" data-profile="nombre" placeholder="Ej. Alex Vance" autocomplete="name" required>
+                <p class="fintrax-field__error" data-error-for="nombre" aria-live="polite"></p>
+              </div>
+
+              <div class="fintrax-field">
+                <label for="fintrax-edad">Edad</label>
+                <div class="fintrax-unit">
+                  <input type="number" id="fintrax-edad" data-profile="edad" placeholder="Ej. 28" min="18" max="80" step="1" inputmode="numeric" required>
+                  <span>AÑOS</span>
+                </div>
+                <p class="fintrax-field__error" data-error-for="edad" aria-live="polite"></p>
+              </div>
+
+              <div class="fintrax-field">
+                <label for="fintrax-peso">Peso corporal</label>
+                <div class="fintrax-unit">
+                  <input type="number" id="fintrax-peso" data-profile="peso" placeholder="Ej. 68.5" min="30" max="200" step="0.1" inputmode="decimal" required>
+                  <span>KG</span>
+                </div>
+                <p class="fintrax-field__error" data-error-for="peso" aria-live="polite"></p>
+              </div>
+
+              <div class="fintrax-field">
+                <label for="fintrax-estatura">Estatura</label>
+                <div class="fintrax-unit">
+                  <input type="number" id="fintrax-estatura" data-profile="estatura" placeholder="Ej. 1.75" min="1.2" max="2.2" step="0.01" inputmode="decimal" required>
+                  <span>M</span>
+                </div>
+                <p class="fintrax-field__error" data-error-for="estatura" aria-live="polite"></p>
+              </div>
+
+              <div class="fintrax-field">
+                <label for="fintrax-sangre">Grupo sanguíneo</label>
+                <select id="fintrax-sangre" data-profile="sangre" required>
+                  <option value="">Selecciona un tipo</option>
+                  <option>A+</option><option>A-</option>
+                  <option>B+</option><option>B-</option>
+                  <option>AB+</option><option>AB-</option>
+                  <option>O+</option><option>O-</option>
+                </select>
+                <p class="fintrax-field__error" data-error-for="sangre" aria-live="polite"></p>
+              </div>
+            </div>
+          </section>
+
+          <section class="fintrax-step-panel" data-step-panel="molestias" data-step-label="Molestias" data-step-only="current" aria-labelledby="fintrax-zones-label">
+            <div class="fintrax-metric-header">
+              <span class="fintrax-metric-header__icon" aria-hidden="true">⚠</span>
+              <div>
+                <h2 id="fintrax-zones-label" tabindex="-1">¿Cómo te sientes hoy?</h2>
+                <p>Marca tus molestias o confirma que te sientes en óptimas condiciones. También puedes tocar el holograma.</p>
+              </div>
+            </div>
+            <div class="fintrax-field fintrax-field--full" data-current-only hidden>
+              <div class="fintrax-zones" data-symptoms="form" role="group" aria-labelledby="fintrax-zones-label" aria-describedby="fintrax-error-symptoms"></div>
+              <p class="fintrax-field__error" id="fintrax-error-symptoms" data-error-for="symptoms" aria-live="polite"></p>
+              <label for="fintrax-otras">Observaciones actuales</label>
+              <textarea id="fintrax-otras" data-other required disabled placeholder="Describe tus observaciones o escribe «Sin observaciones»."></textarea>
+              <p class="fintrax-field__error" data-error-for="otherText" aria-live="polite"></p>
+              <div class="fintrax-count" data-count="form" aria-live="polite"></div>
+            </div>
+          </section>
+
+          <div data-metric-sections></div>
+
+          <div class="fintrax-actions fintrax-actions--steps">
+            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-edit-baseline hidden>‹ Editar datos habituales</button>
+            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-step-prev hidden>‹ Anterior</button>
+            <span class="fintrax-step-count" data-step-count aria-live="polite"></span>
+            <button type="button" class="fintrax-btn fintrax-btn--primary" data-step-next>Siguiente ›</button>
+            <button type="submit" class="fintrax-btn fintrax-btn--primary" data-submit disabled aria-disabled="true">
+              ⚡ &nbsp; COMENZAR ANÁLISIS &nbsp; ›
+            </button>
+          </div>
+          <p class="fintrax-form-note" data-form-note>Completa todos los campos para continuar.</p>
+          <p class="fintrax-field__error" data-form-status role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <!-- -------------------------------------------------------------- -->
+    <!-- Revisión final de los datos actuales                            -->
+    <!-- -------------------------------------------------------------- -->
+    <section class="fintrax-results fintrax-body" data-results aria-labelledby="fintrax-body-title">
+      <header class="fintrax-body__head">
+        <div>
+          <span class="fintrax-step fintrax-step--alt">ANÁLISIS COMPLETO · DATOS ACTUALES</span>
+          <h2 id="fintrax-body-title" tabindex="-1">Mapa funcional</h2>
+          <p>Toca un órgano del avatar o de las tarjetas laterales para ver su estado y su indicación.</p>
+        </div>
+        <div class="fintrax-body__summary" data-body-summary aria-label="Resumen de datos"></div>
+      </header>
+
+      <div class="fintrax-banner" data-banner data-state="unknown">
+        <div>
+          <h3 data-banner-title>◇ SIN DATOS SUFICIENTES</h3>
+          <p data-banner-text>Completa el registro para obtener orientación.</p>
+          <small>Resultado informativo y simulado a partir de tus datos; no sustituye una evaluación médica.</small>
+        </div>
+        <div class="fintrax-banner__chips" data-banner-chips></div>
+      </div>
+
+      <section class="fintrax-centro" data-centro data-estado="off" aria-live="polite" aria-label="Validación del centro médico"></section>
+
+      <div class="fintrax-body__stage">
+        <aside class="fintrax-body__rail fintrax-body__rail--left" data-organ-rail="left" aria-label="Órganos del lado izquierdo"></aside>
+
+        <div class="fintrax-body__core">
+          <div class="fintrax-hud-grid" aria-hidden="true"></div>
+          <div data-organ-avatar></div>
+          <div class="fintrax-body__legend" aria-hidden="true">
+            <span data-st="ok"><i></i>BIEN</span>
+            <span data-st="warn"><i></i>REVISAR</span>
+            <span data-st="bad"><i></i>ATENCIÓN</span>
+            <span data-st="na"><i></i>SIN DATOS</span>
+          </div>
+        </div>
+
+        <aside class="fintrax-body__rail fintrax-body__rail--right" data-organ-rail="right" aria-label="Órganos del lado derecho"></aside>
+      </div>
+
+      <article class="fintrax-organ-card" data-organ-card aria-live="polite" tabindex="-1"></article>
+
+      <div class="fintrax-body__detail">
+        <nav class="fintrax-tabs" role="tablist" aria-label="Detalle del análisis">
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="telemetry" aria-selected="true" aria-controls="fintrax-tab-telemetry" id="fintrax-tabbtn-telemetry">Telemetría</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="symptoms" aria-selected="false" aria-controls="fintrax-tab-symptoms" id="fintrax-tabbtn-symptoms" tabindex="-1">Molestias</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="record" aria-selected="false" aria-controls="fintrax-tab-record" id="fintrax-tabbtn-record" tabindex="-1">Registro</button>
+        </nav>
+
+        <section class="fintrax-tabpanel" data-tab-panel="telemetry" id="fintrax-tab-telemetry" role="tabpanel" aria-labelledby="fintrax-tabbtn-telemetry">
+          <div class="fintrax-charts-grid" data-charts></div>
+          <p class="fintrax-charts-note">Series generadas a partir de tus mediciones. Las tarjetas sin medición real se muestran vacías: no se inventan lecturas.</p>
+        </section>
+
+        <section class="fintrax-tabpanel" data-tab-panel="symptoms" id="fintrax-tab-symptoms" role="tabpanel" aria-labelledby="fintrax-tabbtn-symptoms" hidden>
+          <p class="fintrax-sym-intro">Marca lo que sientes ahora. El estado de los órganos del avatar se actualiza con tu respuesta.</p>
+          <div class="fintrax-sym-grid">
+            <div class="fintrax-zones" data-symptoms="results" role="group" aria-labelledby="fintrax-tabbtn-symptoms"></div>
+            <div class="fintrax-sym-results" data-sym-results aria-live="polite"></div>
+          </div>
+        </section>
+
+        <section class="fintrax-tabpanel" data-tab-panel="record" id="fintrax-tab-record" role="tabpanel" aria-labelledby="fintrax-tabbtn-record" hidden>
+          <div class="fintrax-record-host" data-record></div>
+        </section>
+      </div>
+
+      <div class="fintrax-actions fintrax-actions--body">
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-back>‹ &nbsp; Editar datos actuales</button>
+        <button type="button" class="fintrax-btn fintrax-btn--primary" data-export>↓ &nbsp; DESCARGAR DATOS JSON</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ---------------------------------------------------------------- -->
+  <!-- Análisis tras completar el segundo formulario                    -->
+  <!-- ---------------------------------------------------------------- -->
+  <section class="fintrax-transition" data-transition aria-hidden="true" aria-labelledby="fintrax-transition-title">
+    <div class="fintrax-transition__grid" aria-hidden="true"></div>
+    <div class="fintrax-transition__stage" data-transition-stage aria-hidden="true"></div>
+
+    <div class="fintrax-transition__hud">
+      <p class="fintrax-transition__kicker">FINTRAX · REVISIÓN DE DATOS ACTUALES</p>
+      <h2 id="fintrax-transition-title">Analizando tus datos…</h2>
+      <p class="fintrax-transition__sub" data-transition-sub>Correlacionando perfil, mediciones y molestias.</p>
+
+      <div class="fintrax-transition__bar" role="progressbar" aria-label="Progreso del análisis" aria-valuemin="0" aria-valuemax="100">
+        <i data-transition-bar></i>
+      </div>
+      <p class="fintrax-transition__pct" data-transition-pct>0%</p>
+
+      <ul class="fintrax-transition__log" data-transition-log aria-live="polite"></ul>
+
+      <button type="button" class="fintrax-btn fintrax-btn--secondary" data-skip-transition>Saltar animación &nbsp;›</button>
+    </div>
+  </section>
+
+  <dialog class="fintrax-dialog" data-centro-dialog aria-labelledby="fintrax-centro-title">
+    <form class="fintrax-dialog__form" data-centro-form autocomplete="off" novalidate>
+      <h2 id="fintrax-centro-title">Centro médico Fintrax</h2>
+      <p class="fintrax-hint">Conecta este equipo con el backend para validar cada análisis. La clave solo se guarda durante esta sesión.</p>
+      <label for="fintrax-centro-url">URL del backend</label>
+      <input type="url" id="fintrax-centro-url" data-centro-url placeholder="http://localhost:8000" inputmode="url">
+      <label for="fintrax-centro-clave">Clave de API</label>
+      <input type="password" id="fintrax-centro-clave" data-centro-clave placeholder="Clave asignada por el equipo médico">
+      <div data-centro-elegir hidden>
+        <label for="fintrax-centro-astronauta">Astronauta</label>
+        <select id="fintrax-centro-astronauta" data-centro-astronauta></select>
+      </div>
+      <p class="fintrax-dialog__msg" data-centro-msg role="status" aria-live="polite"></p>
+      <div class="fintrax-dialog__actions">
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-desconectar hidden>Desconectar</button>
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-cerrar>Cerrar</button>
+        <button type="submit" class="fintrax-btn fintrax-btn--primary">Conectar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="fintrax-toast" data-toast role="status" aria-live="polite"></div>
+
+  <noscript>
+    <p class="fintrax-noscript">FINTRAX necesita JavaScript para calcular la evaluación. Actívalo y recarga la página.</p>
+  </noscript>
+</div>
+
+<script type="module" src="src/js/main.js"></script>
+</body>
+</html>

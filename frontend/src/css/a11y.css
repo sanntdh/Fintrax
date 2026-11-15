@@ -1,0 +1,97 @@
+/* ==========================================================================
+   FINTRAX · Accesibilidad: foco, contraste, movimiento reducido
+   ========================================================================== */
+
+/* Enlace de salto para lectores de pantalla y teclado. */
+#fintrax-app .fintrax-skip {
+  position: absolute;
+  top: -200px;
+  left: var(--sp-4);
+  z-index: 60;
+  padding: 10px 16px;
+  border: 2px solid var(--cy);
+  border-radius: var(--r-sm);
+  background: #021024;
+  color: #fff;
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  text-decoration: none;
+}
+
+#fintrax-app .fintrax-skip:focus {
+  top: var(--sp-4);
+}
+
+/* Foco visible y consistente en todos los controles. */
+#fintrax-app :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+#fintrax-app .fintrax-hot:focus-visible {
+  outline: none;
+}
+
+#fintrax-app .fintrax-hot:focus-visible .dot {
+  stroke: #fff;
+  stroke-width: 5;
+  filter: drop-shadow(0 0 10px var(--cy));
+}
+
+/* Contraste: los textos auxiliares suben de luminosidad respecto al prototipo. */
+#fintrax-app .fintrax-helper,
+#fintrax-app .fintrax-hint,
+#fintrax-app .fintrax-range-ends,
+#fintrax-app .fintrax-chart__source,
+#fintrax-app .fintrax-charts-note {
+  color: var(--mut);
+}
+
+/* Respeto global del movimiento reducido (antes solo cubría el barrido). */
+@media (prefers-reduced-motion: reduce) {
+  #fintrax-app *,
+  #fintrax-app *::before,
+  #fintrax-app *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  #fintrax-app .fintrax-avatar__sweep {
+    display: none;
+  }
+
+  #fintrax-app .fintrax-banner[data-state='bad'] {
+    animation: none;
+  }
+}
+
+/* Modo de contraste alto forzado por el sistema. */
+@media (forced-colors: active) {
+  #fintrax-app .fintrax-avatar__img {
+    forced-color-adjust: none;
+  }
+
+  #fintrax-app .fintrax-organ,
+  #fintrax-app .fintrax-system,
+  #fintrax-app .fintrax-chart,
+  #fintrax-app .fintrax-sym-card {
+    border: 1px solid CanvasText;
+  }
+}
+
+/* Impresión: sin fondo animado ni overlays. */
+@media print {
+  #fintrax-app .fintrax-bg,
+  #fintrax-app .fintrax-analyzing,
+  #fintrax-app .fintrax-toast,
+  #fintrax-app .fintrax-panel--human {
+    display: none !important;
+  }
+
+  #fintrax-app {
+    background: #fff;
+    color: #000;
+  }
+}

@@ -1,0 +1,585 @@
+/* ==========================================================================
+   FINTRAX · Resultados, órganos, sistemas, gráficas, síntomas y avisos
+   ========================================================================== */
+
+#fintrax-app .fintrax-results {
+  width: 96%;
+  max-width: var(--shell-max);
+  margin: var(--sp-5) auto 35px;
+  animation: fintrax-res-in var(--dur-slow) var(--ease-out);
+}
+
+@keyframes fintrax-res-in {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+}
+
+/* --- Banner -------------------------------------------------------------- */
+
+#fintrax-app .fintrax-banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-bottom: 18px;
+  padding: 18px 26px;
+  border: 1px solid var(--bc);
+  border-radius: 18px;
+  background: linear-gradient(90deg, var(--bg), rgba(3, 15, 36, 0.9));
+  box-shadow: 0 0 30px var(--bg);
+  --bc: var(--ok);
+  --bg: rgba(0, 245, 180, 0.12);
+}
+
+#fintrax-app .fintrax-banner[data-state='warn'] {
+  --bc: var(--warn);
+  --bg: rgba(255, 170, 51, 0.14);
+}
+
+#fintrax-app .fintrax-banner[data-state='bad'] {
+  --bc: var(--alert);
+  --bg: rgba(255, 56, 96, 0.16);
+  animation: fintrax-alert-pulse 1.8s infinite;
+}
+
+#fintrax-app .fintrax-banner[data-state='unknown'] {
+  --bc: var(--mut);
+  --bg: rgba(142, 186, 217, 0.12);
+}
+
+@keyframes fintrax-alert-pulse {
+  50% {
+    box-shadow: 0 0 45px rgba(255, 56, 96, 0.45);
+  }
+}
+
+#fintrax-app .fintrax-banner h2 {
+  color: var(--bc);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xl);
+  letter-spacing: 3px;
+  text-shadow: 0 0 12px var(--bc);
+}
+
+#fintrax-app .fintrax-banner p {
+  max-width: 760px;
+  margin-top: var(--sp-1);
+  color: var(--tx);
+  font-size: var(--fs-lg);
+}
+
+#fintrax-app .fintrax-banner small {
+  display: block;
+  margin-top: 6px;
+  color: var(--mut);
+  font-size: var(--fs-sm);
+}
+
+#fintrax-app .fintrax-banner__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  margin-left: auto;
+}
+
+#fintrax-app .fintrax-banner__chips span {
+  padding: 7px 11px;
+  border: 1px solid var(--ln-bright);
+  border-radius: var(--r-pill);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 1px;
+}
+
+/* --- Rejilla de resultados ---------------------------------------------- */
+
+#fintrax-app .fintrax-res-grid {
+  display: grid;
+  grid-template-columns: minmax(270px, 1fr) minmax(340px, 1.15fr) minmax(300px, 1.2fr);
+  gap: 18px;
+  align-items: start;
+}
+
+#fintrax-app .fintrax-res-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+#fintrax-app .fintrax-col-title {
+  padding-left: var(--sp-1);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+#fintrax-app .fintrax-col-title--spaced {
+  margin-top: var(--sp-2);
+}
+
+/* --- Órganos ------------------------------------------------------------- */
+
+#fintrax-app .fintrax-organ {
+  display: grid;
+  grid-template-columns: 14px minmax(0, 1fr) auto;
+  gap: var(--sp-1) var(--sp-3);
+  align-items: center;
+  padding: 13px var(--sp-4);
+  border: 1px solid var(--ln);
+  border-left: 4px solid var(--c);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(8, 44, 84, 0.7), rgba(4, 24, 48, 0.8));
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast),
+    box-shadow var(--dur-fast);
+  --c: var(--ok);
+}
+
+#fintrax-app .fintrax-organ[data-st='warn'] {
+  --c: var(--warn);
+}
+
+#fintrax-app .fintrax-organ[data-st='bad'] {
+  --c: var(--alert);
+}
+
+#fintrax-app .fintrax-organ[data-st='na'] {
+  --c: #4b6b88;
+}
+
+#fintrax-app .fintrax-organ:hover,
+#fintrax-app .fintrax-organ.sel {
+  border-color: var(--c);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.22);
+}
+
+#fintrax-app .fintrax-organ b {
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  letter-spacing: 2px;
+}
+
+#fintrax-app .fintrax-organ p {
+  grid-column: 2 / 4;
+  color: var(--mut);
+  font-size: var(--fs-md);
+}
+
+#fintrax-app .fintrax-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--c);
+  box-shadow: 0 0 10px var(--c);
+}
+
+#fintrax-app .fintrax-pill {
+  padding: 4px 10px;
+  border: 1px solid var(--c);
+  border-radius: 14px;
+  color: var(--c);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 1px;
+}
+
+#fintrax-app .fintrax-pill[data-st='ok']::before {
+  content: '✓ ';
+}
+
+#fintrax-app .fintrax-pill[data-st='warn']::before {
+  content: '! ';
+}
+
+#fintrax-app .fintrax-pill[data-st='bad']::before {
+  content: '⚠ ';
+}
+
+#fintrax-app .fintrax-pill[data-st='na']::before {
+  content: '– ';
+}
+
+/* --- Sistemas ------------------------------------------------------------ */
+
+#fintrax-app .fintrax-system {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) auto;
+  gap: 3px 10px;
+  align-items: center;
+  padding: 9px 14px;
+  border: 1px solid var(--ln);
+  border-left: 4px solid var(--c);
+  border-radius: var(--r-md);
+  background: rgba(5, 25, 52, 0.7);
+  --c: var(--ok);
+}
+
+#fintrax-app .fintrax-system[data-st='warn'] {
+  --c: var(--warn);
+}
+
+#fintrax-app .fintrax-system[data-st='bad'] {
+  --c: var(--alert);
+}
+
+#fintrax-app .fintrax-system[data-st='na'] {
+  --c: #4b6b88;
+}
+
+#fintrax-app .fintrax-system .fintrax-dot {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 8px var(--c);
+}
+
+#fintrax-app .fintrax-system b {
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  letter-spacing: 1.5px;
+}
+
+#fintrax-app .fintrax-system p {
+  grid-column: 2 / 4;
+  color: var(--mut);
+  font-size: 13px;
+}
+
+#fintrax-app .fintrax-system .fintrax-pill {
+  font-size: 9px;
+}
+
+/* --- Gráficas ------------------------------------------------------------ */
+
+#fintrax-app .fintrax-chart {
+  padding: var(--sp-3) var(--sp-4) var(--sp-2);
+  border: 1px solid rgba(0, 240, 255, 0.28);
+  border-radius: 14px;
+  background: linear-gradient(145deg, rgba(3, 15, 36, 0.92), rgba(5, 23, 52, 0.88));
+  --c: var(--ok);
+}
+
+#fintrax-app .fintrax-chart[data-st='warn'] {
+  --c: var(--warn);
+}
+
+#fintrax-app .fintrax-chart[data-st='bad'] {
+  --c: var(--alert);
+}
+
+#fintrax-app .fintrax-chart[data-st='na'] {
+  --c: var(--mut-dim);
+}
+
+#fintrax-app .fintrax-chart header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  color: var(--mut);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 2px;
+}
+
+#fintrax-app .fintrax-chart header b {
+  color: var(--c);
+  font-size: 19px;
+  letter-spacing: 0;
+  text-shadow: 0 0 10px var(--c);
+}
+
+#fintrax-app .fintrax-chart header small {
+  margin-left: 3px;
+  font-size: var(--fs-2xs);
+}
+
+#fintrax-app .fintrax-chart canvas {
+  display: block;
+  width: 100%;
+  height: 92px;
+  margin-top: var(--sp-1);
+}
+
+#fintrax-app .fintrax-chart__source {
+  display: block;
+  margin-top: 2px;
+  color: var(--mut-dim);
+  font-family: var(--font-main);
+  font-size: var(--fs-2xs);
+  letter-spacing: 0.4px;
+}
+
+#fintrax-app .fintrax-chart[data-has-data='false'] {
+  border-style: dashed;
+}
+
+#fintrax-app .fintrax-chart__empty {
+  display: grid;
+  place-items: center;
+  height: 92px;
+  margin-top: var(--sp-1);
+  border: 1px dashed rgba(142, 186, 217, 0.35);
+  border-radius: var(--r-sm);
+  color: var(--mut-dim);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+#fintrax-app .fintrax-chart__empty[hidden] {
+  display: none;
+}
+
+#fintrax-app .fintrax-chart[data-has-data='false'] canvas {
+  display: none;
+}
+
+#fintrax-app .fintrax-data-badge {
+  padding: 2px 6px;
+  border: 1px solid rgba(255, 170, 51, 0.55);
+  border-radius: 4px;
+  color: var(--warn);
+  font-size: 8px;
+  letter-spacing: 1px;
+}
+
+#fintrax-app .fintrax-charts-note {
+  color: var(--mut-dim);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+
+/* --- Overlay de análisis ------------------------------------------------- */
+
+#fintrax-app .fintrax-analyzing {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: none;
+  place-items: center;
+  background: rgba(2, 7, 19, 0.88);
+  backdrop-filter: blur(6px);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-md);
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+#fintrax-app .fintrax-analyzing.on {
+  display: grid;
+}
+
+#fintrax-app .fintrax-analyzing i {
+  display: block;
+  width: min(260px, 70vw);
+  height: 3px;
+  margin: 18px auto 10px;
+  background: linear-gradient(90deg, var(--cy) var(--p, 0%), #0a2a4b var(--p, 0%));
+  box-shadow: 0 0 14px var(--cy);
+}
+
+/* --- Panel de síntomas --------------------------------------------------- */
+
+#fintrax-app .fintrax-sym-panel {
+  margin-top: 22px;
+  padding: 22px 26px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(3, 15, 36, 0.92), rgba(5, 23, 52, 0.88));
+  box-shadow: 0 0 25px rgba(0, 190, 255, 0.08);
+}
+
+#fintrax-app .fintrax-sym-intro {
+  margin: 6px 0 var(--sp-4);
+  color: var(--mut);
+  font-size: 15px;
+}
+
+#fintrax-app .fintrax-sym-grid {
+  display: grid;
+  grid-template-columns: minmax(300px, 1fr) minmax(320px, 1.25fr);
+  gap: 22px;
+  align-items: start;
+}
+
+#fintrax-app .fintrax-sym-panel .fintrax-zones {
+  margin-top: 0;
+}
+
+#fintrax-app .fintrax-sym-results {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+#fintrax-app .fintrax-sym-empty {
+  padding: 22px;
+  border: 1px dashed var(--ln-bright);
+  border-radius: 14px;
+  color: var(--mut);
+  text-align: center;
+}
+
+#fintrax-app .fintrax-sym-card {
+  padding: var(--sp-4) 18px;
+  border: 1px solid var(--ln);
+  border-left: 4px solid var(--c);
+  border-radius: 14px;
+  background: rgba(5, 25, 52, 0.75);
+  --c: var(--ok);
+}
+
+#fintrax-app .fintrax-sym-card[data-st='warn'] {
+  --c: var(--warn);
+}
+
+#fintrax-app .fintrax-sym-card[data-st='bad'] {
+  --c: var(--alert);
+  box-shadow: 0 0 22px rgba(255, 56, 96, 0.18);
+}
+
+#fintrax-app .fintrax-sym-card[data-st='na'] {
+  --c: #4b6b88;
+}
+
+#fintrax-app .fintrax-sym-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  letter-spacing: 2px;
+}
+
+#fintrax-app .fintrax-sym-card header b {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+#fintrax-app .fintrax-sym-card header .fintrax-pill {
+  flex: 0 0 auto;
+}
+
+#fintrax-app .fintrax-sym-card .fintrax-pill {
+  font-size: var(--fs-2xs);
+}
+
+#fintrax-app .fintrax-sym-card h4 {
+  margin: 12px 0 var(--sp-1);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  letter-spacing: 2px;
+}
+
+#fintrax-app .fintrax-sym-card ul {
+  margin-left: 18px;
+  font-size: var(--fs-md);
+  line-height: 1.55;
+}
+
+#fintrax-app .fintrax-sym-s {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-md);
+}
+
+#fintrax-app .fintrax-sym-ctx {
+  margin-top: var(--sp-2);
+  color: var(--warn);
+  font-size: 13px;
+}
+
+#fintrax-app .fintrax-sym-alert {
+  margin-top: var(--sp-3);
+  padding: 9px 12px;
+  border: 1px solid rgba(255, 56, 96, 0.35);
+  border-radius: 10px;
+  background: rgba(255, 56, 96, 0.1);
+  font-size: 13px;
+}
+
+#fintrax-app .fintrax-sym-urgent {
+  margin-top: 10px;
+  color: var(--alert);
+  font-weight: 700;
+}
+
+#fintrax-app .fintrax-sym-disc {
+  color: var(--mut);
+  font-size: var(--fs-sm);
+}
+
+/* --- Aviso flotante ------------------------------------------------------ */
+
+#fintrax-app .fintrax-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  z-index: 50;
+  width: max-content;
+  max-width: min(720px, calc(100vw - 32px));
+  padding: var(--sp-4) var(--sp-6);
+  border: 1px solid var(--ok);
+  border-radius: 14px;
+  background: rgba(2, 16, 36, 0.96);
+  color: var(--ok);
+  font-family: var(--font-hud);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(0, 245, 180, 0.35);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, calc(100% + 30px));
+  transition: transform var(--dur-med) var(--ease-out), opacity var(--dur-med), visibility var(--dur-med);
+}
+
+#fintrax-app .fintrax-toast.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+#fintrax-app .fintrax-toast[data-kind='warn'] {
+  border-color: var(--warn);
+  color: var(--warn);
+  box-shadow: 0 0 30px rgba(255, 170, 51, 0.35);
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  #fintrax-app .fintrax-res-grid,
+  #fintrax-app .fintrax-sym-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #fintrax-app .fintrax-banner__chips {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  #fintrax-app .fintrax-banner {
+    padding: var(--sp-4);
+  }
+
+  #fintrax-app .fintrax-banner h2 {
+    font-size: var(--fs-lg);
+    letter-spacing: 2px;
+  }
+
+  #fintrax-app .fintrax-sym-panel {
+    padding: var(--sp-4);
+  }
+}
