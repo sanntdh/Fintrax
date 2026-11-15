@@ -2,6 +2,11 @@
 
 Esta guía corresponde a la fábrica OIDC `app.legacy_api.crear_app`, conservada por compatibilidad. La API actual `app.main:app` usa el flujo y las claves descritos en el README de la raíz.
 
+Las pruebas de esta guía se trasladaron de la raíz a `tests/`. Usa `python -m pytest`
+para la suite unificada o `python -m pytest tests/test_api.py` para el contrato OIDC.
+Los nombres de comandos de pruebas de las secciones históricas no implican que
+los archivos sigan en la raíz. No se eliminó esta implementación.
+
 Long-duration missions expose astronauts to space radiation, isolation and confinement, altered gravity, and a hostile closed environment, which can bring immune changes, bone loss, cardiovascular events, and behavioral health problems. On long missions, astronauts carry much of the responsibility for spotting these changes in themselves. Your challenge is to build a health monitoring software that gathers health indicators and enables astronauts to evaluate and act on the status of their health.
 
 ## Space-health screening

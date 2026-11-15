@@ -5,3 +5,5 @@ __pycache__/
 *.db-*
 .env
 .env.*
+.pytest_cache/
+odd/

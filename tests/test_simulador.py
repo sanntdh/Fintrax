@@ -59,7 +59,7 @@ class SimuladorTests(unittest.TestCase):
         self.assertTrue(all(not p.exists() for p in temporales))
 
     def test_cli_json_y_argumentos_invalidos(self):
-        script = str(Path(__file__).with_name("simulador.py"))
+        script = str(Path(__file__).resolve().parents[1] / "simulador.py")
         r = subprocess.run([sys.executable, "-B", script, "--tripulantes", "1", "--lecturas", "5",
                             "--formato", "json"], capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stderr)

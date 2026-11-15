@@ -11,7 +11,7 @@ import unittest
 from sqlalchemy import create_engine
 from sqlalchemy.engine import make_url
 
-import test_api
+from tests import test_api
 
 
 @unittest.skipUnless(os.environ.get("HEALTH_TEST_POSTGRES_URL"), "PostgreSQL desechable no configurado")

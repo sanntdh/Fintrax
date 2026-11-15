@@ -16,7 +16,7 @@ from app.almacen import auditoria, medicion, perfil
 
 class APITests(unittest.TestCase):
     def setUp(self):
-        self.tmp = tempfile.TemporaryDirectory(prefix="health-api-test-", dir="/tmp/opencode")
+        self.tmp = tempfile.TemporaryDirectory(prefix="health-api-test-")
         self.addCleanup(self.tmp.cleanup)
         self.ahora = datetime(2026, 11, 14, 12, tzinfo=timezone.utc)
         self.config = Configuracion(self.storage_url(),
