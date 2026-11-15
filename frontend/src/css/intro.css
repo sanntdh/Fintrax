@@ -1,0 +1,41 @@
+/* Presentación de «Fintrax Código Error.html», acotada a su pantalla. */
+#astra-app .astra-intro {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: #02060d;
+}
+
+#astra-app #fintrax-fondo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+#astra-app #fintrax-logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(96vw, 96vh);
+  height: min(96vw, 96vh);
+  transform: translate(-50%, -50%);
+  overflow: visible;
+  font-family: var(--font-hud);
+}
+
+#astra-app #fintrax-logo > :not(defs) {
+  opacity: 0;
+}
+
+#astra-app .astra-intro__caption {
+  position: absolute;
+  inset: auto 12px 20px;
+  color: #a9c0d6;
+  text-align: center;
+  font-size: var(--fs-sm);
+  letter-spacing: 2px;
+}

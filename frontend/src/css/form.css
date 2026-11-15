@@ -1,0 +1,710 @@
+/* ==========================================================================
+   ASTRA · Formulario: perfil, síntomas, indicadores y escalas
+   ========================================================================== */
+
+/* --- Rejilla de perfil --------------------------------------------------- */
+
+#astra-app .astra-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+#astra-app .astra-field {
+  position: relative;
+  padding: var(--sp-4) 18px;
+  border: 1px solid rgba(17, 67, 110, 0.7);
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(6, 30, 64, 0.7) 0%, rgba(3, 18, 40, 0.7) 100%);
+  transition:
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease;
+}
+
+#astra-app .astra-field:hover {
+  border-color: rgba(0, 240, 255, 0.45);
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.1);
+}
+
+#astra-app .astra-field:focus-within {
+  border-color: var(--cy);
+  background: linear-gradient(135deg, rgba(8, 38, 80, 0.8) 0%, rgba(4, 22, 50, 0.8) 100%);
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.25);
+}
+
+#astra-app .astra-field--full {
+  grid-column: 1 / -1;
+}
+
+#astra-app .astra-field > label,
+#astra-app .astra-field > .astra-field__label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: var(--sp-3);
+  color: #def1ff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+#astra-app .astra-field > label::before,
+#astra-app .astra-field > .astra-field__label::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-right: var(--sp-1);
+  background: var(--cy);
+  box-shadow: 0 0 8px var(--cy);
+  transform: rotate(45deg);
+}
+
+#astra-app .astra-field__label small,
+#astra-app .astra-field > label small {
+  color: var(--mut-dim);
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  text-transform: none;
+}
+
+#astra-app .astra-hint {
+  margin-top: var(--sp-2);
+  color: #9bbbd8;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+
+#astra-app .astra-field__error {
+  margin-top: var(--sp-2);
+  color: var(--warn);
+  font-size: var(--fs-sm);
+  line-height: 1.4;
+}
+
+#astra-app .astra-field__error:empty {
+  display: none;
+}
+
+#astra-app .astra-rating-confirm {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border: 1px solid var(--cy);
+  border-radius: 6px;
+  background: rgba(0, 240, 255, 0.08);
+  color: var(--cy);
+  cursor: pointer;
+}
+
+#astra-app .astra-rating-confirm[aria-pressed='true'] {
+  border-color: var(--ok);
+  color: var(--ok);
+}
+
+/* --- Controles ----------------------------------------------------------- */
+
+#astra-app input,
+#astra-app select,
+#astra-app textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--field-border);
+  border-radius: var(--r-sm);
+  background: var(--field-bg);
+  color: #fff;
+  font: inherit;
+  font-family: var(--font-main);
+  font-size: var(--fs-lg);
+  outline: none;
+  transition:
+    border-color var(--dur-fast),
+    box-shadow var(--dur-fast),
+    background var(--dur-fast);
+}
+
+#astra-app input:focus,
+#astra-app select:focus,
+#astra-app textarea:focus {
+  border-color: var(--cy);
+  background: #071e3d;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.3);
+}
+
+#astra-app input::placeholder,
+#astra-app textarea::placeholder {
+  color: #6c93b8;
+}
+
+#astra-app select option {
+  background: var(--field-bg);
+  color: #fff;
+}
+
+#astra-app input[aria-invalid='true'],
+#astra-app select[aria-invalid='true'],
+#astra-app textarea[aria-invalid='true'] {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 2px rgba(255, 170, 51, 0.25);
+}
+
+/* Sin flechas de número, sin perder validación nativa */
+#astra-app input[type='number'] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+#astra-app input[type='number']::-webkit-inner-spin-button,
+#astra-app input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#astra-app .astra-unit {
+  position: relative;
+}
+
+#astra-app .astra-unit input {
+  padding-right: 55px;
+}
+
+#astra-app .astra-unit > span {
+  position: absolute;
+  top: 50%;
+  right: var(--sp-4);
+  transform: translateY(-50%);
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: 13px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+#astra-app .astra-unit--wide input {
+  padding-right: 94px;
+}
+
+#astra-app .astra-unit--wide > span {
+  font-size: var(--fs-xs);
+  right: 12px;
+}
+
+#astra-app textarea {
+  min-height: 80px;
+  margin-top: var(--sp-3);
+  resize: vertical;
+}
+
+/* --- Sexo ---------------------------------------------------------------- */
+
+#astra-app .astra-sex-options {
+  display: flex;
+  gap: var(--sp-3);
+}
+
+#astra-app .astra-sex-option {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 52px;
+  padding: 11px 12px;
+  border: 1px solid var(--field-border);
+  border-radius: 10px;
+  background: rgba(5, 22, 46, 0.5);
+  color: #bcd8f4;
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-align: center;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-fast),
+    background var(--dur-fast),
+    color var(--dur-fast);
+}
+
+#astra-app .astra-sex-option input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+#astra-app .astra-sex-option:hover {
+  border-color: var(--cy);
+  background: rgba(0, 240, 255, 0.1);
+  color: #fff;
+}
+
+#astra-app .astra-sex-option:has(input:checked) {
+  border-color: var(--cy);
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.25) 0%, rgba(16, 80, 160, 0.35) 100%);
+  color: #fff;
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+}
+
+#astra-app .astra-sex-option:has(input:checked)::after {
+  content: '✓';
+  color: var(--ok);
+  font-size: var(--fs-md);
+}
+
+#astra-app .astra-sex-option:has(input:focus-visible) {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+/* --- Síntomas ------------------------------------------------------------ */
+
+#astra-app .astra-zones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: 6px;
+}
+
+#astra-app .astra-zone {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  gap: var(--sp-3);
+  align-items: start;
+  padding: 10px 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: rgba(3, 16, 36, 0.4);
+  transition:
+    border-color var(--dur-fast),
+    background var(--dur-fast);
+}
+
+#astra-app .astra-zone.hl {
+  border-color: var(--warn);
+  background: rgba(255, 170, 51, 0.1);
+  box-shadow: 0 0 15px rgba(255, 170, 51, 0.15);
+}
+
+#astra-app .astra-zone h3 {
+  padding-top: 7px;
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+#astra-app .astra-zone.hl h3 {
+  color: var(--warn);
+}
+
+#astra-app .astra-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+}
+
+#astra-app .astra-chip {
+  position: relative;
+}
+
+#astra-app .astra-chip input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+#astra-app .astra-chip span {
+  display: block;
+  padding: 7px 14px;
+  border: 1px solid #1c527e;
+  border-radius: var(--r-pill);
+  background: rgba(4, 18, 40, 0.6);
+  color: #b6d7f8;
+  font-size: var(--fs-md);
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    border-color var(--dur-fast),
+    background var(--dur-fast),
+    color var(--dur-fast);
+}
+
+#astra-app .astra-chip span:hover {
+  border-color: var(--cy);
+  background: rgba(0, 240, 255, 0.1);
+  color: #fff;
+}
+
+#astra-app .astra-chip input:checked + span {
+  border-color: var(--warn);
+  background: linear-gradient(90deg, rgba(255, 170, 51, 0.25), rgba(255, 120, 30, 0.25));
+  color: #fff;
+  box-shadow: 0 0 14px rgba(255, 170, 51, 0.35);
+}
+
+#astra-app .astra-chip input:focus-visible + span {
+  outline: 2px solid var(--cy);
+  outline-offset: 2px;
+}
+
+#astra-app .astra-chip--none input:checked + span {
+  border-color: var(--ok);
+  background: rgba(0, 245, 180, 0.2);
+  color: #fff;
+  box-shadow: 0 0 14px rgba(0, 245, 180, 0.35);
+}
+
+#astra-app .astra-count {
+  min-height: 20px;
+  margin-top: 10px;
+  color: var(--warn);
+  font-family: var(--font-hud);
+  font-size: var(--fs-md);
+  letter-spacing: 1px;
+}
+
+/* --- Indicadores --------------------------------------------------------- */
+
+#astra-app .astra-metric-intro {
+  margin: 28px 0 18px;
+  padding: var(--sp-4) 18px;
+  border: 1px solid rgba(0, 240, 255, 0.3);
+  border-radius: 13px;
+  background: linear-gradient(120deg, rgba(0, 240, 255, 0.08), rgba(0, 70, 150, 0.035));
+}
+
+#astra-app .astra-metric-intro strong {
+  color: #d8faff;
+  font-family: var(--font-hud);
+  font-size: 13px;
+  letter-spacing: 1.7px;
+}
+
+#astra-app .astra-metric-intro p {
+  margin-top: 5px;
+  color: var(--mut);
+  font-size: var(--fs-md);
+  line-height: 1.45;
+}
+
+#astra-app .astra-quicknav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  margin-bottom: 18px;
+}
+
+#astra-app .astra-quicknav a {
+  padding: var(--sp-2) 11px;
+  border: 1px solid rgba(0, 240, 255, 0.26);
+  border-radius: var(--r-pill);
+  background: rgba(0, 240, 255, 0.05);
+  color: #b9e6ff;
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background var(--dur-fast),
+    border-color var(--dur-fast),
+    color var(--dur-fast);
+}
+
+#astra-app .astra-quicknav a:hover {
+  border-color: var(--cy);
+  background: rgba(0, 240, 255, 0.16);
+  color: #fff;
+}
+
+#astra-app .astra-metric-section {
+  margin: 18px 0;
+  padding: 20px 19px 22px;
+  border: 1px solid rgba(35, 126, 185, 0.42);
+  border-radius: var(--r-lg);
+  background: linear-gradient(165deg, rgba(3, 21, 47, 0.8), rgba(2, 13, 32, 0.77));
+  box-shadow: inset 0 0 20px rgba(0, 180, 255, 0.03);
+  scroll-margin-top: var(--sp-5);
+}
+
+#astra-app .astra-metric-header {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin-bottom: var(--sp-4);
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(0, 240, 255, 0.19);
+}
+
+#astra-app .astra-metric-header__icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border: 1px solid rgba(0, 240, 255, 0.37);
+  border-radius: var(--r-md);
+  background: rgba(0, 240, 255, 0.11);
+  color: #b8fbff;
+  font-size: 22px;
+  text-shadow: 0 0 13px var(--cy);
+}
+
+#astra-app .astra-metric-header h2 {
+  color: #effcff;
+  font-family: var(--font-hud);
+  font-size: 15px;
+  letter-spacing: 1px;
+}
+
+#astra-app .astra-metric-header p {
+  margin-top: 3px;
+  color: var(--mut);
+  font-size: 13px;
+}
+
+#astra-app .astra-metric-index {
+  margin-left: auto;
+  color: #73afcf;
+  font-family: var(--font-hud);
+  font-size: var(--fs-xs);
+  white-space: nowrap;
+}
+
+#astra-app .astra-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+#astra-app .astra-metric-field {
+  min-width: 0;
+  padding: 14px 14px 12px;
+  border: 1px solid rgba(37, 98, 144, 0.55);
+  border-radius: var(--r-md);
+  background: rgba(5, 27, 57, 0.7);
+  transition:
+    border-color var(--dur-fast),
+    box-shadow var(--dur-fast);
+}
+
+#astra-app .astra-metric-field:focus-within {
+  border-color: rgba(0, 240, 255, 0.8);
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.12);
+}
+
+#astra-app .astra-metric-field--wide {
+  grid-column: 1 / -1;
+}
+
+#astra-app .astra-metric-label {
+  display: block;
+  margin-bottom: 9px;
+  color: #e3f5ff;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  line-height: 1.3;
+}
+
+#astra-app .astra-metric-label small {
+  color: #87b2cd;
+  font-weight: 500;
+}
+
+#astra-app .astra-helper {
+  margin-top: 7px;
+  color: #82b0d2;
+  font-size: var(--fs-sm);
+  line-height: 1.35;
+}
+
+#astra-app .astra-metric-field textarea {
+  min-height: 76px;
+  margin: 0;
+}
+
+#astra-app .astra-metric-dual {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+}
+
+#astra-app .astra-metric-dual label {
+  display: block;
+  margin-bottom: 5px;
+  color: #92c9e8;
+  font-size: var(--fs-sm);
+}
+
+#astra-app .astra-metric-dual .astra-unit input {
+  padding-right: 57px;
+}
+
+#astra-app .astra-range-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+
+#astra-app .astra-range-row input[type='range'] {
+  flex: 1;
+  min-width: 0;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  accent-color: #00e7ff;
+  cursor: pointer;
+}
+
+#astra-app .astra-range-value {
+  min-width: 58px;
+  color: var(--cy);
+  font-family: var(--font-hud);
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  text-align: center;
+  text-shadow: 0 0 8px rgba(0, 240, 255, 0.3);
+}
+
+#astra-app .astra-range-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  margin-top: 1px;
+  color: #6f9bbd;
+  font-size: var(--fs-xs);
+}
+
+#astra-app .astra-divider-label {
+  grid-column: 1 / -1;
+  padding: 2px 0;
+  color: #8fcde9;
+  font-family: var(--font-hud);
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
+}
+
+#astra-app .astra-metric-note {
+  margin-top: 13px;
+  padding: 9px 12px;
+  border-left: 2px solid rgba(0, 240, 255, 0.65);
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  background: rgba(0, 240, 255, 0.035);
+  color: #a3c8e0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+#astra-app .astra-mini-measures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+#astra-app .astra-mini-measure {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 9px 12px;
+  border: 1px solid rgba(0, 240, 255, 0.24);
+  border-radius: 9px;
+  background: rgba(0, 240, 255, 0.06);
+  color: #96cce6;
+  font-size: var(--fs-sm);
+}
+
+#astra-app .astra-mini-measure strong {
+  color: #e5fbff;
+  font-family: var(--font-hud);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* --- Responsive ---------------------------------------------------------- */
+
+@media (max-width: 1100px) {
+  #astra-app .astra-metric-section {
+    padding: var(--sp-4);
+  }
+}
+
+@media (max-width: 720px) {
+  #astra-app .astra-form-grid,
+  #astra-app .astra-metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  #astra-app .astra-field--full,
+  #astra-app .astra-metric-field--wide {
+    grid-column: auto;
+  }
+
+  #astra-app .astra-zone {
+    grid-template-columns: 1fr;
+  }
+
+  #astra-app .astra-metric-section {
+    padding: 14px 12px;
+  }
+
+  #astra-app .astra-metric-header h2 {
+    font-size: var(--fs-sm);
+  }
+
+  #astra-app .astra-metric-index {
+    font-size: 9px;
+  }
+}
+
+@media (max-width: 420px) {
+  #astra-app .astra-sex-options {
+    gap: 7px;
+  }
+
+  #astra-app .astra-sex-option {
+    font-size: 9px;
+  }
+}
+
+/* --- Validación en vivo -------------------------------------------------- */
+
+#astra-app .astra-form-note {
+  margin: var(--sp-3) 0 0;
+  color: var(--mut-dim);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.5px;
+  text-align: center;
+  transition: color var(--dur-fast) ease;
+}
+
+#astra-app .astra-form-note[data-ready='true'] {
+  color: var(--ok);
+}
+
+#astra-app .astra-field__error:not(:empty) {
+  animation: astra-error-in var(--dur-fast) var(--ease-out);
+}
+
+@keyframes astra-error-in {
+  from {
+    opacity: 0;
+    transform: translateY(-3px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #astra-app .astra-field__error:not(:empty) {
+    animation: none;
+  }
+}
