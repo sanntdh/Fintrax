@@ -4,6 +4,12 @@
 
 /* --- Barra superior ------------------------------------------------------ */
 
+/* Contiene el margen superior de la barra: si se escapara del contenedor, la
+   página mediría la pantalla más ese margen y aparecería una barra de scroll. */
+#fintrax-app .fintrax-shell {
+  display: flow-root;
+}
+
 #fintrax-app .fintrax-topbar {
   height: 68px;
   margin: 18px var(--shell-gutter) 0;
@@ -218,6 +224,109 @@
   color: var(--mut);
   font-size: var(--fs-lg);
   letter-spacing: 0.5px;
+}
+
+@media (min-width: 721px) {
+  #fintrax-app .fintrax-panel--form {
+    padding: 22px var(--sp-6) 24px;
+  }
+
+  #fintrax-app .fintrax-heading {
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-4);
+  }
+
+  #fintrax-app .fintrax-heading__icon {
+    width: 48px;
+    height: 48px;
+    flex-basis: 48px;
+    font-size: 20px;
+  }
+
+  #fintrax-app .fintrax-heading h1 {
+    margin-bottom: 0;
+    font-size: 22px;
+  }
+
+  #fintrax-app .fintrax-heading p {
+    font-size: var(--fs-md);
+  }
+
+  #fintrax-app .fintrax-progress {
+    margin-bottom: var(--sp-3);
+  }
+}
+
+/* Con dos columnas (escritorio), la página entera cabe en la pantalla: el panel
+   del registro mide lo mismo que el del avatar, la cabecera y los botones quedan
+   fijos y, solo si un paso no cabe en una pantalla baja, se desplaza su tarjeta. */
+@media (min-width: 1101px) {
+  #fintrax-app {
+    --panel-height: clamp(520px, calc(100dvh - 140px), 920px);
+  }
+
+  #fintrax-app .fintrax-main {
+    margin-bottom: var(--sp-3);
+  }
+
+  #fintrax-app .fintrax-panel--form {
+    display: flex;
+    flex-direction: column;
+    height: var(--panel-height);
+  }
+
+  #fintrax-app .fintrax-heading,
+  #fintrax-app .fintrax-progress {
+    flex-shrink: 0;
+  }
+
+  #fintrax-personal-form {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  #fintrax-personal-form [data-metric-sections] {
+    display: contents;
+  }
+
+  #fintrax-app #fintrax-personal-form .fintrax-step-panel {
+    flex: 0 1 auto;
+    min-height: 0;
+    margin-bottom: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-color: rgba(0, 240, 255, 0.45) transparent;
+    scrollbar-width: thin;
+  }
+
+  #fintrax-app #fintrax-personal-form .fintrax-actions--steps {
+    flex-shrink: 0;
+    margin-top: auto;
+    padding-top: var(--sp-3);
+  }
+}
+
+/* Pantallas de portátil (hasta 960 px de alto): el título va en una sola línea
+   y sin subtítulos, que ya repiten la etiqueta de etapa y la del paso. */
+@media (min-width: 1101px) and (max-height: 960px) {
+  #fintrax-app .fintrax-heading {
+    margin-bottom: var(--sp-3);
+  }
+
+  #fintrax-app .fintrax-heading__icon,
+  #fintrax-app .fintrax-heading p,
+  #fintrax-app .fintrax-metric-header p {
+    display: none;
+  }
+
+  #fintrax-app .fintrax-heading > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--sp-2) var(--sp-4);
+  }
 }
 
 /* --- Progreso ------------------------------------------------------------ */

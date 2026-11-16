@@ -692,3 +692,149 @@
     animation: none;
   }
 }
+
+/* --- Escritorio compacto ------------------------------------------------- */
+/* En pantallas de escritorio cada paso del asistente debe caber sin desplazarse:
+   menos relleno, controles más bajos y la confirmación de las escalas 0–10 en la
+   misma línea que su título. */
+@media (min-width: 721px) {
+  #fintrax-app .fintrax-metric-section,
+  #fintrax-app .fintrax-step-panel {
+    margin: 12px 0;
+    padding: 14px 16px;
+  }
+
+  #fintrax-app .fintrax-metric-header {
+    gap: 10px;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  #fintrax-app .fintrax-metric-header__icon {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+    font-size: 16px;
+  }
+
+  #fintrax-app .fintrax-metric-header p {
+    margin-top: 1px;
+    font-size: var(--fs-sm);
+  }
+
+  #fintrax-app .fintrax-form-grid {
+    gap: var(--sp-3);
+  }
+
+  #fintrax-app .fintrax-field,
+  #fintrax-app .fintrax-metric-field {
+    padding: 10px 12px;
+  }
+
+  #fintrax-app .fintrax-field > label,
+  #fintrax-app .fintrax-field > .fintrax-field__label,
+  #fintrax-app .fintrax-metric-label {
+    margin-bottom: 6px;
+  }
+
+  #fintrax-app .fintrax-helper,
+  #fintrax-app .fintrax-hint {
+    margin-top: 4px;
+  }
+
+  #fintrax-personal-form input:not([type='range']),
+  #fintrax-personal-form select {
+    padding-block: 8px;
+    font-size: var(--fs-md);
+  }
+
+  #fintrax-app .fintrax-sex-option {
+    min-height: 42px;
+    padding-block: 8px;
+  }
+
+  #fintrax-app .fintrax-metric-note {
+    margin: 0 0 10px;
+    padding: 6px 10px;
+  }
+
+  #fintrax-app .fintrax-metric-field:has(.fintrax-rating-confirm) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--sp-2);
+  }
+
+  #fintrax-app .fintrax-metric-field:has(.fintrax-rating-confirm) > * {
+    grid-column: 1 / -1;
+  }
+
+  #fintrax-app .fintrax-metric-field:has(.fintrax-rating-confirm) > .fintrax-metric-label {
+    grid-column: 1;
+    margin-bottom: 2px;
+  }
+
+  #fintrax-app .fintrax-metric-field > .fintrax-rating-confirm {
+    grid-row: 1;
+    grid-column: 2;
+    margin-top: 0;
+    padding: 4px 9px;
+    font-size: var(--fs-xs);
+  }
+
+  #fintrax-app .fintrax-range-value {
+    min-width: 44px;
+    font-size: var(--fs-lg);
+  }
+
+  #fintrax-personal-form .fintrax-zones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--sp-2);
+    margin-top: 0;
+  }
+
+  #fintrax-personal-form .fintrax-zone {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 6px;
+    padding: 8px 10px;
+  }
+
+  #fintrax-personal-form .fintrax-zone h3 {
+    padding-top: 0;
+  }
+
+  #fintrax-app #fintrax-personal-form textarea {
+    height: 44px;
+    min-height: 44px;
+    margin-top: 6px;
+  }
+
+  #fintrax-personal-form .fintrax-chips {
+    gap: 6px;
+  }
+
+  #fintrax-personal-form .fintrax-chip span {
+    padding: 4px 10px;
+    font-size: var(--fs-sm);
+  }
+
+  #fintrax-app .fintrax-actions--steps .fintrax-btn {
+    padding-block: 11px;
+  }
+
+  #fintrax-app .fintrax-form-note {
+    margin-top: var(--sp-2);
+  }
+}
+
+@media (min-width: 1200px) {
+  #fintrax-app .fintrax-metric-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  #fintrax-app .fintrax-metric-field--wide {
+    grid-column: auto;
+  }
+}
