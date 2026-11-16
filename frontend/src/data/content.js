@@ -8,91 +8,91 @@
 
 /** Posibles causas por síntoma. Separadas por «|». */
 export const CAUSAS = {
-  'Dolor de cabeza':
-    'Tensión muscular o estrés|Deshidratación o poco sueño|Fatiga visual o cambios de presión',
-  'Migraña': 'Migraña por estrés o cambios hormonales|Falta de sueño|Desencadenantes como luz o ruido',
-  'Mareo o vértigo':
-    'Deshidratación o presión baja|Desorientación por movimiento o microgravedad|Alteración del oído interno',
-  'Zumbido en oídos': 'Ruido o presión ambiental|Estrés o fatiga|Tapón de cerumen o alteración del oído',
-  Confusión:
-    'Falta de oxígeno o glucosa baja|Deshidratación o agotamiento|Alteración neurológica que requiere valoración',
-  'Visión borrosa':
-    'Fatiga ocular por pantallas|Deshidratación o cambios de presión|Alteración ocular o neurológica que debe revisarse',
-  'Ardor o sequedad': 'Ojos secos por ambiente y pantallas|Irritación o alergia|Uso prolongado de lentes',
-  'Sensibilidad a luz': 'Fatiga ocular o migraña|Irritación ocular|Deshidratación',
-  'Fatiga ocular': 'Exceso de pantallas|Poco parpadeo en ambiente seco|Posible necesidad de graduación',
-  'Dolor opresivo':
-    'Problema cardíaco, como angina (debe descartarse)|Crisis de ansiedad|Tensión muscular o respiratoria',
-  Palpitaciones: 'Estrés, ansiedad o cafeína|Deshidratación o falta de sueño|Arritmia que requiere un ECG',
-  'Dificultad al respirar': 'Ansiedad o hiperventilación|Baja oxigenación o problema respiratorio|Causa cardíaca',
-  'Falta de aire': 'Ansiedad o hiperventilación|Baja oxigenación o problema respiratorio|Causa cardíaca',
-  'Dolor en pecho': 'Tensión muscular o inflamación costal|Reflujo o acidez|Causa cardíaca (debe descartarse)',
-  Punzadas: 'Tensión muscular o nervios intercostales|Ansiedad|Gases o reflujo',
-  'Sensibilidad mamaria':
-    'Cambios hormonales del ciclo|Estrés o fatiga|Posible embarazo, si hay retraso menstrual',
-  'Dolor abdominal': 'Gastritis o indigestión|Gases o estreñimiento|Infección intestinal o apendicitis si es muy intenso',
-  Náuseas: 'Indigestión o comida en mal estado|Mareo por movimiento|Estrés o infección leve',
-  Vómito: 'Gastroenteritis o intoxicación alimentaria|Mareo por movimiento|Deshidratación asociada',
-  'Acidez o reflujo': 'Reflujo gastroesofágico|Comidas copiosas o irritantes|Gastritis',
-  Hinchazón: 'Gases o digestión lenta|Intolerancia alimentaria|Retención de líquidos',
-  'Molestia pélvica': 'Tensión muscular o estreñimiento|Infección urinaria|Causa ginecológica o urológica a evaluar',
-  'Dolor al orinar': 'Infección urinaria|Deshidratación o irritación|Cálculos renales',
-  'Dolor lumbar bajo': 'Contractura muscular|Mala postura|Problema renal o urinario',
-  'Molestia inguinal': 'Esfuerzo muscular|Hernia inguinal|Inflamación o infección local',
-  'Pesadez testicular': 'Várices (varicocele) o inflamación|Infección|Torsión, una urgencia si el dolor es súbito',
-  'Cólicos menstruales': 'Menstruación normal (dismenorrea)|Endometriosis u otra causa|Estrés o cambios hormonales',
-  'Retraso menstrual': 'Estrés o cambios de rutina|Alteración hormonal|Posible embarazo',
-  'Dolor pélvico bajo': 'Cólico menstrual u ovulación|Infección urinaria o ginecológica|Quiste u otra causa a evaluar',
-  'Molestia al orinar': 'Infección urinaria|Irritación|Deshidratación',
-  Hormigueo: 'Postura o presión sobre un nervio|Mala circulación o falta de minerales|Alteración neurológica si persiste',
-  'Dolor muscular': 'Sobreesfuerzo o ejercicio|Pérdida muscular por microgravedad|Deshidratación o falta de descanso',
-  Calambres: 'Deshidratación o falta de electrolitos|Fatiga muscular|Mala circulación',
-  'Rigidez articular':
-    'Inactividad o mala postura|Inflamación articular|Efecto de la microgravedad en huesos y articulaciones'
+  'Headache':
+    'Muscle tension or stress|Dehydration or little sleep|Eye strain or pressure changes',
+  'Migraine': 'Migraine from stress or hormonal changes|Lack of sleep|Triggers such as light or noise',
+  'Dizziness or vertigo':
+    'Dehydration or low blood pressure|Disorientation from motion or microgravity|Inner ear disturbance',
+  'Ringing in ears': 'Noise or ambient pressure|Stress or fatigue|Earwax plug or ear disturbance',
+  'Confusion':
+    'Lack of oxygen or low glucose|Dehydration or exhaustion|Neurological disturbance that needs assessment',
+  'Blurred vision':
+    'Eye strain from screens|Dehydration or pressure changes|Eye or neurological disturbance that should be checked',
+  'Burning or dryness': 'Dry eyes from environment and screens|Irritation or allergy|Prolonged lens use',
+  'Light sensitivity': 'Eye strain or migraine|Eye irritation|Dehydration',
+  'Eye strain': 'Too much screen time|Little blinking in a dry environment|Possible need for a new prescription',
+  'Crushing pain':
+    'Heart problem such as angina (must be ruled out)|Anxiety attack|Muscle or respiratory tension',
+  'Palpitations': 'Stress, anxiety or caffeine|Dehydration or lack of sleep|Arrhythmia that requires an ECG',
+  'Difficulty breathing': 'Anxiety or hyperventilation|Low oxygenation or respiratory problem|Cardiac cause',
+  'Shortness of breath': 'Anxiety or hyperventilation|Low oxygenation or respiratory problem|Cardiac cause',
+  'Chest pain': 'Muscle tension or rib inflammation|Reflux or heartburn|Cardiac cause (must be ruled out)',
+  'Stabbing pain': 'Muscle tension or intercostal nerves|Anxiety|Gas or reflux',
+  'Breast tenderness':
+    'Hormonal cycle changes|Stress or fatigue|Possible pregnancy, if the period is late',
+  'Abdominal pain': 'Gastritis or indigestion|Gas or constipation|Intestinal infection or appendicitis if very intense',
+  'Nausea': 'Indigestion or spoiled food|Motion sickness|Stress or mild infection',
+  'Vomiting': 'Gastroenteritis or food poisoning|Motion sickness|Associated dehydration',
+  'Heartburn or reflux': 'Gastroesophageal reflux|Large or irritating meals|Gastritis',
+  'Bloating': 'Gas or slow digestion|Food intolerance|Fluid retention',
+  'Pelvic discomfort': 'Muscle tension or constipation|Urinary infection|Gynecological or urological cause to assess',
+  'Painful urination': 'Urinary infection|Dehydration or irritation|Kidney stones',
+  'Lower back pain': 'Muscle contracture|Poor posture|Kidney or urinary problem',
+  'Groin discomfort': 'Muscle strain|Inguinal hernia|Local inflammation or infection',
+  'Testicular heaviness': 'Varicose veins (varicocele) or inflammation|Infection|Torsion, an emergency if the pain is sudden',
+  'Menstrual cramps': 'Normal menstruation (dysmenorrhea)|Endometriosis or another cause|Stress or hormonal changes',
+  'Late period': 'Stress or routine changes|Hormonal disturbance|Possible pregnancy',
+  'Lower pelvic pain': 'Menstrual cramp or ovulation|Urinary or gynecological infection|Cyst or another cause to assess',
+  'Discomfort when urinating': 'Urinary infection|Irritation|Dehydration',
+  'Tingling': 'Posture or pressure on a nerve|Poor circulation or mineral deficiency|Neurological disturbance if it persists',
+  'Muscle pain': 'Overexertion or exercise|Muscle loss from microgravity|Dehydration or lack of rest',
+  'Cramps': 'Dehydration or electrolyte deficiency|Muscle fatigue|Poor circulation',
+  'Joint stiffness':
+    'Inactivity or poor posture|Joint inflammation|Effect of microgravity on bones and joints'
 };
 
 /** Recomendaciones generales por zona. */
 export const ACC = {
   cabeza: [
-    'Hidrátate y descansa en un lugar tranquilo y con poca luz',
-    'Anota cuándo empezó y qué tan fuerte es',
-    'Mide tu presión y temperatura si puedes'
+    'Hydrate and rest in a quiet, dim place',
+    'Note when it started and how strong it is',
+    'Measure your blood pressure and temperature if you can'
   ],
   ojos: [
-    'Descansa la vista y parpadea con frecuencia',
-    'Evita tocarte los ojos y reduce el brillo de pantallas',
-    'Usa lágrimas artificiales si el médico de vuelo lo autoriza'
+    'Rest your eyes and blink often',
+    'Avoid touching your eyes and lower screen brightness',
+    'Use artificial tears if the flight surgeon approves'
   ],
   pecho: [
-    'Suspende el esfuerzo y siéntate',
-    'Respira lento y profundo; mide pulso y oxígeno',
-    'Avisa al médico de vuelo o a Control de Misión'
+    'Stop exertion and sit down',
+    'Breathe slowly and deeply; measure pulse and oxygen',
+    'Notify the flight surgeon or Mission Control'
   ],
   estomago: [
-    'Toma agua en sorbos pequeños',
-    'Evita comidas pesadas, grasas y alcohol',
-    'Reposa y vigila fiebre o vómito repetido'
+    'Drink water in small sips',
+    'Avoid heavy or fatty meals and alcohol',
+    'Rest and watch for fever or repeated vomiting'
   ],
   pelvis: [
-    'Hidrátate y no retengas la orina',
-    'Anota síntomas y su duración',
-    'Consulta al médico de vuelo si dura más de 24 h'
+    'Hydrate and do not hold urine',
+    'Note symptoms and how long they last',
+    'See the flight surgeon if it lasts more than 24 h'
   ],
   extremidades: [
-    'Descansa y estira con suavidad',
-    'Hidrátate y revisa tu ingesta de minerales',
-    'Evita forzar la zona afectada'
+    'Rest and stretch gently',
+    'Hydrate and check your mineral intake',
+    'Avoid straining the affected area'
   ]
 };
 
 /** Señales de alarma que obligan a buscar atención inmediata. */
 export const ALERTA = {
-  cabeza: 'dolor súbito e intenso, confusión, dificultad para hablar, debilidad de un lado del cuerpo o visión doble',
-  ojos: 'pérdida repentina de visión, dolor ocular intenso o destellos con sombras',
-  pecho: 'dolor que se extiende al brazo, mandíbula o espalda, sudor frío, mareo o falta de aire intensa',
-  estomago: 'dolor muy intenso con abdomen duro, vómito con sangre, deshidratación o fiebre alta',
-  pelvis: 'dolor intenso y súbito, sangre en la orina, fiebre o sangrado anormal',
-  extremidades: 'pérdida de fuerza o sensibilidad, hinchazón dolorosa en una pierna o dolor intenso tras un golpe'
+  cabeza: 'sudden severe pain, confusion, trouble speaking, weakness on one side of the body or double vision',
+  ojos: 'sudden vision loss, severe eye pain or flashes with shadows',
+  pecho: 'pain spreading to the arm, jaw or back, cold sweat, dizziness or severe shortness of breath',
+  estomago: 'very severe pain with a hard abdomen, vomiting blood, dehydration or high fever',
+  pelvis: 'sudden severe pain, blood in the urine, fever or abnormal bleeding',
+  extremidades: 'loss of strength or sensation, painful swelling in a leg or severe pain after a blow'
 };
 
 /**
@@ -107,29 +107,29 @@ export const CTX = { pecho: ['cardio'], cabeza: ['neuro'], extremidades: ['osteo
 /** Mensajes del banner de resultado. `{nombres}` se sustituye en results.js. */
 export const MENSAJES = {
   ok: [
-    '✓ ESTADO ÓPTIMO · TODO BIEN',
-    'Todos los órganos registrados están dentro de parámetros normales. Continúa con tu monitoreo rutinario.'
+    '✓ OPTIMAL STATUS · ALL GOOD',
+    'All recorded organs are within normal parameters. Continue your routine monitoring.'
   ],
   warn: [
-    '◆ PRECAUCIÓN · NIVEL MEDIO',
-    'Se detectan alteraciones moderadas en: {nombres}. Mantén reposo e hidratación, sigue el monitoreo y consulta si persisten o empeoran.'
+    '◆ CAUTION · MEDIUM LEVEL',
+    'Moderate changes detected in: {nombres}. Rest and hydrate, keep monitoring and consult if they persist or worsen.'
   ],
   bad: [
-    '⚠ ALERTA GRAVE',
-    'Se detectan alteraciones graves en: {nombres}. Se recomienda atención médica inmediata y reportar a Control de Misión.'
+    '⚠ SEVERE ALERT',
+    'Severe changes detected in: {nombres}. Immediate medical attention and a report to Mission Control are recommended.'
   ],
   unknown: [
-    '◇ SIN DATOS SUFICIENTES',
-    'Todavía no hay mediciones ni molestias registradas. Completa al menos un indicador clínico o marca un síntoma para obtener orientación.'
+    '◇ NOT ENOUGH DATA',
+    'No measurements or symptoms recorded yet. Complete at least one clinical indicator or mark a symptom to get guidance.'
   ]
 };
 
 /** Consejo breve por estado, usado en las tarjetas de órganos. */
 export const CONSEJO_ESTADO = {
-  ok: 'Funcionamiento normal.',
-  warn: 'Vigilar evolución y reposar.',
-  bad: 'Requiere evaluación médica inmediata.',
-  na: 'Sin mediciones registradas.'
+  ok: 'Normal function.',
+  warn: 'Monitor progress and rest.',
+  bad: 'Requires immediate medical evaluation.',
+  na: 'No measurements recorded.'
 };
 
-export const SIN_ALTERACIONES = 'Sin alteraciones registradas';
+export const SIN_ALTERACIONES = 'No changes recorded';

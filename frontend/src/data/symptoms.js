@@ -7,33 +7,33 @@
  */
 
 export const SINTOMAS_BASE = {
-  cabeza: ['Cabeza', 'Dolor de cabeza|Mareo o vértigo|Zumbido en oídos|Confusión'],
-  ojos: ['Ojos', 'Visión borrosa|Ardor o sequedad|Sensibilidad a luz|Fatiga ocular'],
-  pecho: ['Pecho', 'Dolor opresivo|Palpitaciones|Dificultad al respirar|Punzadas'],
-  estomago: ['Estómago', 'Dolor abdominal|Náuseas|Vómito|Acidez o reflujo|Hinchazón'],
-  pelvis: ['Pelvis', 'Molestia pélvica'],
-  extremidades: ['Extremidades', 'Hormigueo|Dolor muscular|Calambres|Rigidez articular']
+  cabeza: ['Head', 'Headache|Dizziness or vertigo|Ringing in ears|Confusion'],
+  ojos: ['Eyes', 'Blurred vision|Burning or dryness|Light sensitivity|Eye strain'],
+  pecho: ['Chest', 'Crushing pain|Palpitations|Difficulty breathing|Stabbing pain'],
+  estomago: ['Stomach', 'Abdominal pain|Nausea|Vomiting|Heartburn or reflux|Bloating'],
+  pelvis: ['Pelvis', 'Pelvic discomfort'],
+  extremidades: ['Limbs', 'Tingling|Muscle pain|Cramps|Joint stiffness']
 };
 
 export const SINTOMAS_ESPECIFICOS = {
-  Masculino: {
-    pelvis: ['Pelvis', 'Dolor al orinar|Dolor lumbar bajo|Molestia inguinal|Pesadez testicular']
+  'Male': {
+    pelvis: ['Pelvis', 'Painful urination|Lower back pain|Groin discomfort|Testicular heaviness']
   },
-  Femenino: {
-    cabeza: ['Cabeza', 'Dolor de cabeza|Migraña|Mareo o vértigo|Zumbido en oídos|Confusión'],
-    pecho: ['Pecho y Mamas', 'Dolor en pecho|Palpitaciones|Sensibilidad mamaria|Falta de aire'],
-    pelvis: ['Pelvis', 'Cólicos menstruales|Retraso menstrual|Dolor pélvico bajo|Molestia al orinar']
+  'Female': {
+    cabeza: ['Head', 'Headache|Migraine|Dizziness or vertigo|Ringing in ears|Confusion'],
+    pecho: ['Chest and Breasts', 'Chest pain|Palpitations|Breast tenderness|Shortness of breath'],
+    pelvis: ['Pelvis', 'Menstrual cramps|Late period|Lower pelvic pain|Discomfort when urinating']
   }
 };
 
 /** Nombres cortos usados por el estado de órganos y las etiquetas del avatar. */
 export const ZONAS_NOMBRES = {
-  cabeza: 'Cabeza',
-  ojos: 'Ojos',
-  pecho: 'Pecho',
-  estomago: 'Estómago',
+  cabeza: 'Head',
+  ojos: 'Eyes',
+  pecho: 'Chest',
+  estomago: 'Stomach',
   pelvis: 'Pelvis',
-  extremidades: 'Extremidades'
+  extremidades: 'Limbs'
 };
 
 /**

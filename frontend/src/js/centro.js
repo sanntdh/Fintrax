@@ -96,13 +96,13 @@ function pintarIndicador() {
   const boton = $('[data-centro-toggle]');
   if (!boton) return;
   const textos = {
-    on: 'CENTRO MÉDICO · EN LÍNEA',
-    probando: 'CENTRO MÉDICO · CONECTANDO…',
-    off: conectado() ? 'CENTRO MÉDICO · SIN ENLACE' : 'CENTRO MÉDICO · SIN CONEXIÓN'
+    on: 'MEDICAL CENTER · ONLINE',
+    probando: 'MEDICAL CENTER · CONNECTING…',
+    off: conectado() ? 'MEDICAL CENTER · NO LINK' : 'MEDICAL CENTER · OFFLINE'
   };
   boton.dataset.estado = enlace === 'on' ? 'on' : 'off';
   $('[data-centro-label]', boton).textContent = textos[enlace];
-  boton.title = conexionAutomatica() ? 'Pulsa para reintentar la conexión' : 'Configurar la conexión';
+  boton.title = conexionAutomatica() ? 'Press to retry the connection' : 'Configure the connection';
 }
 
 /**
@@ -154,7 +154,7 @@ async function alPulsarIndicador() {
     return;
   }
   const ok = await comprobarEnlace();
-  showToast(ok ? 'Centro médico Fintrax en línea.' : 'Sin enlace con el centro médico. El análisis sigue siendo local.', ok ? '' : 'warn');
+  showToast(ok ? 'Fintrax medical center online.' : 'No link to the medical center. The analysis stays local.', ok ? '' : 'warn');
 }
 
 function mensajeDialogo(texto, tono = '') {
@@ -182,16 +182,16 @@ async function conectar(event) {
   const url = $('[data-centro-url]').value;
   const clave = $('[data-centro-clave]').value;
   if (!guardarBase(local(), url)) {
-    mensajeDialogo('Escribe una URL http o https válida, por ejemplo http://localhost:8000.', 'error');
+    mensajeDialogo('Enter a valid http or https URL, e.g. http://localhost:8000.', 'error');
     return;
   }
   if (clave.trim()) guardarApiKey(sesion(), clave);
   if (!leerApiKey(sesion())) {
-    mensajeDialogo('Escribe la clave de API que te asignó el equipo médico.', 'error');
+    mensajeDialogo('Enter the API key assigned by the medical team.', 'error');
     return;
   }
 
-  mensajeDialogo('Conectando…');
+  mensajeDialogo('Connecting…');
   const selector = $('[data-centro-elegir]');
   const yaElegia = selector && !selector.hidden;
   try {
@@ -207,18 +207,18 @@ async function conectar(event) {
     pintarIndicador();
     $('[data-centro-desconectar]').hidden = false;
     if (astronautas.length > 1 && !elegido) {
-      mensajeDialogo('Conectado. Elige el astronauta y pulsa Conectar de nuevo.', 'ok');
+      mensajeDialogo('Connected. Choose the astronaut and press Connect again.', 'ok');
       return;
     }
     mensajeDialogo(astronautas.length
-      ? 'Conectado. Tus análisis se validarán con el centro médico.'
-      : 'Conectado. Se creará tu ficha con tu perfil al analizar.', 'ok');
-    showToast('Centro médico Fintrax en línea.');
+      ? 'Connected. Your analyses will be validated by the medical center.'
+      : 'Connected. Your record will be created from your profile when you analyze.', 'ok');
+    showToast('Fintrax medical center online.');
   } catch (error) {
     borrarApiKey(sesion());
     enlace = 'off';
     pintarIndicador();
-    mensajeDialogo(error instanceof ApiError ? error.mensaje : 'No se pudo conectar.', 'error');
+    mensajeDialogo(error instanceof ApiError ? error.mensaje : 'Could not connect.', 'error');
   }
 }
 
@@ -229,7 +229,7 @@ function desconectar() {
   pintarSelector([]);
   pintarIndicador();
   $('[data-centro-desconectar]').hidden = true;
-  mensajeDialogo('Sin conexión. El análisis seguirá siendo local.');
+  mensajeDialogo('Offline. The analysis will stay local.');
 }
 
 /* ------------------------------------------------------------------------- */
@@ -243,20 +243,20 @@ function pintarFranja({ estado, titulo, texto = '', resumen = null }) {
   host.dataset.estado = estado;
 
   const cabecera = el('div', { class: 'fintrax-centro__head' });
-  cabecera.append(el('span', { class: 'fintrax-centro__kicker', text: 'CENTRO MÉDICO FINTRAX' }), el('strong', { text: titulo }));
+  cabecera.append(el('span', { class: 'fintrax-centro__kicker', text: 'FINTRAX MEDICAL CENTER' }), el('strong', { text: titulo }));
   if (texto) cabecera.append(el('span', { class: 'fintrax-centro__texto', text: texto }));
   host.append(cabecera);
 
   if (estado === 'off') {
     const reintentar = conexionAutomatica();
-    const boton = el('button', { type: 'button', class: 'fintrax-btn fintrax-btn--secondary', text: reintentar ? 'Reintentar' : 'Conectar' });
+    const boton = el('button', { type: 'button', class: 'fintrax-btn fintrax-btn--secondary', text: reintentar ? 'Retry' : 'Connect' });
     boton.addEventListener('click', () => (reintentar ? enviarAlCentro(ultimoEstado) : abrirDialogo()));
     host.append(boton);
   }
 
   if (!resumen || (!resumen.hallazgos.length && !resumen.alertas.length)) return;
   const detalle = el('details', { class: 'fintrax-centro__detalle' });
-  detalle.append(el('summary', { text: 'Ver recomendaciones' }));
+  detalle.append(el('summary', { text: 'View recommendations' }));
   const lista = el('ul');
   for (const hallazgo of resumen.hallazgos) {
     const item = el('li');
@@ -275,8 +275,8 @@ function textoResumen(resumen) {
   return [
     `NEWS2 ${resumen.news2 ?? '—'}`,
     hallazgos
-      ? `${hallazgos} ${hallazgos === 1 ? 'hallazgo requiere' : 'hallazgos requieren'} evaluación`
-      : 'Sin hallazgos que requieran evaluación'
+      ? `${hallazgos} ${hallazgos === 1 ? 'finding requires' : 'findings require'} evaluation`
+      : 'No findings requiring evaluation'
   ].join(' · ');
 }
 
@@ -297,7 +297,7 @@ export async function enviarAlCentro(state) {
   if (!state) return;
   ultimoEstado = state;
   if (!conectado()) {
-    pintarFranja({ estado: 'off', titulo: 'Evaluación local', texto: 'Conecta el centro médico para validar este análisis.' });
+    pintarFranja({ estado: 'off', titulo: 'Local assessment', texto: 'Connect the medical center to validate this analysis.' });
     return;
   }
   const { baseline, current } = state.records;
@@ -311,15 +311,15 @@ export async function enviarAlCentro(state) {
     })
   });
   if (!mision.ok) {
-    pintarFranja({ estado: 'error', titulo: 'No enviado', texto: `Faltan signos vitales: ${mision.faltantes.join(', ')}.` });
+    pintarFranja({ estado: 'error', titulo: 'Not sent', texto: `Faltan signos vitales: ${mision.faltantes.join(', ')}.` });
     return;
   }
 
-  pintarFranja({ estado: 'enviando', titulo: 'Enviando al centro médico…' });
+  pintarFranja({ estado: 'enviando', titulo: 'Sending to the medical center…' });
   const api = apiActual();
   try {
     if (enlace !== 'on' && !(await comprobarEnlace())) {
-      pintarFranja({ estado: 'off', titulo: 'Sin enlace', texto: 'No hay enlace con el centro médico; el análisis es local.' });
+      pintarFranja({ estado: 'off', titulo: 'No link', texto: 'No link to the medical center; the analysis is local.' });
       return;
     }
     const id = await asegurarAstronauta(api, current.profile);
@@ -333,15 +333,15 @@ export async function enviarAlCentro(state) {
     }
     const resumen = resumirEvaluacion(await api.registrarMedicion(id, mision.lectura));
     if (!resumen) {
-      pintarFranja({ estado: 'ok', titulo: 'Lectura registrada', texto: 'El centro no devolvió evaluación para esta lectura.' });
+      pintarFranja({ estado: 'ok', titulo: 'Reading recorded', texto: 'The center returned no assessment for this reading.' });
       return;
     }
-    pintarFranja({ estado: `nivel-${resumen.nivel}`, titulo: `Nivel ${resumen.etiqueta}`, texto: textoResumen(resumen), resumen });
+    pintarFranja({ estado: `nivel-${resumen.nivel}`, titulo: `Level ${resumen.etiqueta}`, texto: textoResumen(resumen), resumen });
   } catch (error) {
     pintarFranja({
       estado: 'error',
-      titulo: 'No se pudo validar',
-      texto: error instanceof ApiError ? error.mensaje : 'Error inesperado al contactar al centro médico.'
+      titulo: 'Could not validate',
+      texto: error instanceof ApiError ? error.mensaje : 'Unexpected error contacting the medical center.'
     });
   }
 }
@@ -354,7 +354,7 @@ function abrirDialogo() {
   const dialogo = $('[data-centro-dialog]');
   if (!dialogo) return;
   $('[data-centro-url]').value = apiActual().baseUrl || '';
-  mensajeDialogo(conectado() ? 'Conectado.' : 'Introduce la URL del backend y tu clave de API.');
+  mensajeDialogo(conectado() ? 'Connected.' : 'Enter the backend URL and your API key.');
   $('[data-centro-desconectar]').hidden = !conectado();
   if (typeof dialogo.showModal === 'function') dialogo.showModal();
   else dialogo.setAttribute('open', '');

@@ -119,3 +119,10 @@ test('el formulario se recorre por pasos, un bloque cada vez', async () => {
   assert.ok(form.includes('dataset.stepPanel = section.id'), 'Cada sección de indicadores debe ser un paso');
   assert.ok(/export function irAPaso\(/.test(form), 'Falta la navegación pública entre pasos');
 });
+
+test('los botones de sexo del HTML envían valores que la validación acepta', async () => {
+  const { PROFILE_FIELDS } = await import('../src/js/validation.js');
+  const opciones = PROFILE_FIELDS.find((campo) => campo.id === 'sexo').options;
+  const valores = [...(await leer('index.html')).matchAll(/name="sexo" value="([^"]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(valores.sort(), [...opciones].sort());
+});

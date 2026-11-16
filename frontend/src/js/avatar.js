@@ -12,25 +12,25 @@ import { ESTADOS } from '../data/severity.js';
 
 /** Coordenadas tomadas del SVG original (viewBox 941×1672). */
 const HOTSPOTS = [
-  { zone: 'cabeza', cx: 470, cy: 180, wave: 22, dot: 13, label: 'Zona Cabeza' },
-  { zone: 'ojos', cx: 470, cy: 213, wave: 20, dot: 11, label: 'Zona Ojos' },
-  { zone: 'pecho', cx: 470, cy: 438, wave: 23, dot: 13, label: 'Zona Pecho' },
-  { zone: 'estomago', cx: 470, cy: 575, wave: 23, dot: 13, label: 'Zona Estómago' },
-  { zone: 'pelvis', cx: 470, cy: 715, wave: 23, dot: 13, label: 'Zona Pelvis' },
-  { zone: 'extremidades', cx: 390, cy: 950, wave: 22, dot: 13, label: 'Zona Piernas' },
-  { zone: 'extremidades', cx: 270, cy: 655, wave: 22, dot: 13, label: 'Zona Brazos' }
+  { zone: 'cabeza', cx: 470, cy: 180, wave: 22, dot: 13, label: 'Head area' },
+  { zone: 'ojos', cx: 470, cy: 213, wave: 20, dot: 11, label: 'Eyes area' },
+  { zone: 'pecho', cx: 470, cy: 438, wave: 23, dot: 13, label: 'Chest area' },
+  { zone: 'estomago', cx: 470, cy: 575, wave: 23, dot: 13, label: 'Stomach area' },
+  { zone: 'pelvis', cx: 470, cy: 715, wave: 23, dot: 13, label: 'Pelvis area' },
+  { zone: 'extremidades', cx: 390, cy: 950, wave: 22, dot: 13, label: 'Legs area' },
+  { zone: 'extremidades', cx: 270, cy: 655, wave: 22, dot: 13, label: 'Arms area' }
 ];
 
 /**
  * Imagen del holograma para un sexo. Solo WebP: lo soportan todos los
  * navegadores actuales y pesa ~40 KB frente a ~1,2 MB del PNG original.
- * @param {string} sexo 'Femenino' | 'Masculino'
+ * @param {string} sexo 'Female' | 'Male'
  * @param {string} clases clases del contenedor
  */
 export function imagenAvatar(sexo, clases) {
   const picture = el('picture', { class: clases });
   picture.append(el('img', {
-    src: sexo === 'Femenino' ? 'assets/avatar-female.webp' : 'assets/avatar-male.webp',
+    src: sexo === 'Female' ? 'assets/avatar-female.webp' : 'assets/avatar-male.webp',
     alt: '',
     width: 941,
     height: 1672,
@@ -76,8 +76,8 @@ function crearHotspots(onZoneSelect) {
  */
 export function createAvatar({ variant = 'form', onZoneSelect } = {}) {
   const root = el('div', { class: 'fintrax-avatar', dataset: { sex: '', glow: 'na' } });
-  root.append(crearImagen('fintrax-avatar__img--female', 'Femenino'));
-  root.append(crearImagen('fintrax-avatar__img--male', 'Masculino'));
+  root.append(crearImagen('fintrax-avatar__img--female', 'Female'));
+  root.append(crearImagen('fintrax-avatar__img--male', 'Male'));
 
   const { root: hotspots, labels } = crearHotspots(onZoneSelect);
   hotspots.append(labels);
@@ -90,7 +90,7 @@ export function createAvatar({ variant = 'form', onZoneSelect } = {}) {
   const groups = [...hotspots.querySelectorAll('.fintrax-hot')];
 
   function setSex(sexo) {
-    const valor = sexo === 'Femenino' || sexo === 'Masculino' ? sexo : '';
+    const valor = sexo === 'Female' || sexo === 'Male' ? sexo : '';
     root.dataset.sex = valor;
     const disponibles = zonasPara(valor);
     for (const group of groups) {
@@ -132,7 +132,7 @@ export function createAvatar({ variant = 'form', onZoneSelect } = {}) {
         'text-anchor': izquierda ? 'end' : 'start',
         fill: (ESTADOS[estado] || ESTADOS.na).h
       });
-      texto.textContent = `${hot.label.replace('Zona ', '').toUpperCase()} · ${(ESTADOS[estado] || ESTADOS.na).t}`;
+      texto.textContent = `${hot.label.replace('Area ', '').toUpperCase()} · ${(ESTADOS[estado] || ESTADOS.na).t}`;
       labels.append(texto);
     }
   }

@@ -7,7 +7,7 @@ import { evaluateOrgans, peorOrgano, zonasConMolestias } from '../src/js/organs.
 import { evaluate } from '../src/js/evaluation.js';
 
 const PERFIL = {
-  sexo: 'Masculino',
+  sexo: 'Male',
   nombre: 'Prueba',
   edad: '34',
   peso: '74',
@@ -65,7 +65,7 @@ test('cada órgano tiene color, ancla, guía y forma dibujable', () => {
 test('una frecuencia alta marca el corazón en atención', () => {
   const { organos } = fichasDe({ fc_reposo: '130', pa_sistolica: '120', pa_diastolica: '78', spo2: '98' });
   assert.equal(organos.corazon.state, 'bad');
-  assert.ok(organos.corazon.sources.some((fuente) => fuente.includes('FC 130')));
+  assert.ok(organos.corazon.sources.some((fuente) => fuente.includes('HR 130')));
   assert.equal(peorOrgano(organos), 'corazon');
 });
 
@@ -78,13 +78,13 @@ test('la saturación baja pesa en pulmones y no en corazón', () => {
 test('el hígado queda sin datos cuando no hay marcadores hepáticos', () => {
   const { organos } = fichasDe({ fc_reposo: '70', spo2: '98', leucocitos: '9000' });
   assert.equal(organos.higado.state, 'na');
-  assert.match(organos.higado.summary, /marcadores hepáticos/i);
+  assert.match(organos.higado.summary, /liver markers/i);
 });
 
 test('los síntomas urinarios activan los riñones', () => {
-  const { organos } = fichasDe({}, ['pelvis|Dolor al orinar']);
+  const { organos } = fichasDe({}, ['pelvis|Painful urination']);
   assert.notEqual(organos.rinones.state, 'na');
-  assert.ok(organos.rinones.sources.some((fuente) => fuente.includes('Dolor al orinar')));
+  assert.ok(organos.rinones.sources.some((fuente) => fuente.includes('Painful urination')));
 });
 
 test('el estrés no se asigna al cerebro', () => {
@@ -102,7 +102,7 @@ test('sin datos todos los órganos quedan en `na`', () => {
 });
 
 test('las molestias se resumen por zona', () => {
-  const result = evaluar({}, ['cabeza|Dolor de cabeza', 'pecho|Palpitaciones']);
+  const result = evaluar({}, ['cabeza|Headache', 'pecho|Palpitations']);
   const zonas = zonasConMolestias(result);
   assert.ok(zonas.length >= 2);
   assert.ok(zonas.every((zona) => zona.items.length > 0));

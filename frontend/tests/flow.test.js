@@ -8,17 +8,17 @@ import { construirRegistro } from '../src/js/export.js';
 
 function registroCompleto() {
   return {
-    profile: { sexo: 'Femenino', nombre: 'Ana Ríos', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'O+' },
+    profile: { sexo: 'Female', nombre: 'Ana Ríos', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'O+' },
     values: {
       fc_reposo: '68', pa_sistolica: '120', pa_diastolica: '80',
-      ecg_estado: 'Sin hallazgos reportados', spo2: '98', fr: '14', temp: '36.6',
-      densidad_osea: '1.120', region_dxa: 'Columna lumbar', masa_muscular: '31.5',
-      fuerza_muscular: '42', metodo_fuerza: 'Prensión manual (dinamómetro)',
-      leucocitos: '6500', cortisol: '12', hora_cortisol: 'Mañana',
-      marcadores_inmunes: 'Dentro de rango', hormonas_estres: 'Dentro de rango',
+      ecg_estado: 'No findings reported', spo2: '98', fr: '14', temp: '36.6',
+      densidad_osea: '1.120', region_dxa: 'Lumbar spine', masa_muscular: '31.5',
+      fuerza_muscular: '42', metodo_fuerza: 'Hand grip (dynamometer)',
+      leucocitos: '6500', cortisol: '12', hora_cortisol: 'Morning',
+      marcadores_inmunes: 'Within range', hormonas_estres: 'Within range',
       estres: '2', estado_animo: '8', ansiedad: '2', sueno_horas: '7.5', sueno_calidad: '8',
-      memoria: '8', atencion: '8', concentracion: '8', equilibrio: 'Sin dificultades percibidas',
-      coordinacion: 'Sin dificultades percibidas', reaccion_ms: '245'
+      memoria: '8', atencion: '8', concentracion: '8', equilibrio: 'No perceived difficulty',
+      coordinacion: 'No perceived difficulty', reaccion_ms: '245'
     },
     ratingsTouched: new Set(RATING_IDS), symptoms: new Set(),
     wellBeing: true, otherText: 'Sin observaciones'
@@ -81,7 +81,7 @@ test('el segundo registro exige estado de molestias; las observaciones son opcio
   record.otherText = ' ';
   assert.deepEqual(Object.keys(erroresRegistro(record, 'current')), ['symptoms']);
   assert.deepEqual(erroresRegistro(record, 'baseline'), {});
-  record.symptoms.add('cabeza|Confusión');
+  record.symptoms.add('cabeza|Confusion');
   assert.deepEqual(erroresRegistro(record, 'current'), {});
   record.wellBeing = true;
   assert.ok(erroresRegistro(record, 'current').symptoms);

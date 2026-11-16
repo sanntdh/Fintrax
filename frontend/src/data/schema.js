@@ -6,13 +6,13 @@
  * `DATOS.md` y en las pruebas del contrato.
  */
 
-export const PLATAFORMA = 'FINTRAX - prototipo local';
+export const PLATAFORMA = 'FINTRAX - local prototype';
 export const AVISO =
-  'Registro de datos autodeclarados o mediciones previas. No constituye diagnóstico ni aptitud para vuelo.';
-export const NOMBRE_ARCHIVO = 'FINTRAX_registro_premision.json';
+  'Record of self-reported data or previous measurements. It is not a diagnosis or a fitness-for-flight decision.';
+export const NOMBRE_ARCHIVO = 'FINTRAX_premission_record.json';
 
 /**
- * @typedef {'Femenino'|'Masculino'|''} Sexo
+ * @typedef {'Female'|'Male'|''} Sexo
  *
  * @typedef {Object} PerfilExportado
  * @property {string} nombre

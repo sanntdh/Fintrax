@@ -137,11 +137,11 @@
   opacity: 0;
 }
 
-#fintrax-app .fintrax-avatar[data-sex='Femenino'] .fintrax-avatar__img--female {
+#fintrax-app .fintrax-avatar[data-sex='Female'] .fintrax-avatar__img--female {
   opacity: 1;
 }
 
-#fintrax-app .fintrax-avatar[data-sex='Femenino'] .fintrax-avatar__img--male {
+#fintrax-app .fintrax-avatar[data-sex='Female'] .fintrax-avatar__img--male {
   opacity: 0;
 }
 

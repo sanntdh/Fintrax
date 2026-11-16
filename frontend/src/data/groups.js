@@ -13,55 +13,55 @@ export const REPORT_GROUPS = [
   {
     title: 'CARDIOVASCULAR',
     fields: [
-      { label: 'Frecuencia cardíaca en reposo', id: 'fc_reposo', unit: 'bpm' },
-      { label: 'Presión arterial', id: 'pa_sistolica', format: 'pressure', unit: 'mmHg' },
-      { label: 'Electrocardiograma (ECG)', id: 'ecg_estado' },
-      { label: 'Saturación de oxígeno (SpO₂)', id: 'spo2', unit: '%' },
-      { label: 'Frecuencia respiratoria', id: 'fr', unit: 'rpm' },
-      { label: 'Temperatura corporal', id: 'temp', unit: '°C' }
+      { label: 'Resting heart rate', id: 'fc_reposo', unit: 'bpm' },
+      { label: 'Blood pressure', id: 'pa_sistolica', format: 'pressure', unit: 'mmHg' },
+      { label: 'Electrocardiogram (ECG)', id: 'ecg_estado' },
+      { label: 'Oxygen saturation (SpO₂)', id: 'spo2', unit: '%' },
+      { label: 'Respiratory rate', id: 'fr', unit: 'rpm' },
+      { label: 'Body temperature', id: 'temp', unit: '°C' }
     ]
   },
   {
-    title: 'ÓSEO Y MUSCULAR',
+    title: 'BONE AND MUSCLE',
     fields: [
-      { label: 'Densidad mineral ósea (DXA)', id: 'densidad_osea', unit: 'g/cm²' },
-      { label: 'Región DXA', id: 'region_dxa' },
-      { label: 'Masa muscular', id: 'masa_muscular', unit: 'kg' },
-      { label: 'Fuerza muscular', id: 'fuerza_muscular', unit: 'kgf' },
-      { label: 'Método de fuerza', id: 'metodo_fuerza' },
-      { label: 'Peso corporal', id: 'peso', unit: 'kg', profile: true },
-      { label: 'Estatura', id: 'estatura', unit: 'm', profile: true }
+      { label: 'Bone mineral density (DXA)', id: 'densidad_osea', unit: 'g/cm²' },
+      { label: 'DXA region', id: 'region_dxa' },
+      { label: 'Muscle mass', id: 'masa_muscular', unit: 'kg' },
+      { label: 'Muscle strength', id: 'fuerza_muscular', unit: 'kgf' },
+      { label: 'Strength method', id: 'metodo_fuerza' },
+      { label: 'Body weight', id: 'peso', unit: 'kg', profile: true },
+      { label: 'Height', id: 'estatura', unit: 'm', profile: true }
     ]
   },
   {
-    title: 'INMUNOLÓGICO',
+    title: 'IMMUNE',
     fields: [
-      { label: 'Glóbulos blancos', id: 'leucocitos', unit: '/µL' },
-      { label: 'Marcadores inmunológicos', id: 'marcadores_inmunes' },
+      { label: 'White blood cells', id: 'leucocitos', unit: '/µL' },
+      { label: 'Immune markers', id: 'marcadores_inmunes' },
       { label: 'Cortisol', id: 'cortisol', unit: 'µg/dL' },
-      { label: 'Momento de medición', id: 'hora_cortisol' },
-      { label: 'Otras hormonas del estrés', id: 'hormonas_estres' }
+      { label: 'Measurement time', id: 'hora_cortisol' },
+      { label: 'Other stress hormones', id: 'hormonas_estres' }
     ]
   },
   {
-    title: 'PSICOLÓGICO · AUTOEVALUACIÓN',
+    title: 'PSYCHOLOGICAL · SELF-ASSESSMENT',
     fields: [
-      { label: 'Estrés percibido', id: 'estres', unit: '/10', rating: true },
-      { label: 'Estado de ánimo', id: 'estado_animo', unit: '/10', rating: true },
-      { label: 'Ansiedad', id: 'ansiedad', unit: '/10', rating: true },
-      { label: 'Duración de sueño', id: 'sueno_horas', unit: 'h' },
-      { label: 'Calidad del sueño', id: 'sueno_calidad', unit: '/10', rating: true },
-      { label: 'Memoria', id: 'memoria', unit: '/10', rating: true },
-      { label: 'Atención', id: 'atencion', unit: '/10', rating: true },
-      { label: 'Concentración', id: 'concentracion', unit: '/10', rating: true }
+      { label: 'Perceived stress', id: 'estres', unit: '/10', rating: true },
+      { label: 'Mood', id: 'estado_animo', unit: '/10', rating: true },
+      { label: 'Anxiety', id: 'ansiedad', unit: '/10', rating: true },
+      { label: 'Sleep duration', id: 'sueno_horas', unit: 'h' },
+      { label: 'Sleep quality', id: 'sueno_calidad', unit: '/10', rating: true },
+      { label: 'Memory', id: 'memoria', unit: '/10', rating: true },
+      { label: 'Attention', id: 'atencion', unit: '/10', rating: true },
+      { label: 'Concentration', id: 'concentracion', unit: '/10', rating: true }
     ]
   },
   {
-    title: 'NEUROLÓGICO',
+    title: 'NEUROLOGICAL',
     fields: [
-      { label: 'Equilibrio', id: 'equilibrio' },
-      { label: 'Coordinación', id: 'coordinacion' },
-      { label: 'Tiempo de reacción', id: 'reaccion_ms', unit: 'ms' }
+      { label: 'Balance', id: 'equilibrio' },
+      { label: 'Coordination', id: 'coordinacion' },
+      { label: 'Reaction time', id: 'reaccion_ms', unit: 'ms' }
     ]
   }
 ];

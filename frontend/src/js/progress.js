@@ -38,13 +38,13 @@ function pintarZonas(state) {
   contador.textContent = String(zonas.size);
 
   if (zonas.size === 0) {
-    estado.textContent = 'ESTADO NOMINAL';
+    estado.textContent = 'NOMINAL STATUS';
     estado.style.color = 'var(--ok)';
   } else if (zonas.size <= 2) {
-    estado.textContent = 'ADVERTENCIA LEVE';
+    estado.textContent = 'MILD WARNING';
     estado.style.color = 'var(--warn)';
   } else {
-    estado.textContent = 'ALERTA MÚLTIPLE';
+    estado.textContent = 'MULTIPLE ALERT';
     estado.style.color = 'var(--alert)';
   }
 }
@@ -54,10 +54,10 @@ function pintarConteoSintomas(state) {
   if (!nodo) return;
 
   if (state.wellBeing) {
-    nodo.textContent = 'Sin molestias declaradas';
+    nodo.textContent = 'No symptoms reported';
     nodo.style.color = 'var(--ok)';
   } else if (state.symptoms.size > 0) {
-    nodo.textContent = `⚠ ${plural(state.symptoms.size, 'molestia registrada', 'molestias registradas')}`;
+    nodo.textContent = `⚠ ${plural(state.symptoms.size, 'symptom recorded', 'symptoms recorded')}`;
     nodo.style.color = 'var(--warn)';
   } else {
     nodo.textContent = '';
@@ -69,12 +69,12 @@ function pintarEscaneo(state) {
   const subtitulo = $('[data-scan-sub]');
   const sexo = state.profile.sexo;
   if (titulo) {
-    titulo.textContent = sexo ? `ESCANEO BIOMÉTRICO · ${sexo.toUpperCase()}` : 'ESCANEO BIOMÉTRICO 3D';
+    titulo.textContent = sexo ? `BIOMETRIC SCAN · ${sexo.toUpperCase()}` : '3D BIOMETRIC SCAN';
   }
   if (subtitulo) {
     subtitulo.textContent = sexo
-      ? (state.activeRecord === 'current' ? 'TOCA UNA ZONA PARA SEÑALAR UNA MOLESTIA ACTUAL' : 'REGISTRO DE TUS VALORES HABITUALES')
-      : 'SELECCIONA TU SEXO PARA CALIBRAR EL HOLOGRAMA';
+      ? (state.activeRecord === 'current' ? 'TAP AN AREA TO MARK A CURRENT SYMPTOM' : 'RECORD OF YOUR USUAL VALUES')
+      : 'SELECT YOUR SEX TO CALIBRATE THE HOLOGRAM';
   }
 }
 
@@ -85,7 +85,7 @@ export function actualizarProgreso(state) {
   if (barra) barra.style.width = `${porcentaje}%`;
 
   const texto = $('[data-progress-text]');
-  if (texto) texto.textContent = `${porcentaje}% · ${completos}/${total} campos`;
+  if (texto) texto.textContent = `${porcentaje}% · ${completos}/${total} fields`;
 
   pintarImc(state);
   pintarZonas(state);

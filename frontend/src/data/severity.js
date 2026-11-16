@@ -8,35 +8,35 @@
 
 /** Puntos por síntoma. Los no listados valen 1. */
 export const SEVERIDAD_SINTOMAS = {
-  Confusión: 3,
-  Migraña: 2,
-  'Visión borrosa': 2,
-  'Dolor opresivo': 3,
-  'Dificultad al respirar': 3,
-  'Dolor en pecho': 3,
-  'Falta de aire': 3,
-  Palpitaciones: 2,
-  'Dolor abdominal': 2,
-  Vómito: 2,
-  'Dolor al orinar': 2,
-  'Pesadez testicular': 2,
-  'Dolor pélvico bajo': 2
+  'Confusion': 3,
+  'Migraine': 2,
+  'Blurred vision': 2,
+  'Crushing pain': 3,
+  'Difficulty breathing': 3,
+  'Chest pain': 3,
+  'Shortness of breath': 3,
+  'Palpitations': 2,
+  'Abdominal pain': 2,
+  'Vomiting': 2,
+  'Painful urination': 2,
+  'Testicular heaviness': 2,
+  'Lower pelvic pain': 2
 };
 
 export const SISTEMAS = {
   cardio: 'Cardiovascular',
-  osteo: 'Óseo y muscular',
-  inmune: 'Inmunológico',
-  psico: 'Psicológico',
-  neuro: 'Neurológico'
+  osteo: 'Bone and muscle',
+  inmune: 'Immune',
+  psico: 'Psychological',
+  neuro: 'Neurological'
 };
 
 /** Estados posibles y su etiqueta visible. */
 export const ESTADOS = {
-  ok: { t: 'BIEN', h: '#00f5b4' },
-  warn: { t: 'MEDIO', h: '#ffaa33' },
-  bad: { t: 'GRAVE', h: '#ff3860' },
-  na: { t: 'SIN DATOS', h: '#8ebad9' }
+  ok: { t: 'GOOD', h: '#00f5b4' },
+  warn: { t: 'MEDIUM', h: '#ffaa33' },
+  bad: { t: 'SEVERE', h: '#ff3860' },
+  na: { t: 'NO DATA', h: '#8ebad9' }
 };
 
 /** Orden de severidad. `na` no eleva el resultado global. */
@@ -44,19 +44,19 @@ export const RANGO = { ok: 0, warn: 1, bad: 2, na: 0 };
 
 /** Dificultad declarada en equilibrio/coordinación. */
 export const DIFICULTAD = {
-  'Dificultad leve': 1,
-  'Dificultad moderada': 2,
-  'Dificultad intensa': 3
+  'Mild difficulty': 1,
+  'Moderate difficulty': 2,
+  'Severe difficulty': 3
 };
 
 /** Valores que significan "todavía no hay medición". */
 export const PENDIENTES = new Set([
   '',
-  'Pendiente de realizar',
-  'Pendiente de prueba',
-  'Seleccionar',
-  'Seleccionar resultado',
-  'Seleccionar método'
+  'Not done yet',
+  'Test pending',
+  'Select',
+  'Select result',
+  'Select method'
 ]);
 
 /**

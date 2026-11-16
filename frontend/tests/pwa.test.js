@@ -36,7 +36,7 @@ test('el manifiesto permite instalar Fintrax como app', async () => {
   assert.equal(manifiesto.short_name, 'Fintrax');
   assert.equal(manifiesto.display, 'standalone');
   assert.equal(manifiesto.start_url, './');
-  assert.equal(manifiesto.lang, 'es');
+  assert.equal(manifiesto.lang, 'en');
   assert.ok(manifiesto.background_color && manifiesto.theme_color);
   for (const tamano of [192, 512]) {
     const icono = manifiesto.icons.find((item) => item.sizes === `${tamano}x${tamano}`);

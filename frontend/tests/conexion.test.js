@@ -26,9 +26,9 @@ const RESPUESTA_VUELO = {
 };
 
 test('el perfil viaja con los nombres y tipos del backend', () => {
-  const perfil = perfilParaBackend({ nombre: '  Alex Vance ', sexo: 'Femenino', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'A+' });
+  const perfil = perfilParaBackend({ nombre: '  Alex Vance ', sexo: 'Female', edad: '28', peso: '68.5', estatura: '1.75', sangre: 'A+' });
   assert.deepEqual(perfil, { nombre: 'Alex Vance', sexo: 'F', edad: 28, masa_kg: 68.5, estatura_m: 1.75 });
-  assert.equal(perfilParaBackend({ nombre: 'B', sexo: 'Masculino', edad: '40', peso: '80', estatura: '1.8' }).sexo, 'M');
+  assert.equal(perfilParaBackend({ nombre: 'B', sexo: 'Male', edad: '40', peso: '80', estatura: '1.8' }).sexo, 'M');
 });
 
 test('los signos del registro forman una lectura de vuelo válida', () => {
@@ -48,17 +48,20 @@ test('sin frecuencia respiratoria la lectura no se envía', () => {
 test('el resumen muestra nivel, NEWS2 y solo los hallazgos que requieren atención', () => {
   const resumen = resumirEvaluacion(RESPUESTA_VUELO);
   assert.equal(resumen.nivel, 2);
-  assert.equal(resumen.etiqueta, 'ALTO');
+  assert.equal(resumen.etiqueta, 'HIGH');
   assert.equal(resumen.news2, 7);
-  assert.deepEqual(resumen.hallazgos.map((h) => h.nombre), ['Riesgo neuro-ocular (SANS)', 'Dosis']);
-  assert.equal(resumen.hallazgos[0].recomendacion, 'Solicitar evaluacion oftalmologica');
+  // Los códigos conocidos se muestran en inglés; uno desconocido conserva el texto del backend.
+  assert.deepEqual(resumen.hallazgos.map((h) => h.nombre), ['Findings compatible with neuro-ocular risk (SANS)', 'Dosis']);
+  assert.match(resumen.hallazgos[0].recomendacion, /^Request an eye examination/);
+  assert.equal(resumen.hallazgos[1].recomendacion, 'Aplicar protocolo');
   assert.equal(resumen.alertas.length, 2);
+  assert.equal(resumen.alertas[1], 'fc: deviation 49.0 >= 30.0 (HIGH)');
 });
 
 test('una lectura sin evaluación o con datos restringidos no rompe el resumen', () => {
   assert.equal(resumirEvaluacion({ medicion: { id: 1 }, evaluacion: null }), null);
   const sinCondiciones = resumirEvaluacion({ evaluacion: { nivel: 0, news2_total: 0, resultado: {} } });
-  assert.equal(sinCondiciones.etiqueta, 'BAJO');
+  assert.equal(sinCondiciones.etiqueta, 'LOW');
   assert.deepEqual(sinCondiciones.hallazgos, []);
   assert.deepEqual(sinCondiciones.alertas, []);
 });
@@ -88,15 +91,15 @@ test('marcadores y hormonas se responden con tres opciones', () => {
   const porId = Object.fromEntries(FORM_FIELDS.map((campo) => [campo.id, campo]));
   for (const id of ['marcadores_inmunes', 'hormonas_estres']) {
     assert.equal(porId[id].kind, 'select');
-    assert.deepEqual(porId[id].options, ['Dentro de rango', 'Fuera de rango', 'No disponible']);
+    assert.deepEqual(porId[id].options, ['Within range', 'Out of range', 'Not available']);
   }
 });
 
 test('un resultado inmunitario fuera de rango llega al backend como evaluación anormal', () => {
-  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Fuera de rango', hormonas_estres: 'Dentro de rango' }), true);
-  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Dentro de rango', hormonas_estres: 'Dentro de rango' }), false);
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Out of range', hormonas_estres: 'Within range' }), true);
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Within range', hormonas_estres: 'Within range' }), false);
   // Sin análisis disponible no se afirma nada: el backend lo trata como desconocido.
-  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'No disponible', hormonas_estres: 'Dentro de rango' }), null);
+  assert.equal(inmuneDeRegistro({ marcadores_inmunes: 'Not available', hormonas_estres: 'Within range' }), null);
   const complementarios = mapearComplementarios({ explicitos: { evaluacion_inmune_anormal: true } });
   assert.equal(complementarios.evaluacion_inmune_anormal, true);
 });

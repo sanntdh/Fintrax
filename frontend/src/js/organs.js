@@ -22,13 +22,13 @@ function estadoDe(score, fuentes) {
 
 function resumen(estado, fuentes, etiqueta) {
   if (estado === 'na') {
-    return etiqueta === 'Hígado'
-      ? 'Sin marcadores hepáticos en este registro.'
-      : 'No hay mediciones ni molestias suficientes para valorar este órgano.';
+    return etiqueta === 'Liver'
+      ? 'No liver markers in this record.'
+      : 'Not enough measurements or symptoms to assess this organ.';
   }
-  if (estado === 'bad') return `Hallazgos que requieren atención: ${fuentes.join(' · ')}.`;
-  if (estado === 'warn') return `Datos a revisar: ${fuentes.join(' · ')}.`;
-  return `Valores registrados dentro de lo esperado: ${fuentes.join(' · ')}.`;
+  if (estado === 'bad') return `Findings that need attention: ${fuentes.join(' · ')}.`;
+  if (estado === 'warn') return `Data to review: ${fuentes.join(' · ')}.`;
+  return `Recorded values within expected range: ${fuentes.join(' · ')}.`;
 }
 
 /**
@@ -43,7 +43,7 @@ export function evaluateOrgans(result, state = {}) {
 
   const sintomasDe = (lista) => [...new Set(todos.filter((s) => lista.includes(s)))];
   const fuentesDeSintomas = (lista) =>
-    sintomasDe(lista).map((s) => `Molestia: ${s}`);
+    sintomasDe(lista).map((s) => `Symptom: ${s}`);
 
   const fichas = {};
 
@@ -54,14 +54,14 @@ export function evaluateOrgans(result, state = {}) {
     const equilibrio = (values.equilibrio || '').trim();
     const coordinacion = (values.coordinacion || '').trim();
     for (const [id, texto] of [
-      ['Equilibrio', equilibrio],
-      ['Coordinación', coordinacion]
+      ['Balance', equilibrio],
+      ['Coordination', coordinacion]
     ]) {
       const puntos = DIFICULTAD[texto] || 0;
       if (puntos) {
         score += puntos;
         fuentes.push(`${id}: ${texto.toLowerCase()}`);
-      } else if (texto && texto !== 'Sin dificultades percibidas' && texto !== 'Pendiente de prueba') {
+      } else if (texto && texto !== 'No perceived difficulty' && texto !== 'Test pending') {
         fuentes.push(`${id}: ${texto.toLowerCase()}`);
       }
     }
@@ -70,11 +70,11 @@ export function evaluateOrgans(result, state = {}) {
       const puntos =
         reaccion > UMBRALES.reaccion.bad ? 3 : reaccion > UMBRALES.reaccion.warn ? 1 : 0;
       score += puntos;
-      fuentes.push(`Reacción ${reaccion} ms`);
+      fuentes.push(`Reaction ${reaccion} ms`);
     }
     for (const sintoma of sintomasDe(ORGANOS.cerebro.symptoms)) {
       score += puntosSintoma(sintoma);
-      fuentes.push(`Molestia: ${sintoma}`);
+      fuentes.push(`Symptom: ${sintoma}`);
     }
     fichas.cerebro = { score, fuentes };
   }
@@ -88,7 +88,7 @@ export function evaluateOrgans(result, state = {}) {
       const u = UMBRALES.fc;
       const puntos = fc < u.badLow || fc > u.badHigh ? 3 : fc < u.warnLow || fc > u.warnHigh ? 1 : 0;
       score += puntos;
-      fuentes.push(`FC ${fc} bpm`);
+      fuentes.push(`HR ${fc} bpm`);
     }
     const ps = result?.base?.ps ?? num(values.pa_sistolica);
     const pd = result?.base?.pd ?? num(values.pa_diastolica);
@@ -101,15 +101,15 @@ export function evaluateOrgans(result, state = {}) {
             ? 1
             : 0;
       score += puntos;
-      fuentes.push(`PA ${ps}/${pd} mmHg`);
+      fuentes.push(`BP ${ps}/${pd} mmHg`);
     }
-    if (values.ecg_estado === 'Con hallazgos por revisar') {
+    if (values.ecg_estado === 'Findings to review') {
       score += 2;
-      fuentes.push('ECG con hallazgos');
+      fuentes.push('ECG with findings');
     }
     for (const sintoma of sintomasDe(ORGANOS.corazon.symptoms)) {
       score += puntosSintoma(sintoma);
-      fuentes.push(`Molestia: ${sintoma}`);
+      fuentes.push(`Symptom: ${sintoma}`);
     }
     fichas.corazon = { score, fuentes };
   }
@@ -126,7 +126,7 @@ export function evaluateOrgans(result, state = {}) {
     }
     for (const sintoma of sintomasDe(ORGANOS.pulmones.symptoms)) {
       score += puntosSintoma(sintoma);
-      fuentes.push(`Molestia: ${sintoma}`);
+      fuentes.push(`Symptom: ${sintoma}`);
     }
     fichas.pulmones = { score, fuentes };
   }

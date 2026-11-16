@@ -116,17 +116,17 @@ export function mensajeDeError(status, detalle = '') {
   const extra = typeof detalle === 'string' ? detalle.trim() : '';
   switch (status) {
     case 401:
-      return 'Clave de API ausente o inválida. Revisa la conexión con el backend.';
+      return 'Missing or invalid API key. Check the backend connection.';
     case 403:
-      return 'Tu rol no tiene permiso para esta operación.';
+      return 'Your role is not allowed to perform this operation.';
     case 404:
-      return extra || 'El recurso solicitado no existe en el backend.';
+      return extra || 'The requested resource does not exist on the backend.';
     case 409:
-      return extra || 'La operación choca con el estado actual del backend.';
+      return extra || 'The operation conflicts with the current backend state.';
     case 422:
-      return `Los datos enviados no son válidos${extra ? `: ${extra}` : '.'}`;
+      return `The data sent is not valid${extra ? `: ${extra}` : '.'}`;
     default:
-      return extra || `El backend respondió con un error (${status}).`;
+      return extra || `The backend returned an error (${status}).`;
   }
 }
 
@@ -157,9 +157,9 @@ export function crearApi({ baseUrl = '', fetch: fetchImpl, getKey } = {}) {
 
   async function peticion(ruta, opciones = {}) {
     const clave = typeof getKey === 'function' ? getKey() : '';
-    if (!clave) throw new ApiError(0, 'Configura la clave de API antes de contactar al backend.');
-    if (!raiz) throw new ApiError(0, 'Configura una URL de backend válida (http o https).');
-    if (typeof traer !== 'function') throw new ApiError(0, 'Este entorno no dispone de fetch.');
+    if (!clave) throw new ApiError(0, 'Set the API key before contacting the backend.');
+    if (!raiz) throw new ApiError(0, 'Set a valid backend URL (http or https).');
+    if (typeof traer !== 'function') throw new ApiError(0, 'This environment has no fetch.');
 
     const { method = 'GET', body, query } = opciones;
     const url = new URL(raiz + ruta);
@@ -186,7 +186,7 @@ export function crearApi({ baseUrl = '', fetch: fetchImpl, getKey } = {}) {
         credentials: 'omit'
       });
     } catch (error) {
-      throw new ApiError(0, 'No se pudo contactar al backend. Revisa la URL y tu conexión.', String(error?.message || error));
+      throw new ApiError(0, 'Could not reach the backend. Check the URL and your connection.', String(error?.message || error));
     }
 
     const texto = typeof respuesta.text === 'function' ? await respuesta.text() : '';
@@ -208,7 +208,7 @@ export function crearApi({ baseUrl = '', fetch: fetchImpl, getKey } = {}) {
     if (!jsonValido || datos === null) {
       throw new ApiError(
         respuesta.status,
-        'El backend respondió sin JSON válido. Revisa la URL y la versión del servidor.',
+        'The backend did not return valid JSON. Check the URL and the server version.',
         texto.slice(0, 200)
       );
     }
@@ -249,12 +249,12 @@ export const CAMPOS_COMPLEMENTARIOS = [
 
 /** Síntomas que activan cada bandera. `evaluacion_inmune_anormal` no se deduce. */
 export const MAPEO_SINTOMAS = {
-  cambio_visual: ['Visión borrosa', 'Sensibilidad a luz'],
+  cambio_visual: ['Blurred vision', 'Light sensitivity'],
   // Un mareo genérico NO implica síntomas al incorporarse: solo lo activa el
   // checkbox posicional explícito (no hay síntoma textual que lo mencione).
   sintomas_al_incorporarse: [],
-  mareo_desorientacion: ['Mareo o vértigo', 'Confusión'],
-  dificultad_cognitiva: ['Confusión'],
+  mareo_desorientacion: ['Dizziness or vertigo', 'Confusion'],
+  dificultad_cognitiva: ['Confusion'],
   alteracion_sueno: [],
   alteracion_animo: [],
   evaluacion_inmune_anormal: []
@@ -368,7 +368,7 @@ export function lecturaMision(fuente = {}) {
 
 // --- Traducción entre el formulario y el backend ---------------------------
 
-const SEXO_BACKEND = { Femenino: 'F', Masculino: 'M' };
+const SEXO_BACKEND = { Female: 'F', Male: 'M' };
 
 /**
  * Perfil del formulario con los nombres y tipos de `AstronautaIn`. El grupo
@@ -410,12 +410,33 @@ export function fuenteDeRegistro(values = {}, perfil = {}) {
  */
 export function inmuneDeRegistro(values = {}) {
   const resultados = [values.marcadores_inmunes, values.hormonas_estres];
-  if (resultados.includes('Fuera de rango')) return true;
-  if (resultados.every((valor) => valor === 'Dentro de rango')) return false;
+  if (resultados.includes('Out of range')) return true;
+  if (resultados.every((valor) => valor === 'Within range')) return false;
   return null;
 }
 
-const ETIQUETAS_NIVEL = ['BAJO', 'MEDIO', 'ALTO'];
+const ETIQUETAS_NIVEL = ['LOW', 'MEDIUM', 'HIGH'];
+
+/** El backend redacta las condiciones en español; se muestran en inglés por código. */
+const CONDICIONES_EN = {
+  radiacion: ['Radiation exposure', 'Review dosimetry and protocol with radiation protection; it does not predict cancer, cataracts or DNA damage.'],
+  perdida_osea: ['Bone mineral loss', 'Review comparable measurements with flight medicine; it is not confirmed osteoporosis or atrophy.'],
+  deterioro_muscular: ['Muscle strength decline', 'Review comparable measurements with flight medicine; it is not confirmed osteoporosis or atrophy.'],
+  sans: ['Findings compatible with neuro-ocular risk (SANS)', 'Request an eye examination (fundus/OCT as available); visual symptoms are not specific to SANS.'],
+  intolerancia_ortostatica: ['Symptoms compatible with orthostatic intolerance', 'Assess posture, symptoms and blood pressure/HR under clinical supervision; do not do standing tests without support if there is presyncope.'],
+  salud_mental_sueno: ['Reported change in sleep, mood or cognition', 'Request a sleep and mental health assessment; these data do not diagnose depression, anxiety or space fog.'],
+  alteracion_vestibular: ['Vestibular or orientation symptoms', 'Assess balance and orientation; dizziness alone does not identify its cause or confirm space motion sickness.'],
+  alteracion_inmunitaria: ['Abnormal immune assessment', 'Review lab results and context with the medical team; it does not infer infection or immunosuppression from vital signs.']
+};
+
+/** Alertas técnicas del backend («fc: desviacion … (ALTO)») en inglés. */
+function traducirAlerta(texto) {
+  return String(texto)
+    .replace(/desviaci[oó]n/gi, 'deviation')
+    .replace(/\(ALTO\)/g, '(HIGH)')
+    .replace(/\(MEDIO\)/g, '(MEDIUM)')
+    .replace(/\(BAJO\)/g, '(LOW)');
+}
 
 /** Estados de condición que piden actuar; el resto no se muestra. */
 const ESTADOS_RELEVANTES = new Set([
@@ -436,12 +457,15 @@ export function resumirEvaluacion(respuesta) {
   return {
     id: evaluacion.id,
     nivel,
-    etiqueta: ETIQUETAS_NIVEL[nivel] ?? 'CRÍTICO',
+    etiqueta: ETIQUETAS_NIVEL[nivel] ?? 'CRITICAL',
     news2: evaluacion.news2_total ?? resultado.news2_total ?? null,
     hallazgos: (resultado.condiciones || [])
       .filter((condicion) => ESTADOS_RELEVANTES.has(condicion.estado))
-      .map(({ nombre, recomendacion }) => ({ nombre, recomendacion })),
-    alertas: Array.isArray(resultado.alertas) ? resultado.alertas : []
+      .map(({ codigo, nombre, recomendacion }) => {
+        const [nombreEn, recomendacionEn] = CONDICIONES_EN[codigo] || [nombre, recomendacion];
+        return { nombre: nombreEn, recomendacion: recomendacionEn };
+      }),
+    alertas: Array.isArray(resultado.alertas) ? resultado.alertas.map(traducirAlerta) : []
   };
 }
 

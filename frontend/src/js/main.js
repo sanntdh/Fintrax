@@ -78,13 +78,13 @@ const results = initResults({
   onExport: () => {
     const state = getState();
     if (!state.result) {
-      showToast('Completa el análisis antes de descargar.', 'warn');
+      showToast('Complete the analysis before downloading.', 'warn');
       return;
     }
     const datos = descargarRegistro(state);
     actions.setExportData(datos);
     beep('success');
-    showToast('Registro descargado en JSON.');
+    showToast('Record downloaded as JSON.');
   }
 });
 
@@ -111,7 +111,7 @@ function iniciarAnalisis() {
       beep('success');
       alArriba();
       enfocar($('#fintrax-form-title'));
-      showToast('Datos habituales guardados. Completa ahora tus datos actuales.');
+      showToast('Usual data saved. Now complete your current data.');
     }
     return;
   }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="assets/icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
-<meta name="description" content="FINTRAX · Registro biomédico pre-misión. Prototipo local de evaluación orientativa con datos autodeclarados. No constituye diagnóstico.">
-<title>FINTRAX | Registro y análisis biomédico</title>
+<meta name="description" content="FINTRAX · Pre-mission biomedical record. Local prototype for guidance assessment with self-reported data. Not a diagnosis.">
+<title>FINTRAX | Biomedical record and analysis</title>
 
 <link rel="preload" href="assets/fonts/orbitron-900.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/rajdhani-600.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,7 +28,7 @@
 <body>
 
 <div id="fintrax-app" data-step="intro">
-  <a class="fintrax-skip" href="#fintrax-form">Saltar al formulario</a>
+  <a class="fintrax-skip" href="#fintrax-form">Skip to the form</a>
 
   <!-- Capas decorativas: siempre por debajo del contenido -->
   <div class="fintrax-bg" aria-hidden="true">
@@ -42,9 +42,9 @@
   <!-- ---------------------------------------------------------------- -->
   <!-- Animación original FINTRAX · un ciclo de 10 segundos              -->
   <!-- ---------------------------------------------------------------- -->
-  <section class="fintrax-intro" data-intro aria-label="Presentación FINTRAX Código Error">
-    <canvas id="fintrax-fondo" role="img" aria-label="Planeta Tierra con atmósfera azul, una luna y estrellas"></canvas>
-    <svg id="fintrax-logo" viewBox="0 0 1000 1000" role="img" aria-label="Logo Fintrax Código Error: corazón con pulso y cruz médica">
+  <section class="fintrax-intro" data-intro aria-label="FINTRAX Código Error intro">
+    <canvas id="fintrax-fondo" role="img" aria-label="Planet Earth with a blue atmosphere, a moon and stars"></canvas>
+    <svg id="fintrax-logo" viewBox="0 0 1000 1000" role="img" aria-label="Fintrax Código Error logo: heart with pulse and medical cross">
       <defs>
         <path id="fintrax-heart" d="M0 90 C-85 25 -120 -20 -110 -65 C-100 -105 -35 -120 0 -75 C35 -120 100 -105 110 -65 C120 -20 85 25 0 90 Z"/>
         <linearGradient id="fintrax-gTxt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#a9c0d6"/></linearGradient>
@@ -75,7 +75,7 @@
       <path id="fintrax-ecgR" d="M1000 502 H920 L900 490 L882 560 L868 430 L854 520 L838 497 H818" fill="none" stroke="#52f08f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" pathLength="1" style="filter:drop-shadow(0 0 7px #3f9)"/>
       <g id="fintrax-ic1"></g><g id="fintrax-ic2"></g><g id="fintrax-ic3"></g><g id="fintrax-ic4"></g>
     </svg>
-    <p class="fintrax-intro__caption">FINTRAX · Preparando registro biomédico…</p>
+    <p class="fintrax-intro__caption">FINTRAX · Preparing biomedical record…</p>
   </section>
 
   <!-- ---------------------------------------------------------------- -->
@@ -89,38 +89,38 @@
       </div>
       <div class="fintrax-topinfo">
         <div class="fintrax-telemetry-item">
-          <span>ASTRONAUTA:</span>
+          <span>ASTRONAUT:</span>
           <span class="val">AST-001</span>
         </div>
         <div class="fintrax-telemetry-item">
-          <span>MISIÓN:</span>
+          <span>MISSION:</span>
           <span class="val">045 DEEP SPACE</span>
         </div>
         <button type="button" class="fintrax-status-pill" data-centro-toggle data-estado="off" aria-haspopup="dialog">
           <span class="fintrax-pulse" aria-hidden="true"></span>
-          <span data-centro-label>CENTRO MÉDICO · SIN CONEXIÓN</span>
+          <span data-centro-label>MEDICAL CENTER · OFFLINE</span>
         </button>
       </div>
     </header>
 
     <main class="fintrax-main">
       <!-- Panel del avatar -->
-      <section class="fintrax-panel fintrax-panel--human" aria-label="Escaneo holográfico corporal">
+      <section class="fintrax-panel fintrax-panel--human" aria-label="Holographic body scan">
         <div class="fintrax-hud-grid" aria-hidden="true"></div>
         <div class="fintrax-scan-header">
-          <div class="fintrax-scan-header__title" data-scan-title>ESCANEO BIOMÉTRICO 3D</div>
-          <div class="fintrax-scan-header__sub" data-scan-sub>SELECCIONA TU SEXO PARA CALIBRAR EL HOLOGRAMA</div>
+          <div class="fintrax-scan-header__title" data-scan-title>3D BIOMETRIC SCAN</div>
+          <div class="fintrax-scan-header__sub" data-scan-sub>SELECT YOUR SEX TO CALIBRATE THE HOLOGRAM</div>
         </div>
         <div data-avatar-host="form"></div>
         <div class="fintrax-holo-metric fintrax-holo-metric--left">
-          <span class="fintrax-holo-metric__tag">IMC ESTIMADO</span>
+          <span class="fintrax-holo-metric__tag">ESTIMATED BMI</span>
           <span class="fintrax-holo-metric__num" data-imc-value>--</span>
-          <span class="fintrax-holo-metric__sub" data-imc-category>CALIBRANDO...</span>
+          <span class="fintrax-holo-metric__sub" data-imc-category>CALIBRATING...</span>
         </div>
       <div class="fintrax-holo-metric fintrax-holo-metric--right" data-current-only hidden>
-          <span class="fintrax-holo-metric__tag">ZONAS MARCADAS</span>
+          <span class="fintrax-holo-metric__tag">MARKED AREAS</span>
           <span class="fintrax-holo-metric__num" data-zone-count>0</span>
-          <span class="fintrax-holo-metric__sub" data-zone-status>ESTADO NOMINAL</span>
+          <span class="fintrax-holo-metric__sub" data-zone-status>NOMINAL STATUS</span>
         </div>
       </section>
 
@@ -129,9 +129,9 @@
         <div class="fintrax-heading">
           <span class="fintrax-heading__icon" aria-hidden="true">👤</span>
           <div>
-            <span class="fintrax-step" data-form-stage>ETAPA 1 DE 2 · DATOS HABITUALES</span>
-            <h1 id="fintrax-form-title" tabindex="-1">Registro Biomédico</h1>
-            <p data-form-subtitle>Evaluación de referencia previa a la misión · FINTRAX</p>
+            <span class="fintrax-step" data-form-stage>STAGE 1 OF 2 · USUAL DATA</span>
+            <h1 id="fintrax-form-title" tabindex="-1">Biomedical Record</h1>
+            <p data-form-subtitle>Pre-mission baseline assessment · FINTRAX</p>
           </div>
         </div>
 
@@ -140,75 +140,75 @@
             <i class="fintrax-progress__fill" data-progress-bar></i>
           </div>
           <div class="fintrax-progress__meta">
-            <span>OBLIGATORIOS SALVO LOS MARCADOS «OPCIONAL»</span>
+            <span>REQUIRED UNLESS MARKED “OPTIONAL”</span>
             <span data-progress-text>0%</span>
           </div>
-          <nav class="fintrax-stepper" data-quicknav aria-label="Pasos del registro"></nav>
+          <nav class="fintrax-stepper" data-quicknav aria-label="Record steps"></nav>
         </div>
 
         <form id="fintrax-personal-form" autocomplete="off" novalidate>
-          <section class="fintrax-step-panel" data-step-panel="perfil" data-step-label="Perfil" aria-labelledby="fintrax-step-perfil-title">
+          <section class="fintrax-step-panel" data-step-panel="perfil" data-step-label="Profile" aria-labelledby="fintrax-step-perfil-title">
             <div class="fintrax-metric-header">
               <span class="fintrax-metric-header__icon" aria-hidden="true">◎</span>
               <div>
-                <h2 id="fintrax-step-perfil-title" tabindex="-1">Perfil del astronauta</h2>
-                <p>Datos básicos para calibrar el holograma.</p>
+                <h2 id="fintrax-step-perfil-title" tabindex="-1">Astronaut profile</h2>
+                <p>Basic data to calibrate the hologram.</p>
               </div>
             </div>
             <div class="fintrax-form-grid">
               <div class="fintrax-field">
-                <span class="fintrax-field__label" id="fintrax-sex-label">Selecciona tu avatar · Sexo biológico</span>
+                <span class="fintrax-field__label" id="fintrax-sex-label">Choose your avatar · Biological sex</span>
                 <div class="fintrax-sex-options" role="radiogroup" aria-labelledby="fintrax-sex-label">
                   <label class="fintrax-sex-option">
-                    <input type="radio" name="sexo" value="Femenino" data-profile="sexo" required>
-                    <span>♀ MUJER</span>
+                    <input type="radio" name="sexo" value="Female" data-profile="sexo" required>
+                    <span>♀ FEMALE</span>
                   </label>
                   <label class="fintrax-sex-option">
-                    <input type="radio" name="sexo" value="Masculino" data-profile="sexo" required>
-                    <span>♂ HOMBRE</span>
+                    <input type="radio" name="sexo" value="Male" data-profile="sexo" required>
+                    <span>♂ MALE</span>
                   </label>
                 </div>
-                <p class="fintrax-hint">Selecciona el perfil del holograma biométrico.</p>
+                <p class="fintrax-hint">Select the biometric hologram profile.</p>
                 <p class="fintrax-field__error" data-error-for="sexo" aria-live="polite"></p>
               </div>
 
               <div class="fintrax-field">
-                <label for="fintrax-nombre">Nombre completo</label>
-                <input type="text" id="fintrax-nombre" data-profile="nombre" placeholder="Ej. Alex Vance" autocomplete="name" required>
+                <label for="fintrax-nombre">Full name</label>
+                <input type="text" id="fintrax-nombre" data-profile="nombre" placeholder="e.g. Alex Vance" autocomplete="name" required>
                 <p class="fintrax-field__error" data-error-for="nombre" aria-live="polite"></p>
               </div>
 
               <div class="fintrax-field">
-                <label for="fintrax-edad">Edad</label>
+                <label for="fintrax-edad">Age</label>
                 <div class="fintrax-unit">
-                  <input type="number" id="fintrax-edad" data-profile="edad" placeholder="Ej. 28" min="18" max="80" step="1" inputmode="numeric" required>
-                  <span>AÑOS</span>
+                  <input type="number" id="fintrax-edad" data-profile="edad" placeholder="e.g. 28" min="18" max="80" step="1" inputmode="numeric" required>
+                  <span>YEARS</span>
                 </div>
                 <p class="fintrax-field__error" data-error-for="edad" aria-live="polite"></p>
               </div>
 
               <div class="fintrax-field">
-                <label for="fintrax-peso">Peso corporal</label>
+                <label for="fintrax-peso">Body weight</label>
                 <div class="fintrax-unit">
-                  <input type="number" id="fintrax-peso" data-profile="peso" placeholder="Ej. 68.5" min="30" max="200" step="0.1" inputmode="decimal" required>
+                  <input type="number" id="fintrax-peso" data-profile="peso" placeholder="e.g. 68.5" min="30" max="200" step="0.1" inputmode="decimal" required>
                   <span>KG</span>
                 </div>
                 <p class="fintrax-field__error" data-error-for="peso" aria-live="polite"></p>
               </div>
 
               <div class="fintrax-field">
-                <label for="fintrax-estatura">Estatura</label>
+                <label for="fintrax-estatura">Height</label>
                 <div class="fintrax-unit">
-                  <input type="number" id="fintrax-estatura" data-profile="estatura" placeholder="Ej. 1.75" min="1.2" max="2.2" step="0.01" inputmode="decimal" required>
+                  <input type="number" id="fintrax-estatura" data-profile="estatura" placeholder="e.g. 1.75" min="1.2" max="2.2" step="0.01" inputmode="decimal" required>
                   <span>M</span>
                 </div>
                 <p class="fintrax-field__error" data-error-for="estatura" aria-live="polite"></p>
               </div>
 
               <div class="fintrax-field">
-                <label for="fintrax-sangre">Grupo sanguíneo</label>
+                <label for="fintrax-sangre">Blood type</label>
                 <select id="fintrax-sangre" data-profile="sangre" required>
-                  <option value="">Selecciona un tipo</option>
+                  <option value="">Select a type</option>
                   <option>A+</option><option>A-</option>
                   <option>B+</option><option>B-</option>
                   <option>AB+</option><option>AB-</option>
@@ -219,19 +219,19 @@
             </div>
           </section>
 
-          <section class="fintrax-step-panel" data-step-panel="molestias" data-step-label="Molestias" data-step-only="current" aria-labelledby="fintrax-zones-label">
+          <section class="fintrax-step-panel" data-step-panel="molestias" data-step-label="Symptoms" data-step-only="current" aria-labelledby="fintrax-zones-label">
             <div class="fintrax-metric-header">
               <span class="fintrax-metric-header__icon" aria-hidden="true">⚠</span>
               <div>
-                <h2 id="fintrax-zones-label" tabindex="-1">¿Cómo te sientes hoy?</h2>
-                <p>Marca tus molestias o confirma que te sientes en óptimas condiciones. También puedes tocar el holograma.</p>
+                <h2 id="fintrax-zones-label" tabindex="-1">How do you feel today?</h2>
+                <p>Mark your symptoms or confirm that you feel in optimal condition. You can also tap the hologram.</p>
               </div>
             </div>
             <div class="fintrax-field fintrax-field--full" data-current-only hidden>
               <div class="fintrax-zones" data-symptoms="form" role="group" aria-labelledby="fintrax-zones-label" aria-describedby="fintrax-error-symptoms"></div>
               <p class="fintrax-field__error" id="fintrax-error-symptoms" data-error-for="symptoms" aria-live="polite"></p>
-              <label for="fintrax-otras">Observaciones actuales <small>(opcional)</small></label>
-              <textarea id="fintrax-otras" data-other disabled placeholder="Si quieres, describe algo más que notes."></textarea>
+              <label for="fintrax-otras">Current notes <small>(optional)</small></label>
+              <textarea id="fintrax-otras" data-other disabled placeholder="Optionally, describe anything else you notice."></textarea>
               <p class="fintrax-field__error" data-error-for="otherText" aria-live="polite"></p>
               <div class="fintrax-count" data-count="form" aria-live="polite"></div>
             </div>
@@ -240,15 +240,15 @@
           <div data-metric-sections></div>
 
           <div class="fintrax-actions fintrax-actions--steps">
-            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-edit-baseline hidden>‹ Editar datos habituales</button>
-            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-step-prev hidden>‹ Anterior</button>
+            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-edit-baseline hidden>‹ Edit usual data</button>
+            <button type="button" class="fintrax-btn fintrax-btn--secondary" data-step-prev hidden>‹ Previous</button>
             <span class="fintrax-step-count" data-step-count aria-live="polite"></span>
-            <button type="button" class="fintrax-btn fintrax-btn--primary" data-step-next>Siguiente ›</button>
+            <button type="button" class="fintrax-btn fintrax-btn--primary" data-step-next>Next ›</button>
             <button type="submit" class="fintrax-btn fintrax-btn--primary" data-submit disabled aria-disabled="true">
-              ⚡ &nbsp; COMENZAR ANÁLISIS &nbsp; ›
+              ⚡ &nbsp; START ANALYSIS &nbsp; ›
             </button>
           </div>
-          <p class="fintrax-form-note" data-form-note>Completa todos los campos para continuar.</p>
+          <p class="fintrax-form-note" data-form-note>Complete all fields to continue.</p>
           <p class="fintrax-field__error" data-form-status role="status" aria-live="polite"></p>
         </form>
       </section>
@@ -260,49 +260,49 @@
     <section class="fintrax-results fintrax-body" data-results aria-labelledby="fintrax-body-title">
       <header class="fintrax-body__head">
         <div>
-          <span class="fintrax-step fintrax-step--alt">ANÁLISIS COMPLETO · DATOS ACTUALES</span>
-          <h2 id="fintrax-body-title" tabindex="-1">Mapa funcional</h2>
-          <p>Toca un órgano del avatar o de las tarjetas laterales para ver su estado y su indicación.</p>
+          <span class="fintrax-step fintrax-step--alt">ANALYSIS COMPLETE · CURRENT DATA</span>
+          <h2 id="fintrax-body-title" tabindex="-1">Functional map</h2>
+          <p>Tap an organ on the avatar or the side cards to see its status and guidance.</p>
         </div>
-        <div class="fintrax-body__summary" data-body-summary aria-label="Resumen de datos"></div>
+        <div class="fintrax-body__summary" data-body-summary aria-label="Data summary"></div>
       </header>
 
       <div class="fintrax-banner" data-banner data-state="unknown">
         <div>
-          <h3 data-banner-title>◇ SIN DATOS SUFICIENTES</h3>
-          <p data-banner-text>Completa el registro para obtener orientación.</p>
-          <small>Resultado informativo y simulado a partir de tus datos; no sustituye una evaluación médica.</small>
+          <h3 data-banner-title>◇ NOT ENOUGH DATA</h3>
+          <p data-banner-text>Complete the record to get guidance.</p>
+          <small>Informative, simulated result based on your data; it does not replace a medical evaluation.</small>
         </div>
         <div class="fintrax-banner__chips" data-banner-chips></div>
       </div>
 
-      <section class="fintrax-centro" data-centro data-estado="off" aria-live="polite" aria-label="Validación del centro médico"></section>
+      <section class="fintrax-centro" data-centro data-estado="off" aria-live="polite" aria-label="Medical center validation"></section>
 
       <div class="fintrax-body__stage">
-        <aside class="fintrax-body__rail fintrax-body__rail--left" data-organ-rail="left" aria-label="Órganos del lado izquierdo"></aside>
+        <aside class="fintrax-body__rail fintrax-body__rail--left" data-organ-rail="left" aria-label="Left-side organs"></aside>
 
         <div class="fintrax-body__core">
           <div class="fintrax-hud-grid" aria-hidden="true"></div>
           <div data-organ-avatar></div>
           <div class="fintrax-body__legend" aria-hidden="true">
-            <span data-st="ok"><i></i>BIEN</span>
-            <span data-st="warn"><i></i>REVISAR</span>
-            <span data-st="bad"><i></i>ATENCIÓN</span>
-            <span data-st="na"><i></i>SIN DATOS</span>
+            <span data-st="ok"><i></i>GOOD</span>
+            <span data-st="warn"><i></i>REVIEW</span>
+            <span data-st="bad"><i></i>ATTENTION</span>
+            <span data-st="na"><i></i>NO DATA</span>
           </div>
         </div>
 
-        <aside class="fintrax-body__rail fintrax-body__rail--right" data-organ-rail="right" aria-label="Órganos del lado derecho"></aside>
+        <aside class="fintrax-body__rail fintrax-body__rail--right" data-organ-rail="right" aria-label="Right-side organs"></aside>
       </div>
 
       <article class="fintrax-organ-card" data-organ-card aria-live="polite" tabindex="-1"></article>
 
       <div class="fintrax-body__detail">
-        <nav class="fintrax-tabs" role="tablist" aria-label="Detalle del análisis">
-          <button type="button" class="fintrax-tab" role="tab" data-body-tab="acciones" aria-selected="true" aria-controls="fintrax-tab-acciones" id="fintrax-tabbtn-acciones">Qué hacer</button>
-          <button type="button" class="fintrax-tab" role="tab" data-body-tab="comparativa" aria-selected="false" aria-controls="fintrax-tab-comparativa" id="fintrax-tabbtn-comparativa" tabindex="-1">Comparativa</button>
-          <button type="button" class="fintrax-tab" role="tab" data-body-tab="symptoms" aria-selected="false" aria-controls="fintrax-tab-symptoms" id="fintrax-tabbtn-symptoms" tabindex="-1">Molestias</button>
-          <button type="button" class="fintrax-tab" role="tab" data-body-tab="record" aria-selected="false" aria-controls="fintrax-tab-record" id="fintrax-tabbtn-record" tabindex="-1">Registro</button>
+        <nav class="fintrax-tabs" role="tablist" aria-label="Analysis detail">
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="acciones" aria-selected="true" aria-controls="fintrax-tab-acciones" id="fintrax-tabbtn-acciones">What to do</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="comparativa" aria-selected="false" aria-controls="fintrax-tab-comparativa" id="fintrax-tabbtn-comparativa" tabindex="-1">Comparison</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="symptoms" aria-selected="false" aria-controls="fintrax-tab-symptoms" id="fintrax-tabbtn-symptoms" tabindex="-1">Symptoms</button>
+          <button type="button" class="fintrax-tab" role="tab" data-body-tab="record" aria-selected="false" aria-controls="fintrax-tab-record" id="fintrax-tabbtn-record" tabindex="-1">Record</button>
         </nav>
 
         <section class="fintrax-tabpanel" data-tab-panel="acciones" id="fintrax-tab-acciones" role="tabpanel" aria-labelledby="fintrax-tabbtn-acciones">
@@ -310,12 +310,12 @@
         </section>
 
         <section class="fintrax-tabpanel" data-tab-panel="comparativa" id="fintrax-tab-comparativa" role="tabpanel" aria-labelledby="fintrax-tabbtn-comparativa" hidden>
-          <p class="fintrax-comp-intro">Tu registro habitual (<span class="fintrax-comp-clave fintrax-comp-clave--base">○</span>) frente al actual (<span class="fintrax-comp-clave fintrax-comp-clave--actual">●</span>). La franja verde es el rango normal. Son dos mediciones puntuales, no una monitorización continua.</p>
+          <p class="fintrax-comp-intro">Your usual record (<span class="fintrax-comp-clave fintrax-comp-clave--base">○</span>) versus the current one (<span class="fintrax-comp-clave fintrax-comp-clave--actual">●</span>). The green band is the normal range. These are two single measurements, not continuous monitoring.</p>
           <div data-comparativa></div>
         </section>
 
         <section class="fintrax-tabpanel" data-tab-panel="symptoms" id="fintrax-tab-symptoms" role="tabpanel" aria-labelledby="fintrax-tabbtn-symptoms" hidden>
-          <p class="fintrax-sym-intro">Marca lo que sientes ahora. El estado de los órganos del avatar se actualiza con tu respuesta.</p>
+          <p class="fintrax-sym-intro">Mark what you feel now. The avatar organs update with your answer.</p>
           <div class="fintrax-sym-grid">
             <div class="fintrax-zones" data-symptoms="results" role="group" aria-labelledby="fintrax-tabbtn-symptoms"></div>
             <div class="fintrax-sym-results" data-sym-results aria-live="polite"></div>
@@ -328,8 +328,8 @@
       </div>
 
       <div class="fintrax-actions fintrax-actions--body">
-        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-back>‹ &nbsp; Editar datos actuales</button>
-        <button type="button" class="fintrax-btn fintrax-btn--primary" data-export>↓ &nbsp; DESCARGAR DATOS JSON</button>
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-back>‹ &nbsp; Edit current data</button>
+        <button type="button" class="fintrax-btn fintrax-btn--primary" data-export>↓ &nbsp; DOWNLOAD JSON DATA</button>
       </div>
     </section>
   </div>
@@ -342,38 +342,38 @@
     <div class="fintrax-transition__stage" data-transition-stage aria-hidden="true"></div>
 
     <div class="fintrax-transition__hud">
-      <p class="fintrax-transition__kicker">FINTRAX · REVISIÓN DE DATOS ACTUALES</p>
-      <h2 id="fintrax-transition-title">Analizando tus datos…</h2>
-      <p class="fintrax-transition__sub" data-transition-sub>Correlacionando perfil, mediciones y molestias.</p>
+      <p class="fintrax-transition__kicker">FINTRAX · CURRENT DATA REVIEW</p>
+      <h2 id="fintrax-transition-title">Analyzing your data…</h2>
+      <p class="fintrax-transition__sub" data-transition-sub>Correlating profile, measurements and symptoms.</p>
 
-      <div class="fintrax-transition__bar" role="progressbar" aria-label="Progreso del análisis" aria-valuemin="0" aria-valuemax="100">
+      <div class="fintrax-transition__bar" role="progressbar" aria-label="Analysis progress" aria-valuemin="0" aria-valuemax="100">
         <i data-transition-bar></i>
       </div>
       <p class="fintrax-transition__pct" data-transition-pct>0%</p>
 
       <ul class="fintrax-transition__log" data-transition-log aria-live="polite"></ul>
 
-      <button type="button" class="fintrax-btn fintrax-btn--secondary" data-skip-transition>Saltar animación &nbsp;›</button>
+      <button type="button" class="fintrax-btn fintrax-btn--secondary" data-skip-transition>Skip animation &nbsp;›</button>
     </div>
   </section>
 
   <dialog class="fintrax-dialog" data-centro-dialog aria-labelledby="fintrax-centro-title">
     <form class="fintrax-dialog__form" data-centro-form autocomplete="off" novalidate>
-      <h2 id="fintrax-centro-title">Centro médico Fintrax</h2>
-      <p class="fintrax-hint">Conecta este equipo con el backend para validar cada análisis. La clave solo se guarda durante esta sesión.</p>
-      <label for="fintrax-centro-url">URL del backend</label>
+      <h2 id="fintrax-centro-title">Fintrax medical center</h2>
+      <p class="fintrax-hint">Connect this device to the backend to validate each analysis. The key is only kept for this session.</p>
+      <label for="fintrax-centro-url">Backend URL</label>
       <input type="url" id="fintrax-centro-url" data-centro-url placeholder="http://localhost:8000" inputmode="url">
-      <label for="fintrax-centro-clave">Clave de API</label>
-      <input type="password" id="fintrax-centro-clave" data-centro-clave placeholder="Clave asignada por el equipo médico">
+      <label for="fintrax-centro-clave">API key</label>
+      <input type="password" id="fintrax-centro-clave" data-centro-clave placeholder="Key assigned by the medical team">
       <div data-centro-elegir hidden>
-        <label for="fintrax-centro-astronauta">Astronauta</label>
+        <label for="fintrax-centro-astronauta">Astronaut</label>
         <select id="fintrax-centro-astronauta" data-centro-astronauta></select>
       </div>
       <p class="fintrax-dialog__msg" data-centro-msg role="status" aria-live="polite"></p>
       <div class="fintrax-dialog__actions">
-        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-desconectar hidden>Desconectar</button>
-        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-cerrar>Cerrar</button>
-        <button type="submit" class="fintrax-btn fintrax-btn--primary">Conectar</button>
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-desconectar hidden>Disconnect</button>
+        <button type="button" class="fintrax-btn fintrax-btn--secondary" data-centro-cerrar>Close</button>
+        <button type="submit" class="fintrax-btn fintrax-btn--primary">Connect</button>
       </div>
     </form>
   </dialog>
@@ -381,7 +381,7 @@
   <div class="fintrax-toast" data-toast role="status" aria-live="polite"></div>
 
   <noscript>
-    <p class="fintrax-noscript">FINTRAX necesita JavaScript para calcular la evaluación. Actívalo y recarga la página.</p>
+    <p class="fintrax-noscript">FINTRAX needs JavaScript to calculate the assessment. Enable it and reload the page.</p>
   </noscript>
 </div>
 

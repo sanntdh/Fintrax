@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 
 import { evaluate, isFilled, isPending } from '../src/js/evaluation.js';
 
-const perfil = (extra = {}) => ({ sexo: 'Masculino', edad: '35', peso: '78', estatura: '1.80', ...extra });
+const perfil = (extra = {}) => ({ sexo: 'Male', edad: '35', peso: '78', estatura: '1.80', ...extra });
 
 test('sin datos el resultado global es desconocido y ningún sistema está en verde', () => {
   const r = evaluate({});
@@ -30,12 +30,12 @@ test('una escala no tocada no cuenta aunque tenga un valor', () => {
 });
 
 test('los valores pendientes no cuentan como medición', () => {
-  assert.equal(isFilled('equilibrio', { equilibrio: 'Pendiente de prueba' }, new Set()), false);
-  assert.equal(isPending('equilibrio', { equilibrio: 'Pendiente de prueba' }), true);
+  assert.equal(isFilled('equilibrio', { equilibrio: 'Test pending' }, new Set()), false);
+  assert.equal(isPending('equilibrio', { equilibrio: 'Test pending' }), true);
 
   const r = evaluate({
     profile: perfil(),
-    values: { equilibrio: 'Pendiente de prueba', ecg_estado: 'Pendiente de realizar' }
+    values: { equilibrio: 'Test pending', ecg_estado: 'Not done yet' }
   });
   assert.equal(r.systems.neuro.st, 'na');
   assert.equal(r.systems.cardio.st, 'na');
@@ -57,14 +57,14 @@ test('un IMC alto añade una advertencia sin inventar patología', () => {
   assert.ok(r.imc > 30);
   assert.equal(r.zones.pecho.st, 'warn');
   assert.equal(r.zones.extremidades.st, 'warn');
-  assert.ok(r.zones.pecho.notes.includes('IMC elevado'));
+  assert.ok(r.zones.pecho.notes.includes('High BMI'));
   assert.equal(r.overall, 'warn');
 });
 
 test('los síntomas suman por zona y respetan su severidad', () => {
   const r = evaluate({
     profile: perfil(),
-    symptoms: ['cabeza|Confusión', 'cabeza|Mareo o vértigo']
+    symptoms: ['cabeza|Confusion', 'cabeza|Dizziness or vertigo']
   });
   assert.equal(r.zones.cabeza.items.length, 2);
   assert.equal(r.zones.cabeza.score, 4);
@@ -80,7 +80,7 @@ test('una zona sin mediciones ni síntomas queda sin datos', () => {
 });
 
 test('un análisis inmunitario fuera de rango marca el sistema inmunológico para revisar', () => {
-  const values = { marcadores_inmunes: 'Fuera de rango', hormonas_estres: 'Dentro de rango' };
+  const values = { marcadores_inmunes: 'Out of range', hormonas_estres: 'Within range' };
   assert.notEqual(evaluate({ profile: perfil(), values }).systems.inmune.st, 'ok');
-  assert.ok(evaluate({ profile: perfil(), values }).systems.inmune.notes.some((nota) => /fuera de rango/i.test(nota)));
+  assert.ok(evaluate({ profile: perfil(), values }).systems.inmune.notes.some((nota) => /out of range/i.test(nota)));
 });

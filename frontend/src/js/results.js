@@ -24,17 +24,17 @@ import { beep } from './audio.js';
 import { construirRegistro } from './export.js';
 
 const TITULOS = {
-  bad: '◇ HALLAZGOS QUE REQUIEREN ATENCIÓN',
-  warn: '◇ DATOS A REVISAR',
-  ok: '◇ SISTEMAS DENTRO DE LO ESPERADO',
-  unknown: '◇ SIN DATOS SUFICIENTES'
+  bad: '◇ FINDINGS THAT NEED ATTENTION',
+  warn: '◇ DATA TO REVIEW',
+  ok: '◇ SYSTEMS WITHIN EXPECTED RANGE',
+  unknown: '◇ NOT ENOUGH DATA'
 };
 
 const TEXTOS = {
-  bad: 'Hay órganos con hallazgos que conviene valorar antes de la misión.',
-  warn: 'Algunos datos están fuera de rango o hay molestias que revisar.',
-  ok: 'No aparecen hallazgos relevantes con los datos registrados.',
-  unknown: 'Faltan mediciones y molestias para valorar los órganos.'
+  bad: 'Some organs have findings worth assessing before the mission.',
+  warn: 'Some data are out of range or there are symptoms to review.',
+  ok: 'No relevant findings with the recorded data.',
+  unknown: 'Measurements and symptoms are missing to assess the organs.'
 };
 
 /**
@@ -109,16 +109,16 @@ export function initResults({ onEdit, onExport }) {
 
     banner.dataset.state = overall;
     titulo.textContent = TITULOS[overall];
-    texto.textContent = `${TEXTOS[overall]} ${cuentas.bad} en atención · ${cuentas.warn} por revisar · ${cuentas.na} sin datos.`;
+    texto.textContent = `${TEXTOS[overall]} ${cuentas.bad} need attention · ${cuentas.warn} to review · ${cuentas.na} no data.`;
 
     if (!chips) return;
     limpiar(chips);
     const perfil = state.profile;
     const datos = [
       (perfil.nombre || '—').toUpperCase(),
-      `${(perfil.sexo || '—').toUpperCase()} · ${perfil.edad || '—'} AÑOS`,
-      `IMC ${result.imc === null ? '—' : result.imc.toFixed(1)}`,
-      `SANGRE ${(perfil.sangre || '—').toUpperCase()}`
+      `${(perfil.sexo || '—').toUpperCase()} · ${perfil.edad || '—'} YEARS`,
+      `BMI ${result.imc === null ? '—' : result.imc.toFixed(1)}`,
+      `BLOOD ${(perfil.sangre || '—').toUpperCase()}`
     ];
     for (const dato of datos) chips.append(el('span', { text: dato }));
   }
@@ -130,11 +130,11 @@ export function initResults({ onEdit, onExport }) {
     const molestias = zonasConMolestias(result).reduce((total, zona) => total + zona.items.length, 0);
 
     const datos = [
-      ['ÓRGANOS', `${ORGAN_ORDER.length}`],
-      ['MEDICIONES', `${result.counts?.filledMetrics ?? 0}/${result.counts?.totalMetrics ?? 0}`],
-      ['MOLESTIAS', `${molestias}`],
-      ['IMC', result.imc === null ? '—' : result.imc.toFixed(1)],
-      ['EN ATENCIÓN', `${cuentas.bad}`]
+      ['ORGANS', `${ORGAN_ORDER.length}`],
+      ['MEASUREMENTS', `${result.counts?.filledMetrics ?? 0}/${result.counts?.totalMetrics ?? 0}`],
+      ['SYMPTOMS', `${molestias}`],
+      ['BMI', result.imc === null ? '—' : result.imc.toFixed(1)],
+      ['NEED ATTENTION', `${cuentas.bad}`]
     ];
 
     for (const [etiqueta, valor] of datos) {
@@ -203,7 +203,7 @@ export function initResults({ onEdit, onExport }) {
     cabecera.append(
       el('span', {
         class: 'fintrax-organ-card__index',
-        text: `ÓRGANO ${String(indice).padStart(2, '0')} / ${String(ORGAN_ORDER.length).padStart(2, '0')}`
+        text: `ORGAN ${String(indice).padStart(2, '0')} / ${String(ORGAN_ORDER.length).padStart(2, '0')}`
       }),
       el('h3', { text: organo.label }),
       el('span', {
@@ -218,13 +218,13 @@ export function initResults({ onEdit, onExport }) {
 
     const indicacion = el('div', { class: 'fintrax-organ-card__block' });
     indicacion.append(
-      el('h4', { text: 'INDICACIÓN' }),
+      el('h4', { text: 'GUIDANCE' }),
       el('p', { text: organo.guidance })
     );
     cuerpo.append(indicacion);
 
     const fuentes = el('div', { class: 'fintrax-organ-card__block' });
-    fuentes.append(el('h4', { text: 'DATOS USADOS' }));
+    fuentes.append(el('h4', { text: 'DATA USED' }));
     if (organo.sources?.length) {
       const lista = el('ul', { class: 'fintrax-organ-card__list' });
       for (const fuente of organo.sources) lista.append(el('li', { text: fuente }));
@@ -233,7 +233,7 @@ export function initResults({ onEdit, onExport }) {
       fuentes.append(
         el('p', {
           class: 'fintrax-organ-card__empty',
-          text: 'No hay mediciones ni molestias registradas para este órgano.'
+          text: 'No measurements or symptoms recorded for this organ.'
         })
       );
     }
@@ -285,12 +285,12 @@ export function initResults({ onEdit, onExport }) {
     for (const [etapa, datosEtapa] of Object.entries(etapas)) {
       const actual = etapa === 'actuales';
       const bloque = el('details', { class: 'fintrax-record-stage', open: actual, dataset: { recordStage: etapa } });
-      bloque.append(el('summary', { text: actual ? 'Etapa 2 · Datos actuales y evaluación' : 'Etapa 1 · Valores habituales de referencia' }));
+      bloque.append(el('summary', { text: actual ? 'Stage 2 · Current data and assessment' : 'Stage 1 · Usual baseline values' }));
       const perfil = datosEtapa.perfil;
       const filas = [
-        ['Nombre', perfil.nombre], ['Sexo', perfil.sexo], ['Edad', `${perfil.edad} años`],
-        ['Peso', `${perfil.peso_kg} kg`], ['Estatura', `${perfil.estatura_m} m`],
-        ['Grupo sanguíneo', perfil.grupo_sanguineo]
+        ['Name', perfil.nombre], ['Sex', perfil.sexo], ['Age', `${perfil.edad} years`],
+        ['Weight', `${perfil.peso_kg} kg`], ['Height', `${perfil.estatura_m} m`],
+        ['Blood type', perfil.grupo_sanguineo]
       ];
       const lista = el('dl', { class: 'fintrax-record' });
       for (const [etiqueta, valor] of filas) lista.append(el('dt', { text: etiqueta }), el('dd', { text: valor }));
@@ -308,10 +308,10 @@ export function initResults({ onEdit, onExport }) {
         bloque.append(seccion);
       });
       if (actual) {
-        const molestias = datosEtapa.sinMolestias ? 'Sin molestias declaradas'
-          : datosEtapa.molestias.map((s) => `${s.zona}: ${s.molestia}`).join(' · ') || 'No declarado';
-        bloque.append(el('p', { class: 'fintrax-record__note', text: `Molestias: ${molestias}` }));
-        bloque.append(el('p', { class: 'fintrax-record__note', text: `Observaciones: ${datosEtapa.observaciones}` }));
+        const molestias = datosEtapa.sinMolestias ? 'No symptoms reported'
+          : datosEtapa.molestias.map((s) => `${s.zona}: ${s.molestia}`).join(' · ') || 'Not stated';
+        bloque.append(el('p', { class: 'fintrax-record__note', text: `Symptoms: ${molestias}` }));
+        bloque.append(el('p', { class: 'fintrax-record__note', text: `Notes: ${datosEtapa.observaciones}` }));
       }
       registro.append(bloque);
     }

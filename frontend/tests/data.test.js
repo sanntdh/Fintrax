@@ -15,7 +15,7 @@ import { PROFILE_FIELDS } from '../src/js/validation.js';
 
 const sintomasDeAmbosSexos = () =>
   new Set(
-    [...listaSintomas('Masculino'), ...listaSintomas('Femenino')].map((sintoma) => sintoma.value)
+    [...listaSintomas('Male'), ...listaSintomas('Female')].map((sintoma) => sintoma.value)
   );
 
 test('CAUSAS cubre todos los síntomas disponibles en ambos sexos', () => {

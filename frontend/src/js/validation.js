@@ -3,34 +3,34 @@ import { FORM_FIELDS } from '../data/metrics.js';
 import { sintomaValido } from '../data/symptoms.js';
 
 export const PROFILE_FIELDS = [
-  { id: 'sexo', label: 'Sexo biológico', kind: 'select', options: ['Femenino', 'Masculino'] },
-  { id: 'nombre', label: 'Nombre completo', kind: 'text' },
-  { id: 'edad', label: 'Edad', kind: 'number', min: 18, max: 80, step: 1 },
-  { id: 'peso', label: 'Peso corporal', kind: 'number', min: 30, max: 200, step: 0.1 },
-  { id: 'estatura', label: 'Estatura', kind: 'number', min: 1.2, max: 2.2, step: 0.01 },
-  { id: 'sangre', label: 'Grupo sanguíneo', kind: 'select', options: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] }
+  { id: 'sexo', label: 'Biological sex', kind: 'select', options: ['Female', 'Male'] },
+  { id: 'nombre', label: 'Full name', kind: 'text' },
+  { id: 'edad', label: 'Age', kind: 'number', min: 18, max: 80, step: 1 },
+  { id: 'peso', label: 'Body weight', kind: 'number', min: 30, max: 200, step: 0.1 },
+  { id: 'estatura', label: 'Height', kind: 'number', min: 1.2, max: 2.2, step: 0.01 },
+  { id: 'sangre', label: 'Blood type', kind: 'select', options: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] }
 ];
 
 function errorCampo(field, value, confirmado = true) {
   const texto = String(value ?? '').trim();
-  if (!texto) return field.optional ? '' : `Completa «${field.label}».`;
-  if (!confirmado) return `Selecciona o confirma el valor de «${field.label}».`;
-  if (field.kind === 'select' && !field.options.includes(texto)) return `Selecciona una opción de «${field.label}».`;
+  if (!texto) return field.optional ? '' : `Complete “${field.label}”.`;
+  if (!confirmado) return `Select or confirm the value of “${field.label}”.`;
+  if (field.kind === 'select' && !field.options.includes(texto)) return `Select an option for “${field.label}”.`;
   if (field.kind !== 'number' && field.kind !== 'range') return '';
 
   const numero = Number(texto);
   const min = field.kind === 'range' ? 0 : field.min;
   const max = field.kind === 'range' ? 10 : field.max;
   const step = field.kind === 'range' ? 1 : field.step;
-  if (!Number.isFinite(numero)) return `Introduce un número en «${field.label}».`;
+  if (!Number.isFinite(numero)) return `Enter a number in “${field.label}”.`;
   if (numero < min || (max !== undefined && numero > max)) {
     return max === undefined
-      ? `«${field.label}» debe ser al menos ${min}.`
-      : `«${field.label}» debe estar entre ${min} y ${max}.`;
+      ? `“${field.label}” must be at least ${min}.`
+      : `“${field.label}” must be between ${min} and ${max}.`;
   }
   const pasos = (numero - (min ?? 0)) / step;
   if (step && Math.abs(pasos - Math.round(pasos)) > 0.000001) {
-    return `Usa incrementos de ${step} en «${field.label}».`;
+    return `Use steps of ${step} in “${field.label}”.`;
   }
   return '';
 }
@@ -53,7 +53,7 @@ export function erroresRegistro(record, etapa = 'baseline') {
       return corte > 0 && sintomaValido(key.slice(0, corte), key.slice(corte + 1), record.profile.sexo);
     });
     if ((!sintomas.length && !record.wellBeing) || !validos || (sintomas.length && record.wellBeing)) {
-      errores.symptoms = 'Selecciona tus molestias o «Me siento en óptimas condiciones».';
+      errores.symptoms = 'Select your symptoms or “I feel in optimal condition”.';
     }
   }
   return errores;

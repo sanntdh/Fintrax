@@ -45,7 +45,7 @@ function crearNodo(key, onSelect) {
     transform: `translate(${meta.anchor.x} ${meta.anchor.y})`,
     tabindex: '0',
     role: 'button',
-    'aria-label': `${meta.label}: sin datos`,
+    'aria-label': `${meta.label}: no data`,
     style: `--organ:${meta.color}`
   });
 
@@ -112,7 +112,7 @@ function crearEtiqueta(key, onSelect) {
       `left:${pct(meta.labelAt.x, VIEWBOX.w)}`,
       `top:${pct(meta.labelAt.y, VIEWBOX.h)}`
     ].join(';'),
-    'aria-label': `${meta.label}: sin datos`
+    'aria-label': `${meta.label}: no data`
   });
   boton.append(el('span', { class: 'fintrax-organ-tag__name', text: meta.label }));
 
@@ -130,14 +130,14 @@ export function createOrganAvatar({ onSelect } = {}) {
     dataset: { sex: '', glow: 'na' }
   });
 
-  root.append(crearImagen('fintrax-avatar__img--female', 'Femenino'));
-  root.append(crearImagen('fintrax-avatar__img--male', 'Masculino'));
+  root.append(crearImagen('fintrax-avatar__img--female', 'Female'));
+  root.append(crearImagen('fintrax-avatar__img--male', 'Male'));
 
   const capa = svg('svg', {
     class: 'fintrax-organ-avatar__layer',
     viewBox: `0 0 ${VIEWBOX.w} ${VIEWBOX.h}`,
     role: 'group',
-    'aria-label': 'Órganos interactivos del cuerpo'
+    'aria-label': 'Interactive body organs'
   });
 
   const guias = svg('g', { class: 'fintrax-organ-leaders' });

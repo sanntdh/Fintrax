@@ -109,10 +109,10 @@ test('crearApi envía X-API-Key y omite credenciales de navegador', async () => 
   assert.equal('Authorization' in llamadas[0].opciones.headers, false);
 });
 
-test('los errores 401/403/409/422 dan mensajes claros en español', async () => {
+test('los errores 401/403/409/422 dan mensajes claros', async () => {
   const casos = [
-    [401, {}, 'Clave de API'],
-    [403, {}, 'permiso'],
+    [401, {}, 'API key'],
+    [403, {}, 'not allowed'],
     [409, { detail: 'Hay 3 muestras válidas; faltan 2 para la línea base' }, 'faltan 2'],
     [422, { detail: 'ts no puede ser futuro' }, 'ts no puede ser futuro']
   ];
@@ -187,7 +187,7 @@ test('los campos vacíos no se convierten en 0', () => {
 });
 
 test('lecturaMision incluye los complementarios mapeados y omite los desconocidos', () => {
-  const complementarios = mapearComplementarios({ sintomas: ['ojos|Visión borrosa'] });
+  const complementarios = mapearComplementarios({ sintomas: ['ojos|Blurred vision'] });
   const { ok, lectura } = lecturaMision({
     fc: '64', pas: '115', fr: '14', temp: '36.6', spo2: '98', complementarios
   });
@@ -206,7 +206,7 @@ test('un síntoma no seleccionado queda desconocido, nunca en falso', () => {
 
 test('evaluacion_inmune_anormal solo viaja si se marca explícitamente', () => {
   const mapa = mapearComplementarios({
-    sintomas: ['cabeza|Confusión'],
+    sintomas: ['cabeza|Confusion'],
     explicitos: { evaluacion_inmune_anormal: true }
   });
 
@@ -216,7 +216,7 @@ test('evaluacion_inmune_anormal solo viaja si se marca explícitamente', () => {
 });
 
 test('un mareo genérico activa desorientación pero no síntomas al incorporarse', () => {
-  const mapa = mapearComplementarios({ sintomas: ['cabeza|Mareo o vértigo'] });
+  const mapa = mapearComplementarios({ sintomas: ['cabeza|Dizziness or vertigo'] });
   assert.equal(mapa.mareo_desorientacion, true);
   assert.equal(mapa.sintomas_al_incorporarse, null, 'Solo un checkbox posicional explícito lo activa');
 });

@@ -131,10 +131,10 @@ export function evaluate(input = {}) {
     zones[key].notes.push(note);
   };
   if (imc !== null && imc >= 30) {
-    addZone('pecho', 'IMC elevado');
-    addZone('extremidades', 'IMC elevado');
+    addZone('pecho', 'High BMI');
+    addZone('extremidades', 'High BMI');
   }
-  if (imc !== null && imc > 0 && imc < 18.5) addZone('estomago', 'IMC bajo');
+  if (imc !== null && imc > 0 && imc < 18.5) addZone('estomago', 'Low BMI');
   if (edad >= UMBRALES.edadRiesgo) addZone('pecho', `Edad ≥ ${UMBRALES.edadRiesgo}`);
 
   // --- Sistemas médicos ----------------------------------------------------
@@ -165,7 +165,7 @@ export function evaluate(input = {}) {
   if (fc !== null) {
     const points =
       fc < u.fc.badLow || fc > u.fc.badHigh ? 3 : fc < u.fc.warnLow || fc > u.fc.warnHigh ? 1 : 0;
-    addSystem('cardio', points, `FC ${fc} bpm`);
+    addSystem('cardio', points, `HR ${fc} bpm`);
   }
   if (ps !== null && pd !== null) {
     const points =
@@ -174,21 +174,21 @@ export function evaluate(input = {}) {
         : ps >= u.pa.warnSis || pd >= u.pa.warnDia || ps < u.pa.warnSisLow || pd < u.pa.warnDiaLow
           ? 1
           : 0;
-    addSystem('cardio', points, `PA ${ps}/${pd}`);
+    addSystem('cardio', points, `BP ${ps}/${pd}`);
   }
   if (ox !== null) {
     const points = ox < u.spo2.bad ? 3 : ox < u.spo2.warn ? 1 : 0;
     addSystem('cardio', points, `SpO₂ ${ox}%`);
   }
-  if (values.ecg_estado === 'Con hallazgos por revisar') addSystem('cardio', 2, 'ECG con hallazgos');
+  if (values.ecg_estado === 'Findings to review') addSystem('cardio', 2, 'ECG with findings');
 
   // Óseo y muscular
   const dx = num(values.densidad_osea);
   const fz = num(values.fuerza_muscular);
-  const umbralFuerza = sexo === 'Masculino' ? u.fuerza.hombre : u.fuerza.mujer;
+  const umbralFuerza = sexo === 'Male' ? u.fuerza.hombre : u.fuerza.mujer;
   if (dx !== null) {
     const points = dx < u.densidadOsea.bad ? 3 : dx < u.densidadOsea.warn ? 1 : 0;
-    addSystem('osteo', points, 'Densidad ósea baja');
+    addSystem('osteo', points, 'Low bone density');
   }
   if (fz !== null) {
     const points = fz < umbralFuerza * u.fuerza.ratioBad ? 3 : fz < umbralFuerza ? 1 : 0;
@@ -207,9 +207,9 @@ export function evaluate(input = {}) {
           : 0;
     addSystem('inmune', points, `Leucocitos ${lc}/µL`);
   }
-  if (co !== null) addSystem('inmune', co > u.cortisol.warnAlto ? 1 : 0, 'Cortisol alto');
-  for (const [id, nombre] of [['marcadores_inmunes', 'Marcadores inmunológicos'], ['hormonas_estres', 'Hormonas del estrés']]) {
-    if (values[id] === 'Fuera de rango') addSystem('inmune', 1, `${nombre} fuera de rango`);
+  if (co !== null) addSystem('inmune', co > u.cortisol.warnAlto ? 1 : 0, 'High cortisol');
+  for (const [id, nombre] of [['marcadores_inmunes', 'Immune markers'], ['hormonas_estres', 'Stress hormones']]) {
+    if (values[id] === 'Out of range') addSystem('inmune', 1, `${nombre} out of range`);
   }
 
   // Psicológico (solo si la escala se tocó)
@@ -227,13 +227,13 @@ export function evaluate(input = {}) {
     const points = value <= u.psicoBajo.bad ? 3 : value <= u.psicoBajo.warn ? 1 : 0;
     addSystem('psico', points, `${label} ${value}/10`);
   };
-  alto('estres', 'Estrés');
-  alto('ansiedad', 'Ansiedad');
-  bajo('estado_animo', 'Ánimo bajo');
-  bajo('sueno_calidad', 'Sueño pobre');
-  bajo('memoria', 'Memoria');
-  bajo('atencion', 'Atención');
-  bajo('concentracion', 'Concentración');
+  alto('estres', 'Stress');
+  alto('ansiedad', 'Anxiety');
+  bajo('estado_animo', 'Low mood');
+  bajo('sueno_calidad', 'Poor sleep');
+  bajo('memoria', 'Memory');
+  bajo('atencion', 'Attention');
+  bajo('concentracion', 'Concentration');
   const horasSueno = num(values.sueno_horas);
   if (horasSueno !== null) {
     const points =
@@ -242,7 +242,7 @@ export function evaluate(input = {}) {
         : horasSueno < u.suenoHoras.warnBajo || horasSueno > u.suenoHoras.warnAlto
           ? 1
           : 0;
-    addSystem('psico', points, `Sueño ${horasSueno} h`);
+    addSystem('psico', points, `Sleep ${horasSueno} h`);
   }
 
   // Neurológico
@@ -254,7 +254,7 @@ export function evaluate(input = {}) {
   const rt = num(values.reaccion_ms);
   if (rt !== null) {
     const points = rt > u.reaccion.bad ? 3 : rt > u.reaccion.warn ? 1 : 0;
-    addSystem('neuro', points, `Reacción ${rt} ms`);
+    addSystem('neuro', points, `Reaction ${rt} ms`);
   }
 
   // Estado de cada sistema: sin datos reales ⇒ `na`

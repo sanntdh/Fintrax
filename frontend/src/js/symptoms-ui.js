@@ -57,13 +57,13 @@ function construir(contenedor, variante, sexo) {
 
   {
     const bloque = el('div', { class: 'fintrax-zone' });
-    bloque.append(el('h3', { text: 'Estado general' }));
+    bloque.append(el('h3', { text: 'General status' }));
     const chips = el('div', { class: 'fintrax-chips' });
     const id = `fintrax-wellbeing-${variante}`;
     const chip = el('label', { class: 'fintrax-chip fintrax-chip--none', for: id });
     chip.append(
       el('input', { type: 'checkbox', id, dataset: { wellbeing: '' } }),
-      el('span', { text: '✓ Me siento en óptimas condiciones' })
+      el('span', { text: '✓ I feel in optimal condition' })
     );
     chips.append(chip);
     bloque.append(chips);
@@ -103,8 +103,8 @@ function renderTarjetas(state) {
       el('div', {
         class: 'fintrax-sym-empty',
         text: state.wellBeing
-          ? 'Marcaste que te sientes en óptimas condiciones. Mantén el monitoreo rutinario.'
-          : 'Aún no has marcado ningún síntoma. Si no sientes nada, marca «Me siento en óptimas condiciones» en la lista.'
+          ? 'You marked that you feel in optimal condition. Keep routine monitoring.'
+          : 'You have not marked any symptom yet. If you feel nothing, mark “I feel in optimal condition” in the list.'
       })
     );
     return;
@@ -132,20 +132,20 @@ function renderTarjetas(state) {
     );
     tarjeta.append(cabecera);
 
-    tarjeta.append(el('p', { class: 'fintrax-sym-s' }, [el('b', { text: 'Sientes: ' }), lista.join(' · ')]));
+    tarjeta.append(el('p', { class: 'fintrax-sym-s' }, [el('b', { text: 'You feel: ' }), lista.join(' · ')]));
 
-    const causas = [...new Set(lista.flatMap((valor) => (CAUSAS[valor] || 'Causa por determinar').split('|')))].slice(0, 4);
-    tarjeta.append(el('h4', { text: 'POSIBLEMENTE SEA…' }));
+    const causas = [...new Set(lista.flatMap((valor) => (CAUSAS[valor] || 'Cause to be determined').split('|')))].slice(0, 4);
+    tarjeta.append(el('h4', { text: 'IT MIGHT BE…' }));
     const ulCausas = el('ul');
     for (const causa of causas) ulCausas.append(el('li', { text: causa }));
     tarjeta.append(ulCausas);
 
     const contexto = (CTX[zona] || []).flatMap((sistema) => state.result?.systems?.[sistema]?.notes || []);
     if (contexto.length) {
-      tarjeta.append(el('p', { class: 'fintrax-sym-ctx', text: `Tus datos registrados también muestran: ${contexto.join(' · ')}.` }));
+      tarjeta.append(el('p', { class: 'fintrax-sym-ctx', text: `Your recorded data also show: ${contexto.join(' · ')}.` }));
     }
 
-    tarjeta.append(el('h4', { text: 'QUÉ HACER' }));
+    tarjeta.append(el('h4', { text: 'WHAT TO DO' }));
     const ulAcciones = el('ul');
     for (const accion of ACC[zona] || []) ulAcciones.append(el('li', { text: accion }));
     tarjeta.append(ulAcciones);
@@ -154,13 +154,13 @@ function renderTarjetas(state) {
       tarjeta.append(
         el('p', {
           class: 'fintrax-sym-urgent',
-          text: '⚠ Nivel GRAVE: contacta ahora al médico de vuelo o a Control de Misión.'
+          text: '⚠ SEVERE level: contact the flight surgeon or Mission Control now.'
         })
       );
     }
 
     if (ALERTA[zona]) {
-      tarjeta.append(el('p', { class: 'fintrax-sym-alert', text: `Busca atención inmediata si aparece: ${ALERTA[zona]}.` }));
+      tarjeta.append(el('p', { class: 'fintrax-sym-alert', text: `Seek immediate care if you notice: ${ALERTA[zona]}.` }));
     }
 
     caja.append(tarjeta);
@@ -169,7 +169,7 @@ function renderTarjetas(state) {
   caja.append(
     el('small', {
       class: 'fintrax-sym-disc',
-      text: 'Orientación general basada en lo que marcaste; no es un diagnóstico ni sustituye al médico.'
+      text: 'General guidance based on what you marked; it is not a diagnosis and does not replace a doctor.'
     })
   );
 }

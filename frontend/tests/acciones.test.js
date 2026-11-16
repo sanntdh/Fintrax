@@ -13,15 +13,15 @@ test('sin molestias ni sistemas alterados no se propone nada', () => {
 });
 
 test('el mareo lleva a acciones vestibulares respaldadas por FISIO p. 5', () => {
-  const { areas } = accionesPara({ symptoms: ['cabeza|Mareo o vértigo'], systems: sistemas() });
+  const { areas } = accionesPara({ symptoms: ['cabeza|Dizziness or vertigo'], systems: sistemas() });
   const vestibular = areas.find((area) => area.id === 'alteracion_vestibular');
   assert.ok(vestibular);
-  assert.deepEqual(vestibular.motivos, ['Mareo o vértigo']);
+  assert.deepEqual(vestibular.motivos, ['Dizziness or vertigo']);
   assert.ok(vestibular.acciones.some((accion) => accion.fuente === 'FISIO' && accion.pagina === 5));
 });
 
 test('la visión borrosa lleva a las gafas de ajuste según NASA (SANS-MTB p. 12)', () => {
-  const { areas } = accionesPara({ symptoms: ['ojos|Visión borrosa'], systems: sistemas() });
+  const { areas } = accionesPara({ symptoms: ['ojos|Blurred vision'], systems: sistemas() });
   const sans = areas.find((area) => area.id === 'sans');
   assert.equal(sans.respaldada, true);
   assert.ok(sans.acciones.some((accion) => accion.fuente === 'SANS-MTB' && accion.pagina === 12));
@@ -38,8 +38,8 @@ test('cada área con molestias tiene ya alguna acción respaldada', () => {
 });
 
 test('dolor en el pecho o falta de aire piden avisar de inmediato', () => {
-  assert.equal(accionesPara({ symptoms: ['pecho|Dolor opresivo'], systems: sistemas() }).urgente, true);
-  assert.equal(accionesPara({ symptoms: ['pecho|Falta de aire'], systems: sistemas() }).urgente, true);
+  assert.equal(accionesPara({ symptoms: ['pecho|Crushing pain'], systems: sistemas() }).urgente, true);
+  assert.equal(accionesPara({ symptoms: ['pecho|Shortness of breath'], systems: sistemas() }).urgente, true);
   assert.equal(accionesPara({ symptoms: [], systems: sistemas({ cardio: { st: 'bad' } }) }).urgente, true);
 });
 

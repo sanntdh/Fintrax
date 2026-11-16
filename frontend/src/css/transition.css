@@ -84,11 +84,11 @@
   opacity: 0;
 }
 
-#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--f {
+#fintrax-app .fintrax-transition__stage[data-sex='Female'] .fintrax-transition__img--f {
   opacity: 1;
 }
 
-#fintrax-app .fintrax-transition__stage[data-sex='Femenino'] .fintrax-transition__img--m {
+#fintrax-app .fintrax-transition__stage[data-sex='Female'] .fintrax-transition__img--m {
   opacity: 0;
 }
 

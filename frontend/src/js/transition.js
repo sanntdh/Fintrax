@@ -30,8 +30,8 @@ const PASO_ORGANO = 180;
 function crearFigura(clase) {
   const contenedor = el('div', { class: `fintrax-transition__figure ${clase}` });
   for (const [sufijo, sexo] of [
-    ['f', 'Femenino'],
-    ['m', 'Masculino']
+    ['f', 'Female'],
+    ['m', 'Male']
   ]) {
     contenedor.append(imagenAvatar(sexo, `fintrax-transition__img fintrax-transition__img--${sufijo}`));
   }
@@ -133,7 +133,7 @@ export function createTransition({ onDone }) {
     if (barra) barra.style.setProperty('--p', '0%');
     if (porcentaje) porcentaje.textContent = '0%';
     if (log) limpiar(log);
-    if (sub) sub.textContent = 'Correlacionando perfil, mediciones y molestias.';
+    if (sub) sub.textContent = 'Correlating profile, measurements and symptoms.';
   }
 
   function progreso() {
@@ -201,7 +201,7 @@ export function createTransition({ onDone }) {
     });
 
     programar(() => {
-      if (sub) sub.textContent = 'Análisis completo. Preparando mapa funcional…';
+      if (sub) sub.textContent = 'Analysis complete. Preparing functional map…';
     }, 2400);
 
     programar(() => beep('success'), 2450);

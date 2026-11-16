@@ -81,7 +81,7 @@ function campoSelect(field) {
   wrapper.append(el('label', { class: 'fintrax-metric-label', for: idControl(field.id), text: field.label }));
 
   const select = el('select', { id: idControl(field.id), dataset: { field: field.id } });
-  select.append(el('option', { value: '', text: field.placeholder || 'Seleccionar' }));
+  select.append(el('option', { value: '', text: field.placeholder || 'Select' }));
   for (const opcion of field.options || []) {
     select.append(el('option', { value: opcion, text: opcion }));
   }
@@ -135,7 +135,7 @@ function campoEscala(field) {
     class: 'fintrax-rating-confirm',
     dataset: { confirmRating: field.id },
     'aria-pressed': 'false',
-    text: 'Confirmar 5/10'
+    text: 'Confirm 5/10'
   }));
   return wrapper;
 }
@@ -146,9 +146,9 @@ function campoPreview(field) {
 
   const medidas = el('div', { class: 'fintrax-mini-measures' });
   const peso = el('span', { class: 'fintrax-mini-measure' });
-  peso.append(document.createTextNode('Peso '), el('strong', { dataset: { previewPeso: '' }, text: '— kg' }));
+  peso.append(document.createTextNode('Weight '), el('strong', { dataset: { previewPeso: '' }, text: '— kg' }));
   const estatura = el('span', { class: 'fintrax-mini-measure' });
-  estatura.append(document.createTextNode('Estatura '), el('strong', { dataset: { previewEstatura: '' }, text: '— m' }));
+  estatura.append(document.createTextNode('Height '), el('strong', { dataset: { previewEstatura: '' }, text: '— m' }));
   medidas.append(peso, estatura);
   wrapper.append(medidas);
 
@@ -173,7 +173,7 @@ function crearCampo(field) {
   const nodo = constructor ? constructor(field) : null;
   if (nodo && field.optional) {
     nodo.dataset.optional = 'true';
-    $('.fintrax-metric-label', nodo)?.append(el('small', { class: 'fintrax-opcional', text: ' (opcional)' }));
+    $('.fintrax-metric-label', nodo)?.append(el('small', { class: 'fintrax-opcional', text: ' (optional)' }));
   }
   return nodo;
 }
@@ -303,13 +303,13 @@ export function initForm({ onSubmit }) {
           class: 'fintrax-stepper__step',
           dataset: { gotoStep: String(i), complete: String(hechos === campos.length) },
           'aria-label': campos.length
-            ? `Paso ${i + 1}: ${panel.dataset.stepLabel}, ${hechos} de ${campos.length} campos`
-            : `Paso ${i + 1}: ${panel.dataset.stepLabel}, opcional`
+            ? `Step ${i + 1}: ${panel.dataset.stepLabel}, ${hechos} of ${campos.length} fields`
+            : `Step ${i + 1}: ${panel.dataset.stepLabel}, optional`
         });
         boton.append(
           el('span', { class: 'fintrax-stepper__num', 'aria-hidden': 'true', text: hechos === campos.length ? '✓' : String(i + 1) }),
           el('span', { class: 'fintrax-stepper__label', text: panel.dataset.stepLabel }),
-          el('span', { class: 'fintrax-stepper__count', 'aria-hidden': 'true', text: campos.length ? `${hechos}/${campos.length}` : 'opcional' })
+          el('span', { class: 'fintrax-stepper__count', 'aria-hidden': 'true', text: campos.length ? `${hechos}/${campos.length}` : 'optional' })
         );
         if (i === paso) boton.setAttribute('aria-current', 'step');
         nav.append(boton);
@@ -320,7 +320,7 @@ export function initForm({ onSubmit }) {
     $('[data-edit-baseline]').hidden = !(actual && paso === 0);
     if (siguiente) siguiente.hidden = ultimo;
     if (submit) submit.hidden = !ultimo;
-    if (contador) contador.textContent = `Paso ${paso + 1} de ${pasos.length}`;
+    if (contador) contador.textContent = `Step ${paso + 1} of ${pasos.length}`;
   }
 
   function mostrarPaso(indice, { foco = true } = {}) {
@@ -359,7 +359,7 @@ export function initForm({ onSubmit }) {
     }
     for (const campo of pendientes) tocados.add(campo);
     reflejarValidacion();
-    showToast('Completa este paso antes de continuar.', 'warn');
+    showToast('Complete this step before continuing.', 'warn');
     beep('alert');
     const primero = nodoDe(pendientes[0]);
     if (primero) mostrarControl(primero);
@@ -403,9 +403,9 @@ export function initForm({ onSubmit }) {
     if (nota) {
       nota.textContent = ok
         ? (state.activeRecord === 'baseline'
-          ? 'Registro habitual completo · continúa con tus datos actuales.'
-          : 'Registro actual completo · listo para analizar.')
-        : `${completos}/${total} campos válidos. Faltan ${faltan} por completar o corregir. ${Object.values(errores)[0]}`;
+          ? 'Usual record complete · continue with your current data.'
+          : 'Current record complete · ready to analyze.')
+        : `${completos}/${total} valid fields. ${faltan} left to complete or fix. ${Object.values(errores)[0]}`;
       nota.dataset.ready = String(ok);
     }
 
@@ -431,12 +431,12 @@ export function initForm({ onSubmit }) {
       $('[data-form-status]').textContent = '';
     }
 
-    $('[data-form-stage]').textContent = actual ? 'ETAPA 2 DE 2 · DATOS ACTUALES' : 'ETAPA 1 DE 2 · DATOS HABITUALES';
-    $('#fintrax-form-title').textContent = actual ? 'Registro de datos actuales' : 'Registro Biomédico';
+    $('[data-form-stage]').textContent = actual ? 'STAGE 2 OF 2 · CURRENT DATA' : 'STAGE 1 OF 2 · USUAL DATA';
+    $('#fintrax-form-title').textContent = actual ? 'Current data record' : 'Biomedical Record';
     $('[data-form-subtitle]').textContent = actual
-      ? 'Registra cómo te encuentras ahora · FINTRAX'
-      : 'Evaluación de referencia previa a la misión · FINTRAX';
-    $('[data-submit]').textContent = actual ? '⚡ ANALIZAR DATOS ACTUALES ›' : '⚡ COMENZAR ANÁLISIS ›';
+      ? 'Record how you feel right now · FINTRAX'
+      : 'Pre-mission baseline assessment · FINTRAX';
+    $('[data-submit]').textContent = actual ? '⚡ ANALYZE CURRENT DATA ›' : '⚡ START ANALYSIS ›';
     for (const bloque of document.querySelectorAll('[data-current-only]')) bloque.hidden = !actual;
     $('[data-other]').disabled = !actual;
 
@@ -445,7 +445,7 @@ export function initForm({ onSubmit }) {
       const confirmado = state.ratingsTouched.has(id);
       control.parentElement.querySelector('output').textContent = confirmado ? `${state.values[id]}/10` : '—';
       const boton = $(`[data-confirm-rating="${id}"]`);
-      boton.textContent = confirmado ? `✓ ${state.values[id]}/10 confirmado` : `Confirmar ${control.value}/10`;
+      boton.textContent = confirmado ? `✓ ${state.values[id]}/10 confirmed` : `Confirm ${control.value}/10`;
       boton.setAttribute('aria-pressed', String(confirmado));
     }
   }
@@ -522,8 +522,8 @@ export function initForm({ onSubmit }) {
 
     if (!ok) {
       reflejarValidacion({ forzar: true });
-      if (estado) estado.textContent = 'Revisa los datos marcados antes de continuar.';
-      showToast('Completa los datos obligatorios para continuar.', 'warn');
+      if (estado) estado.textContent = 'Check the highlighted data before continuing.';
+      showToast('Complete the required data to continue.', 'warn');
       beep('alert');
       if (primero) mostrarControl(primero);
       return;

@@ -26,11 +26,11 @@ export function formatearImc(imc) {
 
 /** Clasificación descriptiva del IMC (no diagnóstica). */
 export function categoriaImc(imc) {
-  if (imc === null) return { key: 'sin-datos', label: 'CALIBRANDO...' };
-  if (imc < 18.5) return { key: 'bajo', label: 'BAJO PESO' };
-  if (imc < 25) return { key: 'normal', label: 'PESO NORMAL' };
-  if (imc < 30) return { key: 'sobrepeso', label: 'SOBREPESO' };
-  return { key: 'obesidad', label: 'OBESIDAD' };
+  if (imc === null) return { key: 'sin-datos', label: 'CALIBRATING...' };
+  if (imc < 18.5) return { key: 'bajo', label: 'UNDERWEIGHT' };
+  if (imc < 25) return { key: 'normal', label: 'NORMAL WEIGHT' };
+  if (imc < 30) return { key: 'sobrepeso', label: 'OVERWEIGHT' };
+  return { key: 'obesidad', label: 'OBESITY' };
 }
 
 /**

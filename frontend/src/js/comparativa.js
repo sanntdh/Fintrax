@@ -17,13 +17,13 @@ import { UMBRALES as U } from '../data/severity.js';
  * FR y temperatura usan las franjas de puntuación 0 y 1 de NEWS2 (RCP).
  */
 export const COMPARABLES = [
-  { id: 'fc_reposo', label: 'Frecuencia cardíaca', unit: 'lpm', ok: [U.fc.warnLow, U.fc.warnHigh], wn: [U.fc.badLow, U.fc.badHigh], eje: [30, 160], cambio: 15 },
-  { id: 'pa_sistolica', label: 'Presión sistólica', unit: 'mmHg', ok: [U.pa.warnSisLow, U.pa.warnSis - 1], wn: [U.pa.badSisLow, U.pa.badSis - 1], eje: [60, 200], cambio: 15 },
-  { id: 'spo2', label: 'Saturación de oxígeno', unit: '%', ok: [U.spo2.warn, 100], wn: [U.spo2.bad, 100], eje: [80, 100], cambio: 3 },
-  { id: 'fr', label: 'Frecuencia respiratoria', unit: 'rpm', ok: [12, 20], wn: [9, 24], eje: [4, 40], cambio: 4 },
-  { id: 'temp', label: 'Temperatura', unit: '°C', ok: [36.1, 38], wn: [35.1, 39], eje: [34, 41], cambio: 0.8 },
+  { id: 'fc_reposo', label: 'Heart rate', unit: 'bpm', ok: [U.fc.warnLow, U.fc.warnHigh], wn: [U.fc.badLow, U.fc.badHigh], eje: [30, 160], cambio: 15 },
+  { id: 'pa_sistolica', label: 'Systolic pressure', unit: 'mmHg', ok: [U.pa.warnSisLow, U.pa.warnSis - 1], wn: [U.pa.badSisLow, U.pa.badSis - 1], eje: [60, 200], cambio: 15 },
+  { id: 'spo2', label: 'Oxygen saturation', unit: '%', ok: [U.spo2.warn, 100], wn: [U.spo2.bad, 100], eje: [80, 100], cambio: 3 },
+  { id: 'fr', label: 'Respiratory rate', unit: 'rpm', ok: [12, 20], wn: [9, 24], eje: [4, 40], cambio: 4 },
+  { id: 'temp', label: 'Temperature', unit: '°C', ok: [36.1, 38], wn: [35.1, 39], eje: [34, 41], cambio: 0.8 },
   {
-    id: 'leucocitos', label: 'Glóbulos blancos', unit: '/µL',
+    id: 'leucocitos', label: 'White blood cells', unit: '/µL',
     ok: [U.leucocitos.warnLow, U.leucocitos.warnHigh], wn: [U.leucocitos.badLow, U.leucocitos.badHigh], eje: [0, 20000], cambio: null
   }
 ];
@@ -98,19 +98,19 @@ function grafica(fila) {
   return lienzo;
 }
 
-const formato = (valor) => (valor === null ? '—' : String(valor).replace('.', ','));
+const formato = (valor) => (valor === null ? '—' : String(valor));
 
 function filaComparativa(fila) {
   const item = el('li', { class: 'fintrax-comp', dataset: { st: fila.estado, cambio: String(fila.cambioNotable) } });
   const cabecera = el('div', { class: 'fintrax-comp__head' });
   cabecera.append(el('strong', { text: fila.label }));
-  const cifras = `Habitual ${formato(fila.base)} → Actual ${formato(fila.actual)} ${fila.unit}`;
+  const cifras = `Usual ${formato(fila.base)} → Current ${formato(fila.actual)} ${fila.unit}`;
   const delta = fila.delta === null || fila.delta === 0 ? '' : ` (${fila.delta > 0 ? '+' : ''}${formato(fila.delta)})`;
   cabecera.append(el('span', { text: cifras + delta }));
   item.append(cabecera, grafica(fila));
-  const motivo = fila.estado === 'bad' ? 'Fuera de rango: requiere atención'
-    : fila.estado === 'warn' ? 'Fuera del rango normal'
-      : fila.cambioNotable ? 'Cambio notable respecto a lo habitual' : '';
+  const motivo = fila.estado === 'bad' ? 'Out of range: needs attention'
+    : fila.estado === 'warn' ? 'Outside the normal range'
+      : fila.cambioNotable ? 'Notable change from your usual value' : '';
   if (motivo) item.append(el('small', { class: 'fintrax-comp__motivo', text: motivo }));
   return item;
 }
@@ -127,11 +127,11 @@ export function createComparativa(host) {
         for (const fila of anomalas) lista.append(filaComparativa(fila));
         host.append(lista);
       } else {
-        host.append(el('p', { class: 'fintrax-accion-vacio', text: 'Sin anomalías respecto a tu registro habitual.' }));
+        host.append(el('p', { class: 'fintrax-accion-vacio', text: 'No anomalies compared with your usual record.' }));
       }
       if (normales.length) {
         const detalle = el('details', { class: 'fintrax-comp-normales' });
-        detalle.append(el('summary', { text: `Sin cambios relevantes (${normales.length})` }));
+        detalle.append(el('summary', { text: `No relevant changes (${normales.length})` }));
         const lista = el('ul', { class: 'fintrax-comp-lista' });
         for (const fila of normales) lista.append(filaComparativa(fila));
         detalle.append(lista);

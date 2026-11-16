@@ -1,8 +1,8 @@
 {
-  "name": "Fintrax · Registro biomédico",
+  "name": "Fintrax · Biomedical record",
   "short_name": "Fintrax",
-  "description": "Registro y análisis biomédico orientativo para astronautas. Funciona sin conexión.",
-  "lang": "es",
+  "description": "Biomedical record and guidance assessment for astronauts. Works offline.",
+  "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
