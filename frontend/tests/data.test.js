@@ -61,3 +61,11 @@ test('todas las secciones declaran índice y campos', () => {
     assert.ok(seccion.fields.length > 0, `Sección vacía: ${seccion.id}`);
   }
 });
+
+test('la autoevaluación cognitiva va en el paso neurológico, no en el psicológico', () => {
+  const ids = (id) => COUNTED_BY_SECTION.find((seccion) => seccion.id === id).ids;
+  for (const id of ['memoria', 'atencion', 'concentracion']) {
+    assert.ok(ids('neuro').includes(id), `${id} debería estar en Neurological`);
+    assert.equal(ids('psico').includes(id), false, `${id} no debería estar en Psychological`);
+  }
+});

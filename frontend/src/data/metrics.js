@@ -287,29 +287,6 @@ export const METRIC_SECTIONS = [
         label: 'Sleep quality',
         ends: ['0 · Very poor', '10 · Excellent'],
         counted: true
-      },
-      { kind: 'divider', label: 'MEMORY, ATTENTION AND CONCENTRATION · SELF-ASSESSMENT' },
-      {
-        kind: 'range',
-        id: 'memoria',
-        label: 'Memory',
-        ends: ['0 · Great difficulty', '10 · No difficulty'],
-        counted: true
-      },
-      {
-        kind: 'range',
-        id: 'atencion',
-        label: 'Attention',
-        ends: ['0 · Great difficulty', '10 · No difficulty'],
-        counted: true
-      },
-      {
-        kind: 'range',
-        id: 'concentracion',
-        label: 'Concentration',
-        ends: ['0 · Great difficulty', '10 · No difficulty'],
-        wide: true,
-        counted: true
       }
     ]
   },
@@ -317,7 +294,7 @@ export const METRIC_SECTIONS = [
     id: 'neuro',
     icon: '⌁',
     title: 'NEUROLOGICAL',
-    subtitle: 'Balance, coordination and motor response',
+    subtitle: 'Balance, coordination, motor response and cognition',
     index: '05 / 05',
     fields: [
       {
@@ -347,7 +324,28 @@ export const METRIC_SECTIONS = [
         step: 1,
         placeholder: 'e.g. 245',
         helper: 'Record the measured value, not an estimate',
-        wide: true,
+        counted: true
+      },
+      { kind: 'divider', label: 'MEMORY, ATTENTION AND CONCENTRATION · SELF-ASSESSMENT' },
+      {
+        kind: 'range',
+        id: 'memoria',
+        label: 'Memory',
+        ends: ['0 · Great difficulty', '10 · No difficulty'],
+        counted: true
+      },
+      {
+        kind: 'range',
+        id: 'atencion',
+        label: 'Attention',
+        ends: ['0 · Great difficulty', '10 · No difficulty'],
+        counted: true
+      },
+      {
+        kind: 'range',
+        id: 'concentracion',
+        label: 'Concentration',
+        ends: ['0 · Great difficulty', '10 · No difficulty'],
         counted: true
       }
     ]

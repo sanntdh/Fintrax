@@ -52,22 +52,18 @@ function campoPresion(field) {
   const dual = el('div', { class: 'fintrax-metric-dual' });
   for (const item of field.ids) {
     const bloque = el('div');
-    bloque.append(el('label', { for: idControl(item.id), text: item.label }));
-    const unidad = el('div', { class: 'fintrax-unit' });
-    unidad.append(
-      el('input', {
-        type: 'number',
-        id: idControl(item.id),
-        dataset: { field: item.id },
-        placeholder: item.placeholder,
-        min: item.min,
-        max: item.max,
-        step: item.step,
-        inputmode: 'numeric'
-      }),
-      el('span', { text: 'mmHg' })
-    );
-    bloque.append(unidad);
+    // La unidad va en la etiqueta: dentro de una casilla tan estrecha tapaba el valor.
+    bloque.append(el('label', { for: idControl(item.id), text: `${item.label} · mmHg` }));
+    bloque.append(el('input', {
+      type: 'number',
+      id: idControl(item.id),
+      dataset: { field: item.id },
+      placeholder: item.placeholder,
+      min: item.min,
+      max: item.max,
+      step: item.step,
+      inputmode: 'numeric'
+    }));
     dual.append(bloque);
   }
   wrapper.append(dual);

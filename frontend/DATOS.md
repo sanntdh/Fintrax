@@ -68,9 +68,6 @@ motor no les asigna puntos.
 | Ansiedad percibida | `ansiedad` | escala 0–10 | sí |
 | Duración del sueño | `sueno_horas` | número (h) | sí |
 | Calidad del sueño | `sueno_calidad` | escala 0–10 | sí |
-| Memoria | `memoria` | escala 0–10 | sí |
-| Atención | `atencion` | escala 0–10 | sí |
-| Concentración | `concentracion` | escala 0–10 | sí |
 
 **Las escalas requieren una respuesta explícita:** mover el control o pulsar su
 botón de confirmación. El valor inicial 5 es una posición visual hasta que se
@@ -83,6 +80,12 @@ confirma; `ratingsTouched` se conserva por separado para cada etapa.
 | Equilibrio | `equilibrio` | selección | sí |
 | Coordinación | `coordinacion` | selección | sí |
 | Tiempo de reacción | `reaccion_ms` | número (ms) | sí |
+| Memoria | `memoria` | escala 0–10 | sí |
+| Atención | `atencion` | escala 0–10 | sí |
+| Concentración | `concentracion` | escala 0–10 | sí |
+
+La autoevaluación cognitiva se pide en este paso del formulario, pero el motor la
+sigue sumando al sistema psicológico (`systems.psico`), como antes.
 
 ## 3. Progreso
 

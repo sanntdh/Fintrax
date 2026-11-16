@@ -529,10 +529,6 @@
   font-size: var(--fs-sm);
 }
 
-#fintrax-app .fintrax-metric-dual .fintrax-unit input {
-  padding-right: 57px;
-}
-
 #fintrax-app .fintrax-range-row {
   display: flex;
   align-items: center;
