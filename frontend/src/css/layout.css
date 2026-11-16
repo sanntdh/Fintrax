@@ -257,9 +257,8 @@
   }
 }
 
-/* Con dos columnas (escritorio), la página entera cabe en la pantalla: el panel
-   del registro mide lo mismo que el del avatar, la cabecera y los botones quedan
-   fijos y, solo si un paso no cabe en una pantalla baja, se desplaza su tarjeta. */
+/* Con dos columnas (escritorio), la página entera cabe en la pantalla: el
+   formulario se compacta (ver form.css) en vez de usar cajas con desplazamiento. */
 @media (min-width: 1101px) {
   #fintrax-app {
     --panel-height: clamp(520px, calc(100dvh - 140px), 920px);
@@ -269,42 +268,12 @@
     margin-bottom: var(--sp-3);
   }
 
-  #fintrax-app .fintrax-panel--form {
-    display: flex;
-    flex-direction: column;
-    height: var(--panel-height);
-  }
-
-  #fintrax-app .fintrax-heading,
-  #fintrax-app .fintrax-progress {
-    flex-shrink: 0;
-  }
-
-  #fintrax-personal-form {
-    display: flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    min-height: 0;
-  }
-
-  #fintrax-personal-form [data-metric-sections] {
-    display: contents;
-  }
-
   #fintrax-app #fintrax-personal-form .fintrax-step-panel {
-    flex: 0 1 auto;
-    min-height: 0;
     margin-bottom: 0;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    scrollbar-color: rgba(0, 240, 255, 0.45) transparent;
-    scrollbar-width: thin;
   }
 
   #fintrax-app #fintrax-personal-form .fintrax-actions--steps {
-    flex-shrink: 0;
-    margin-top: auto;
-    padding-top: var(--sp-3);
+    margin-top: var(--sp-3);
   }
 }
 
@@ -326,6 +295,23 @@
     flex-wrap: wrap;
     align-items: center;
     gap: var(--sp-2) var(--sp-4);
+  }
+}
+
+/* Portátiles muy bajos (800 px o menos): barra superior más delgada y menos
+   margen alrededor, para ganar alto para el formulario. */
+@media (min-width: 1101px) and (max-height: 800px) {
+  #fintrax-app {
+    --panel-height: clamp(520px, calc(100dvh - 100px), 920px);
+  }
+
+  #fintrax-app .fintrax-topbar {
+    height: 52px;
+    margin-top: 10px;
+  }
+
+  #fintrax-app .fintrax-main {
+    margin-top: var(--sp-3);
   }
 }
 

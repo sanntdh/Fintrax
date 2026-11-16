@@ -789,7 +789,7 @@
 
   #fintrax-personal-form .fintrax-zones {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
     gap: var(--sp-2);
     margin-top: 0;
   }
@@ -836,5 +836,160 @@
 
   #fintrax-app .fintrax-metric-field--wide {
     grid-column: auto;
+  }
+}
+
+/* --- Portátiles (hasta 960 px de alto) ----------------------------------- */
+/* Para que cada paso entre entero sin bajar: letra un punto más pequeña y
+   espacios más ajustados, sin ocultar ningún dato. */
+@media (min-width: 1101px) and (max-height: 960px) {
+  #fintrax-app .fintrax-stepper {
+    margin-top: var(--sp-2);
+  }
+
+  #fintrax-app .fintrax-stepper__step {
+    padding-block: 3px;
+  }
+
+  #fintrax-app .fintrax-metric-section,
+  #fintrax-app .fintrax-step-panel {
+    margin-top: var(--sp-2);
+    padding: 10px 12px;
+  }
+
+  #fintrax-app .fintrax-metric-header {
+    margin-bottom: var(--sp-2);
+    padding-bottom: 6px;
+  }
+
+  #fintrax-app .fintrax-metric-header__icon {
+    width: 26px;
+    height: 26px;
+    flex-basis: 26px;
+    font-size: 14px;
+  }
+
+  #fintrax-app .fintrax-metric-grid,
+  #fintrax-app .fintrax-form-grid {
+    gap: var(--sp-2);
+  }
+
+  #fintrax-app .fintrax-field,
+  #fintrax-app .fintrax-metric-field {
+    padding: 7px 10px;
+  }
+
+  #fintrax-app .fintrax-field > label,
+  #fintrax-app .fintrax-field > .fintrax-field__label,
+  #fintrax-app .fintrax-metric-label {
+    margin-bottom: 4px;
+    font-size: 13px;
+  }
+
+  #fintrax-app .fintrax-helper,
+  #fintrax-app .fintrax-hint {
+    margin-top: 2px;
+    font-size: var(--fs-xs);
+  }
+
+  #fintrax-personal-form input:not([type='range']),
+  #fintrax-personal-form select {
+    padding-block: 6px;
+    font-size: 13px;
+  }
+
+  #fintrax-app .fintrax-sex-option {
+    min-height: 36px;
+    padding-block: 6px;
+  }
+
+  #fintrax-app .fintrax-metric-note {
+    margin-bottom: var(--sp-2);
+    padding: 4px 8px;
+    font-size: var(--fs-xs);
+  }
+
+  #fintrax-app .fintrax-range-row input[type='range'] {
+    height: 18px;
+  }
+
+  #fintrax-app .fintrax-range-value {
+    font-size: 15px;
+  }
+
+  #fintrax-app .fintrax-range-ends {
+    font-size: var(--fs-2xs);
+  }
+
+  #fintrax-app .fintrax-metric-field > .fintrax-rating-confirm {
+    padding: 2px 7px;
+    font-size: var(--fs-2xs);
+  }
+
+  #fintrax-app .fintrax-divider-label {
+    padding: 0;
+  }
+
+  #fintrax-personal-form .fintrax-zone {
+    gap: 4px;
+    padding: 6px 8px;
+  }
+
+  #fintrax-personal-form .fintrax-zone h3 {
+    font-size: var(--fs-xs);
+  }
+
+  #fintrax-personal-form .fintrax-chips {
+    gap: 4px;
+  }
+
+  #fintrax-personal-form .fintrax-chip span {
+    padding: 3px 8px;
+    font-size: var(--fs-xs);
+  }
+
+  #fintrax-app #fintrax-personal-form textarea {
+    height: 36px;
+    min-height: 36px;
+    margin-top: 0;
+  }
+
+  /* «Estado general» tiene una sola opción: va en una línea a todo lo ancho. */
+  #fintrax-personal-form .fintrax-zone:has(.fintrax-chip--none) {
+    grid-column: 1 / -1;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--sp-3);
+  }
+
+  /* Las notas opcionales, con su etiqueta al lado en vez de encima. */
+  #fintrax-personal-form [data-step-panel='molestias'] .fintrax-field {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    column-gap: var(--sp-3);
+  }
+
+  #fintrax-personal-form [data-step-panel='molestias'] .fintrax-field > * {
+    grid-column: 1 / -1;
+  }
+
+  #fintrax-personal-form [data-step-panel='molestias'] .fintrax-field > label {
+    grid-column: 1;
+    margin: var(--sp-2) 0 0;
+  }
+
+  #fintrax-personal-form [data-step-panel='molestias'] .fintrax-field > textarea {
+    grid-column: 2;
+    margin-top: var(--sp-2);
+  }
+
+  #fintrax-personal-form .fintrax-count {
+    min-height: 0;
+    margin-top: 4px;
+  }
+
+  #fintrax-app #fintrax-personal-form .fintrax-actions--steps .fintrax-btn {
+    padding-block: 9px;
   }
 }
