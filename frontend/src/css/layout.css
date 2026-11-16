@@ -135,6 +135,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* El encabezado del escaneo y las métricas van superpuestos arriba y abajo:
+     se reserva su espacio para que el avatar no quede pegado a ellos. */
+  padding: 76px var(--sp-4) 88px;
   overflow: hidden;
   background: linear-gradient(
     180deg,

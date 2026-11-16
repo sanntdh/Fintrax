@@ -65,3 +65,9 @@ test('la app registra el service worker y el servidor sirve el manifiesto', asyn
   assert.match(await leer('src/js/main.js'), /navigator\.serviceWorker\.register\('sw\.js'/);
   assert.ok((await leer('scripts/serve.mjs')).includes("'.webmanifest': 'application/manifest+json"));
 });
+
+test('con conexión se sirve siempre la versión publicada; la caché es solo para trabajar sin red', async () => {
+  const sw = await leer('sw.js');
+  assert.match(sw, /event\.respondWith\(primeroRed\(request\)\)/, 'Todas las peticiones deben ir primero a la red');
+  assert.equal(sw.includes('cacheYActualiza'), false, 'La estrategia «caché primero» muestra versiones antiguas tras actualizar');
+});

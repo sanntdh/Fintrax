@@ -2,17 +2,16 @@
  * Service worker de Fintrax: la app funciona sin conexión.
  *
  * - Al instalarse guarda en caché todos los archivos de la app (PRECACHE).
- * - Responde desde la caché y actualiza en segundo plano
- *   (stale-while-revalidate): los cambios llegan en la siguiente apertura.
- * - `config.json` y `config.demo.json` se piden primero a la red (pueden
- *   cambiar) y se guardan como respaldo; no van en PRECACHE porque son opcionales.
+ * - Con conexión todo se pide primero a la red (siempre la versión publicada)
+ *   y se guarda como respaldo; sin conexión se responde desde la caché.
+ * - `config.json` y `config.demo.json` no van en PRECACHE porque son opcionales.
  * - Las peticiones al backend (otro origen) no pasan por la caché.
  *
  * Al añadir o quitar archivos de src/ o assets/, actualiza PRECACHE: un test
  * lo comprueba. Cambia VERSION para forzar una recarga completa de la caché.
  */
 
-const VERSION = 'fintrax-v3';
+const VERSION = 'fintrax-v4';
 
 const PRECACHE = [
   './',
@@ -101,25 +100,16 @@ async function primeroRed(request) {
   const cache = await caches.open(VERSION);
   try {
     const respuesta = await fetch(request);
-    if (respuesta.ok) cache.put(request, respuesta.clone());
+    if (respuesta.ok && respuesta.type === 'basic') cache.put(request, respuesta.clone());
     return respuesta;
   } catch {
-    return (await cache.match(request)) || Response.error();
+    // Sin red: lo guardado. Las navegaciones con parámetros (?mantenimiento,
+    // ?api=) usan el mismo index.
+    const navegacion = request.mode === 'navigate';
+    return (await cache.match(request, { ignoreSearch: navegacion }))
+      || (navegacion ? await cache.match('index.html') : undefined)
+      || Response.error();
   }
-}
-
-async function cacheYActualiza(request) {
-  const cache = await caches.open(VERSION);
-  // Las navegaciones con parámetros (?mantenimiento, ?api=) usan el mismo index.
-  const guardada = await cache.match(request, { ignoreSearch: request.mode === 'navigate' });
-  const deRed = fetch(request)
-    .then((respuesta) => {
-      if (respuesta.ok && respuesta.type === 'basic') cache.put(request, respuesta.clone());
-      return respuesta;
-    })
-    .catch(() => null);
-  if (guardada) return guardada;
-  return (await deRed) || (request.mode === 'navigate' ? cache.match('index.html') : Response.error());
 }
 
 self.addEventListener('fetch', (event) => {
@@ -127,6 +117,5 @@ self.addEventListener('fetch', (event) => {
   if (request.method !== 'GET') return;
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
-  const esConfig = url.pathname.endsWith('/config.json') || url.pathname.endsWith('/config.demo.json');
-  event.respondWith(esConfig ? primeroRed(request) : cacheYActualiza(request));
+  event.respondWith(primeroRed(request));
 });

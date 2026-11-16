@@ -65,9 +65,9 @@ y comparativa. Sin enlace, el centro médico muestra **SIN ENLACE** y ofrece
 - **Instalar:** en Chrome, Edge o Chromium, botón de instalar de la barra de
   direcciones; en Android, «Añadir a pantalla de inicio». Firefox de escritorio
   usa la caché sin conexión pero no instala la app.
-- **Actualizar:** la app responde desde la caché y descarga los cambios en
-  segundo plano; se ven en la siguiente apertura. Para forzar una recarga completa
-  se cambia `VERSION` en `sw.js`.
+- **Actualizar:** con conexión todo se pide primero a la red, así que cada
+  despliegue se ve en la primera recarga; la caché solo se usa sin red. Cambiar
+  `VERSION` en `sw.js` renueva la caché completa.
 - **Al añadir o quitar archivos** de `src/` o `assets/` hay que actualizar
   `PRECACHE` en `sw.js`; `tests/pwa.test.js` falla si falta alguno.
 
