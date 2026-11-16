@@ -32,10 +32,12 @@ python3 -m http.server 5173
    por pasos (perfil y una sección médica por pantalla) con **Anterior** y
    **Siguiente**; la barra de pasos permite saltar a cualquiera.
 3. **Etapa 2 · Datos actuales**, basada en `ASTRA_version2_con_resultados.html`:
-   nombre, sexo, edad y grupo sanguíneo aparecen precargados y editables; peso,
-   estatura, mediciones, molestias y observaciones se registran para el momento
-   actual. Las molestias tienen su propio paso, justo después del perfil; tocar el
-   holograma lleva a él. Completar sus 35 campos y pulsar **ANALIZAR DATOS ACTUALES**.
+   solo pide lo que puede cambiar de un día para otro, en 4 pasos y 19 campos:
+   molestias (primero; tocar el holograma lleva a ellas), signos vitales,
+   psicológico y neurológico. El perfil y los datos de hueso, músculo y
+   laboratorio (`soloHabitual` en `metrics.js`) se copian del registro habitual,
+   de modo que la evaluación, el JSON y el backend los siguen recibiendo. Pulsar
+   **ANALIZAR DATOS ACTUALES**.
 4. Tras la transición se muestra la revisión: órganos, gráficas, síntomas y el
    detalle de ambos registros en la pestaña **Registro**.
 

@@ -1,5 +1,5 @@
 /** Validación compartida por formularios, progreso y transiciones de etapa. */
-import { FORM_FIELDS } from '../data/metrics.js';
+import { FORM_FIELDS, SOLO_HABITUAL_IDS } from '../data/metrics.js';
 import { sintomaValido } from '../data/symptoms.js';
 
 export const PROFILE_FIELDS = [
@@ -61,8 +61,12 @@ export function erroresRegistro(record, etapa = 'baseline') {
 
 export function progresoRegistro(record, etapa = 'baseline') {
   const errores = erroresRegistro(record, etapa);
-  // Solo cuentan los obligatorios; un opcional mal escrito sí resta.
-  const total = PROFILE_FIELDS.length + FORM_FIELDS.filter((field) => !field.optional).length + (etapa === 'current' ? 1 : 0);
+  // Solo cuentan los obligatorios; un opcional mal escrito sí resta. En la etapa
+  // 2, perfil y datos «solo habituales» vienen del registro habitual y no cuentan.
+  const obligatorios = FORM_FIELDS.filter((field) => !field.optional);
+  const total = etapa === 'current'
+    ? obligatorios.filter((field) => !SOLO_HABITUAL_IDS.includes(field.id)).length + 1
+    : PROFILE_FIELDS.length + obligatorios.length;
   const completos = Math.max(0, total - Object.keys(errores).length);
   return { errores, total, completos, porcentaje: Math.floor(completos / total * 100) };
 }

@@ -466,6 +466,38 @@
   display: none;
 }
 
+/* Tras la intro, el registro y el fondo aparecen con un fundido suave en vez de
+   saltar de golpe (la animación arranca al dejar de estar oculto). */
+#fintrax-app:not([data-step='intro']) .fintrax-shell {
+  animation: fintrax-entrada 700ms ease-out both;
+}
+
+#fintrax-app:not([data-step='intro']) .fintrax-bg {
+  animation: fintrax-fundido 900ms ease-out both;
+}
+
+@keyframes fintrax-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fintrax-fundido {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* Las dos capturas usan el formulario y sus propios registros. */
 #fintrax-app[data-step='baseline'] .fintrax-results,
 #fintrax-app[data-step='current'] .fintrax-results,

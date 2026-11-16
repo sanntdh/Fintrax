@@ -54,9 +54,18 @@ export function initIntro({ onDone }) {
     if (terminado) return;
     terminado = true;
     clearTimeout(timer);
-    detenerFondo();
     for (const animacion of animaciones) animacion.cancel();
-    onDone();
+    const salir = () => {
+      detenerFondo();
+      onDone();
+    };
+    if (reduce) {
+      salir();
+      return;
+    }
+    // Fundido a negro antes de mostrar el registro, que entra con su propio fundido.
+    root.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 600, easing: 'ease-in', fill: 'forwards' })
+      .finished.then(salir, salir);
   }
 
   function tl(id, inicio, fin, desde, hasta, opciones = {}) {

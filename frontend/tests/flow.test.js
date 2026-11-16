@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { actions, getState, copiarRegistro } from '../src/js/state.js';
+import { actions, getState, copiarRegistro, registroActualInicial } from '../src/js/state.js';
 import { erroresRegistro, progresoRegistro, PROFILE_FIELDS } from '../src/js/validation.js';
-import { FIELD_IDS, RATING_IDS } from '../src/data/metrics.js';
+import { FIELD_IDS, RATING_IDS, SOLO_HABITUAL_IDS } from '../src/data/metrics.js';
 import { evaluate } from '../src/js/evaluation.js';
 import { construirRegistro } from '../src/js/export.js';
 
@@ -103,8 +103,9 @@ test('recorrido completo: orden, aislamiento, edición, análisis actual y expor
   assert.equal(state.step, 'current');
   assert.equal(state.result, null);
   assert.equal(state.profile.nombre, 'Ana Ríos');
-  assert.equal(state.profile.peso, '');
-  assert.deepEqual(state.values, {});
+  // Perfil y datos que no cambian vienen del registro habitual; el resto se pide de nuevo.
+  assert.equal(state.profile.peso, '68.5');
+  assert.deepEqual(Object.keys(state.values).sort(), [...SOLO_HABITUAL_IDS].sort());
   assert.equal(state.ratingsTouched.size, 0);
   assert.equal(state.wellBeing, false);
   assert.equal(actions.comenzarAnalisis(evaluate(state)), false);
@@ -121,7 +122,7 @@ test('recorrido completo: orden, aislamiento, edición, análisis actual y expor
   actions.setValue('fc_reposo', '72');
   actions.completarHabituales();
   assert.equal(state.values.fc_reposo, '145');
-  assert.equal(state.profile.peso, '70.5');
+  assert.equal(state.profile.peso, '68.5', 'El perfil de la etapa 2 sigue al registro habitual');
   assert.equal(state.ratingsTouched.size, RATING_IDS.length);
 
   const snapshot = copiarRegistro(state);
@@ -141,7 +142,7 @@ test('recorrido completo: orden, aislamiento, edición, análisis actual y expor
   actions.setOtherText('Observación revisada');
   const exported = construirRegistro(state);
   assert.equal(exported.registros.habituales.perfil.peso_kg, '68.5');
-  assert.equal(exported.registros.actuales.perfil.peso_kg, '70.5');
+  assert.equal(exported.registros.actuales.perfil.peso_kg, '68.5');
   assert.equal(exported.registros.actuales.observaciones, 'Observación revisada');
   assert.equal(exported.registros.habituales.variables[0].registros[0].value, '72 bpm');
   assert.equal(exported.registros.actuales.variables[0].registros[0].value, '145 bpm');
@@ -172,4 +173,39 @@ test('un dato de laboratorio escrito mal sigue siendo un error', () => {
   record.values.leucocitos = 'abc';
   assert.ok(erroresRegistro(record).leucocitos);
   assert.ok(progresoRegistro(record).porcentaje < 100);
+});
+
+test('la etapa 2 no repite lo que no cambia: perfil, hueso y laboratorio vienen del registro habitual', () => {
+  assert.deepEqual([...SOLO_HABITUAL_IDS].sort(), [...LABORATORIO, 'masa_muscular', 'fuerza_muscular', 'metodo_fuerza'].sort());
+  const base = registroCompleto();
+  const actual = registroActualInicial(base, null);
+  assert.deepEqual(actual.profile, base.profile);
+  for (const id of SOLO_HABITUAL_IDS) assert.equal(actual.values[id], base.values[id], `${id} no se copió`);
+  assert.equal(actual.values.fc_reposo, undefined, 'Los signos vitales se piden de nuevo');
+  assert.equal(actual.symptoms.size, 0);
+});
+
+test('si se edita el registro habitual, la etapa 2 conserva lo actual y toma lo habitual nuevo', () => {
+  const base = registroCompleto();
+  const previo = registroActualInicial(base, null);
+  previo.values.fc_reposo = '110';
+  base.values.masa_muscular = '33';
+  base.profile.peso = '70';
+  const actual = registroActualInicial(base, previo);
+  assert.equal(actual.values.fc_reposo, '110');
+  assert.equal(actual.values.masa_muscular, '33');
+  assert.equal(actual.profile.peso, '70');
+});
+
+test('la etapa 2 solo cuenta y exige los 19 campos que cambian hoy', () => {
+  const base = registroCompleto();
+  const actual = registroActualInicial(base, null);
+  const hoy = ['fc_reposo', 'pa_sistolica', 'pa_diastolica', 'ecg_estado', 'spo2', 'fr', 'temp', ...RATING_IDS, 'sueno_horas', 'equilibrio', 'coordinacion', 'reaccion_ms'];
+  for (const id of hoy) actual.values[id] = base.values[id];
+  actual.ratingsTouched = new Set(RATING_IDS);
+  assert.equal(progresoRegistro(actual, 'current').total, 19);
+  assert.equal(progresoRegistro(actual, 'current').completos, 18, 'Falta el estado de molestias');
+  actual.wellBeing = true;
+  assert.deepEqual(erroresRegistro(actual, 'current'), {});
+  assert.equal(progresoRegistro(actual, 'current').porcentaje, 100);
 });

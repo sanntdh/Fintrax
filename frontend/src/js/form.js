@@ -185,6 +185,7 @@ function crearSeccion(section) {
     'aria-labelledby': `fintrax-sec-${section.id}-title`
   });
   bloque.dataset.stepPanel = section.id;
+  if (section.soloHabitual) bloque.dataset.stepOnly = 'baseline';
   bloque.dataset.stepLabel = section.title;
 
   const cabecera = el('div', { class: 'fintrax-metric-header' });
@@ -434,7 +435,7 @@ export function initForm({ onSubmit }) {
     $('[data-form-stage]').textContent = actual ? 'STAGE 2 OF 2 · CURRENT DATA' : 'STAGE 1 OF 2 · USUAL DATA';
     $('#fintrax-form-title').textContent = actual ? 'Current data record' : 'Biomedical Record';
     $('[data-form-subtitle]').textContent = actual
-      ? 'Record how you feel right now · FINTRAX'
+      ? 'Only what may have changed today · the rest comes from your usual record'
       : 'Pre-mission baseline assessment · FINTRAX';
     $('[data-submit]').textContent = actual ? '⚡ ANALYZE CURRENT DATA ›' : '⚡ START ANALYSIS ›';
     for (const bloque of document.querySelectorAll('[data-current-only]')) bloque.hidden = !actual;

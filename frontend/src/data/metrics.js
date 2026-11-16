@@ -99,6 +99,7 @@ export const METRIC_SECTIONS = [
   },
   {
     id: 'muscular',
+    soloHabitual: true,
     icon: '◇',
     title: 'BONE AND MUSCLE',
     subtitle: 'Body composition and baseline strength',
@@ -172,6 +173,7 @@ export const METRIC_SECTIONS = [
   },
   {
     id: 'inmune',
+    soloHabitual: true,
     icon: '✧',
     title: 'IMMUNE',
     subtitle: 'Blood count, markers and stress response',
@@ -359,6 +361,14 @@ export const FIELD_IDS = METRIC_SECTIONS.flatMap((section) =>
     if (field.id) return [field.id];
     return [];
   })
+);
+
+/**
+ * Campos que no cambian de un día para otro (pruebas con equipo o laboratorio):
+ * solo se piden en el registro habitual y la etapa 2 los toma de él.
+ */
+export const SOLO_HABITUAL_IDS = METRIC_SECTIONS.filter((section) => section.soloHabitual).flatMap((section) =>
+  section.fields.flatMap((field) => (field.ids ? field.ids.map((item) => item.id) : field.id ? [field.id] : []))
 );
 
 /** Los 23 indicadores que cuentan para el progreso y la evaluación. */

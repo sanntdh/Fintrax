@@ -10,7 +10,7 @@
  * dos etapas conservan sus propios valores, escalas y perfil al navegar.
  */
 
-import { RATING_IDS } from '../data/metrics.js';
+import { RATING_IDS, SOLO_HABITUAL_IDS } from '../data/metrics.js';
 import { sintomaValido } from '../data/symptoms.js';
 import { erroresRegistro } from './validation.js';
 
@@ -28,6 +28,25 @@ export function copiarRegistro(record) {
     wellBeing: Boolean(record.wellBeing),
     otherText: record.otherText || ''
   };
+}
+
+/**
+ * Registro con el que empieza la etapa 2: conserva lo ya escrito en ella y
+ * toma del registro habitual el perfil y los datos que no cambian de un día
+ * para otro, para no volver a pedirlos.
+ * @param {ReturnType<typeof copiarRegistro>} habitual
+ * @param {ReturnType<typeof copiarRegistro>|null} previo
+ */
+export function registroActualInicial(habitual, previo) {
+  const actual = previo
+    ? copiarRegistro(previo)
+    : { profile: {}, values: {}, ratingsTouched: new Set(), symptoms: new Set(), wellBeing: false, otherText: '' };
+  actual.profile = { ...habitual.profile };
+  for (const id of SOLO_HABITUAL_IDS) {
+    if (habitual.values[id] === undefined) delete actual.values[id];
+    else actual.values[id] = habitual.values[id];
+  }
+  return actual;
 }
 
 const state = {
@@ -146,11 +165,7 @@ export const actions = {
   completarHabituales() {
     if (state.step !== 'baseline' || Object.keys(erroresRegistro(state)).length) return false;
     state.records.baseline = copiarRegistro(state);
-    const actual = state.records.current || {
-      profile: { ...state.profile, peso: '', estatura: '' },
-      values: {}, ratingsTouched: new Set(), symptoms: new Set(), wellBeing: false, otherText: ''
-    };
-    Object.assign(state, copiarRegistro(actual));
+    Object.assign(state, registroActualInicial(state.records.baseline, state.records.current));
     state.activeRecord = 'current';
     state.step = 'current';
     state.result = null;

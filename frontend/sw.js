@@ -12,7 +12,7 @@
  * lo comprueba. Cambia VERSION para forzar una recarga completa de la caché.
  */
 
-const VERSION = 'fintrax-v2';
+const VERSION = 'fintrax-v3';
 
 const PRECACHE = [
   './',

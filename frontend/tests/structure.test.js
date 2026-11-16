@@ -126,3 +126,21 @@ test('los botones de sexo del HTML envían valores que la validación acepta', a
   const valores = [...(await leer('index.html')).matchAll(/name="sexo" value="([^"]+)"/g)].map((m) => m[1]);
   assert.deepEqual(valores.sort(), [...opciones].sort());
 });
+
+test('un síntoma marcado se distingue claramente y resalta su zona', async () => {
+  const css = await leer('src/css/form.css');
+  assert.match(css, /\.fintrax-chip input:checked \+ span::before\s*\{[^}]*content:\s*'✓/, 'Falta la marca ✓ en el síntoma marcado');
+  assert.match(css, /\.fintrax-zone:has\(input\[data-symptom\]:checked\)/, 'La zona con síntomas marcados debe resaltarse');
+});
+
+test('la pantalla de carga se desvanece y el registro aparece con un fundido', async () => {
+  assert.match(await leer('src/js/intro.js'), /root\.animate\(\s*\[\s*\{\s*opacity:\s*1/, 'La intro debe desvanecerse antes de dar paso al registro');
+  const css = await leer('src/css/layout.css');
+  assert.match(css, /@keyframes fintrax-entrada/);
+  assert.match(css, /#fintrax-app:not\(\[data-step='intro'\]\) \.fintrax-shell\s*\{[^}]*animation:\s*fintrax-entrada/);
+});
+
+test('la etapa 2 oculta los pasos que no se repiten', async () => {
+  assert.match(await leer('index.html'), /data-step-panel="perfil"[^>]*data-step-only="baseline"/);
+  assert.match(await leer('src/js/form.js'), /if \(section\.soloHabitual\) bloque\.dataset\.stepOnly = 'baseline';/);
+});

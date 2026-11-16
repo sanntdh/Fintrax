@@ -21,11 +21,7 @@ export const COMPARABLES = [
   { id: 'pa_sistolica', label: 'Systolic pressure', unit: 'mmHg', ok: [U.pa.warnSisLow, U.pa.warnSis - 1], wn: [U.pa.badSisLow, U.pa.badSis - 1], eje: [60, 200], cambio: 15 },
   { id: 'spo2', label: 'Oxygen saturation', unit: '%', ok: [U.spo2.warn, 100], wn: [U.spo2.bad, 100], eje: [80, 100], cambio: 3 },
   { id: 'fr', label: 'Respiratory rate', unit: 'rpm', ok: [12, 20], wn: [9, 24], eje: [4, 40], cambio: 4 },
-  { id: 'temp', label: 'Temperature', unit: '°C', ok: [36.1, 38], wn: [35.1, 39], eje: [34, 41], cambio: 0.8 },
-  {
-    id: 'leucocitos', label: 'White blood cells', unit: '/µL',
-    ok: [U.leucocitos.warnLow, U.leucocitos.warnHigh], wn: [U.leucocitos.badLow, U.leucocitos.badHigh], eje: [0, 20000], cambio: null
-  }
+  { id: 'temp', label: 'Temperature', unit: '°C', ok: [36.1, 38], wn: [35.1, 39], eje: [34, 41], cambio: 0.8 }
 ];
 
 const GRAVEDAD = { bad: 0, warn: 1, ok: 2, na: 3 };
